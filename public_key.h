@@ -18,9 +18,19 @@ namespace pgp {
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
-             *  @throws TODO
+             *  @throws std::out_of_range
              */
             public_key(decoder &parser);
+
+            /**
+             *  Constructor
+             *
+             *  @param  creation_time   UNIX timestamp the key was created at
+             *  @param  algorithm       The key algorithm used
+             *  @param  components      The key components
+             *  @throws std::runtime_error
+             */
+            public_key(uint32_t creation_time, public_key_algorithm algorithm, gsl::span<const multiprecision_integer> components);
 
             /**
              *  Get the key version
@@ -49,6 +59,14 @@ namespace pgp {
              *  @return All the key components
              */
             gsl::span<const multiprecision_integer> components() const noexcept;
+
+            /**
+             *  Write the data to an encoder
+             *
+             *  @param  writer  The encoder to write to
+             *  @throws std::out_of_range, std::range_error
+             */
+            void encode(encoder &writer) const;
         private:
             expected_number<uint8_t, 4>         _version;               // the expected key version format
             uint32_t                            _creation_time  { 0 };  // UNIX timestamp the key was created at

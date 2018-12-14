@@ -26,6 +26,15 @@ namespace pgp {
     }
 
     /**
+     *  Constructor
+     *
+     *  @param  data    The range of numbers
+     */
+    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept :
+        _data{ data.begin(), data.end() }
+    {}
+
+    /**
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
@@ -33,6 +42,24 @@ namespace pgp {
     {
         // provide access to the underlying vector
         return _data;
+    }
+
+    /**
+     *  Write the data to an encoder
+     *
+     *  @param  writer  The encoder to write to
+     *  @throws std::out_of_range, std::range_error
+     */
+    void multiprecision_integer::encode(encoder &writer) const
+    {
+        // write out the number of elements first
+        writer.insert_number(static_cast<uint16_t>(_data.size() * 8));
+
+        // now write out all the elements
+        for (auto number : _data) {
+            // add the number
+            writer.insert_number(number);
+        }
     }
 
 }

@@ -32,34 +32,29 @@ int main(int argc, char **argv)
         std::copy(buffer, buffer + count, std::back_inserter(data));
     }
 
-    pgp::decoder    decoder { data      };
-    pgp::packet     packet  { decoder   };
+    std::cout << "Starting the decoder with " << data.size() << " bytes" << std::endl;
 
-    std::cout << "Packet is of type " << (uint16_t)packet.type() << std::endl;
+    pgp::decoder    decoder     { data      };
+    pgp::packet     packet      { decoder   };
+    pgp::public_key source_key  { decoder   };
 
-    auto size = packet.size();
+    std::cout << "Have public key packet version " << (int)source_key.version() << ", created at " << source_key.creation_time() << std::endl;
+    std::cout << "The public key uses algorithm " << (int)source_key.algorithm() << " and has " << source_key.components().size() << " components" << std::endl;
+    std::cout << "The operation consumed " << (data.size() - decoder.size()) << " bytes" << std::endl;
 
-    switch (packet.type()) {
-        case pgp::packet_tag::public_key: {
-            pgp::public_key key { decoder };
-            std::cout << "Have public key packet version " << (int)key.version() << ", created at " << key.creation_time() << " using algorithm " << (int)key.algorithm() << std::endl;
-            std::cout << "The public key has " << key.components().size() << " components" << std::endl;
-            break;
-        }
-        default:
-            std::cout << "Unhandled packet type: " << (uint16_t)packet.type() << std::endl;
-            break;
-    }
+    return 0;
 
-    if (size) {
-        std::cout << "Packet has a body size of " << *size << " bytes" << std::endl;
-    } else {
-        std::cout << "No size known" << std::endl;
-    }
+    std::array<uint8_t, 4096>   output;
+    pgp::encoder                encoder { output                                                                        };
+    pgp::packet                 result  { packet.tag(), packet.size()                                                   };
+    pgp::public_key             pubkey  { source_key.creation_time(), source_key.algorithm(), source_key.components()   };
 
-    if (decoder.empty()) {
-        std::cout << "All data was read" << std::endl;
-    } else {
-        std::cout << decoder.size() << " bytes are still available in the decoder" << std::endl;
-    }
+    result.encode(encoder);
+    pubkey.encode(encoder);
+
+    std::cout << "Encoding the new packet results in " << encoder.size() << " bytes" << std::endl;
+
+    std::ofstream               newfile { "/home/martijn/newkey" };
+
+    newfile.write(reinterpret_cast<const char*>(output.data()), encoder.size());
 }

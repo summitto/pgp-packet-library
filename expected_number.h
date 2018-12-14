@@ -1,6 +1,7 @@
 #pragma once
 
 #include "decoder.h"
+#include "encoder.h"
 
 
 namespace pgp {
@@ -15,6 +16,11 @@ namespace pgp {
         public:
             /**
              *  Constructor
+             */
+            expected_number() = default;
+
+            /**
+             *  Constructor
              *
              *  @param  parser  The decoder to parse the data
              *  @throws std::range_error, std::out_of_range
@@ -24,7 +30,7 @@ namespace pgp {
                 // check whether the value is as expected
                 if (parser.extract_number<T>() != number) {
                     // invalid number was read
-                    throw std::range_error{ "A fixed number is incorrect" };
+                    throw std::range_error{ "A fixed number is outside of expected range" };
                 }
             }
 
@@ -36,6 +42,18 @@ namespace pgp {
             {
                 // return the expected value
                 return number;
+            }
+
+            /**
+             *  Write the data to an encoder
+             *
+             *  @param  writer  The encoder to write to
+             *  @throws std::out_of_range, std::range_error
+             */
+            void encode(encoder &writer) const
+            {
+                // write out the number
+                writer.insert_number(value());
             }
     };
 

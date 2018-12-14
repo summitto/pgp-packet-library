@@ -1,5 +1,8 @@
 #pragma once
 
+#include <type_traits>
+
+
 namespace pgp {
 
     /**
@@ -26,5 +29,19 @@ namespace pgp {
         symmetrically_encrypted_and_integrity_protected_data    = 18,
         modification_detection_code                             = 19
     };
+
+    /**
+     *  Check whether a packet tag is compatible with the
+     *  old package format
+     *
+     *  @param  tag     The packet tag to check
+     *  @return Can the tag be represented in the old format
+     */
+    constexpr bool packet_tag_compatible_with_old_format(packet_tag tag) noexcept
+    {
+        // the old format uses only four bits to represent the tag
+        // so any tag using more than this is not compatible
+        return (0b11110000 & static_cast<typename std::underlying_type_t<packet_tag>>(tag)) == 0;
+    }
 
 }

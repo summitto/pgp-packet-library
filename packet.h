@@ -5,6 +5,7 @@
 #include <boost/optional.hpp>
 #include "packet_tag.h"
 #include "decoder.h"
+#include "encoder.h"
 
 
 namespace pgp {
@@ -21,15 +22,24 @@ namespace pgp {
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
-             *  @throws TODO
+             *  @throws std::runtime_error
              */
             packet(decoder &parser);
 
             /**
-             *  Retrieve the packet type
-             *  @return The packet type, as described in TODO
+             *  Constructor
+             *
+             *  @param  tag     The packet tag
+             *  @param  size    The size of the body
+             *  @throws std::runtime_error
              */
-            packet_tag type() const noexcept;
+            packet(packet_tag tag, boost::optional<size_t> size);
+
+            /**
+             *  Retrieve the packet tag
+             *  @return The packet tag, as described in https://tools.ietf.org/html/rfc4880#section-4.3
+             */
+            packet_tag tag() const noexcept;
 
             /**
              *  Retrieve the body length
@@ -38,8 +48,16 @@ namespace pgp {
              *  @return The number of bytes in the body of the packet
              */
             boost::optional<size_t> size() const noexcept;
+
+            /**
+             *  Write the data to an encoder
+             *
+             *  @param  writer  The encoder to write to
+             *  @throws std::out_of_range, std::range_error
+             */
+            void encode(encoder &writer) const;
         private:
-            packet_tag              _type   { packet_tag::reserved  };  // the packet type
+            packet_tag              _tag    { packet_tag::reserved  };  // the packet tag
             boost::optional<size_t> _size   { 0                     };  // number of bytes in the body
     };
 
