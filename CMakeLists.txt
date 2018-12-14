@@ -3,5 +3,5 @@ project(rfc4480)
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/GSL/include")
 
-add_executable(dump main.cpp wireformat.cpp header.cpp packet.cpp)
+add_executable(dump main.cpp decoder.cpp header.cpp packet.cpp public_key.cpp multiprecision_integer.cpp)
 set_property(TARGET dump PROPERTY CXX_STANDARD 17)
