@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/utility/string_view.hpp>
+
 
 namespace pgp {
 
@@ -14,6 +16,24 @@ namespace pgp {
         elgamal_encrypt_only    = 16,
         dsa                     = 17
     };
+
+    /**
+     *  Get a description of the public key algorithm
+     *
+     *  @param  algorithm   The algorithm to get a description for
+     *  @return The algorithm to describe
+     */
+    constexpr boost::string_view public_key_algorithm_description(public_key_algorithm algorithm) noexcept
+    {
+        // check the provided algorithm
+        switch (algorithm) {
+            case public_key_algorithm::rsa_encrypt_or_sign:     return "RSA (encrypt or sign)";
+            case public_key_algorithm::rsa_encrypt_only:        return "RSA (encrypt only)";
+            case public_key_algorithm::rsa_sign_only:           return "RSA (sign only)";
+            case public_key_algorithm::elgamal_encrypt_only:    return "Elgamal (encrypt only)";
+            case public_key_algorithm::dsa:                     return "DSA";
+        }
+    }
 
     /**
      *  Retrieve the number of key components
