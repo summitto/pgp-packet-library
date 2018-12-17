@@ -17,9 +17,41 @@ namespace pgp {
             /**
              *  Constructor
              *
+             *  @note   Creates an empty decoder
+             */
+            decoder() = default;
+
+            /**
+             *  Constructor
+             *
              *  @param  data    The range to decode from
              */
             decoder(gsl::span<const uint8_t> data) noexcept;
+
+            /**
+             *  The decoder is a move-only class
+             *
+             *  @param  that    The decoder to move
+             */
+            decoder(const decoder &that) = delete;
+            decoder(decoder &&that) = default;
+
+            /**
+             *  Assignment operator, only using move
+             *
+             *  @param  that    The decoder to assign
+             */
+            decoder &operator=(const decoder &that) = delete;
+            decoder &operator=(decoder &&that) = default;
+
+            /**
+             *  Splice the data in the decoder into a second decoder
+             *
+             *  @param  size    Number of bytes to splice off into the other decoder
+             *  @return The decoder containing the sliced off data
+             *  @throws std::out_of_range
+             */
+            decoder splice(size_t size);
 
             /**
              *  Check whether the decoder is empty

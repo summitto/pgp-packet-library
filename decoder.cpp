@@ -13,6 +13,25 @@ namespace pgp {
     {}
 
     /**
+     *  Splice the data in the decoder into a second decoder
+     *
+     *  @param  size    Number of bytes to splice off into the other decoder
+     *  @return The decoder containing the sliced off data
+     *  @throws std::out_of_range
+     */
+    decoder decoder::splice(size_t size)
+    {
+        // first create a new decoder with the spliced data
+        decoder result{ _data.first(size) };
+
+        // alter the stored data
+        _data = _data.subspan(size);
+
+        // return the result
+        return result;
+    }
+
+    /**
      *  Check whether the decoder is empty
      *  @return Whether all encoded data is exhausted
      */
