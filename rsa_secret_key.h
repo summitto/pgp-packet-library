@@ -29,17 +29,6 @@ namespace pgp {
             rsa_secret_key(multiprecision_integer n, multiprecision_integer e, multiprecision_integer d, multiprecision_integer p, multiprecision_integer q, multiprecision_integer u) noexcept;
 
             /**
-             *  Retrieve the packet tag used for this
-             *  key type
-             *  @return The packet type to use
-             */
-            static constexpr packet_tag tag() noexcept
-            {
-                // this is a secret key
-                return packet_tag::secret_key;
-            }
-
-            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

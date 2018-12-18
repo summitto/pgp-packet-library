@@ -29,17 +29,6 @@ namespace pgp {
             elgamal_secret_key(multiprecision_integer p, multiprecision_integer g, multiprecision_integer y, multiprecision_integer x) noexcept;
 
             /**
-             *  Retrieve the packet tag used for this
-             *  key type
-             *  @return The packet type to use
-             */
-            static constexpr packet_tag tag() noexcept
-            {
-                // this is a public key
-                return packet_tag::public_key;
-            }
-
-            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

@@ -25,17 +25,6 @@ namespace pgp {
             unknown_key(decoder &parser) noexcept {};
 
             /**
-             *  Retrieve the packet tag used for this
-             *  key type
-             *  @return The packet type to use
-             */
-            static packet_tag tag()
-            {
-                // an unknown packet has no tag
-                throw std::runtime_error{ "Unknown key has no tag" };
-            }
-
-            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              *  @throws std::runtime_error for the unknown key
