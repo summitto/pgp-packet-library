@@ -1,5 +1,4 @@
 #include "raii_pointer.h"
-#include "public_key.h"
 #include "packet.h"
 #include <iterator>
 #include <iostream>
@@ -32,29 +31,35 @@ int main(int argc, char **argv)
         std::copy(buffer, buffer + count, std::back_inserter(data));
     }
 
-    std::cout << "Starting the decoder with " << data.size() << " bytes" << std::endl;
+    pgp::decoder                decoder     { data      };
 
-    pgp::decoder    decoder     { data      };
-    pgp::packet     packet      { decoder   };
-    pgp::public_key source_key  { decoder   };
+    // std::array<uint8_t, 4096>   out_data;
+    // pgp::packet                 packet      { decoder   };
+    // pgp::encoder                encoder     { out_data  };
 
-    std::cout << "Have public key packet version " << (int)source_key.version() << ", created at " << source_key.creation_time() << std::endl;
-    std::cout << "The public key uses algorithm " << (int)source_key.algorithm() << " and has " << source_key.components().size() << " components" << std::endl;
-    std::cout << "The operation consumed " << (data.size() - decoder.size()) << " bytes" << std::endl;
+    // packet.encode(encoder);
 
-    return 0;
+    // std::cout << "Wrote packet with tag " << pgp::packet_tag_description(packet.tag()) << " and " << encoder.size() << " bytes to encoder" << std::endl;
 
-    std::array<uint8_t, 4096>   output;
-    pgp::encoder                encoder { output                                                                        };
-    pgp::packet                 result  { packet.tag(), packet.size()                                                   };
-    pgp::public_key             pubkey  { source_key.creation_time(), source_key.algorithm(), source_key.components()   };
+    // std::ofstream               outfile     { "/home/martijn/newkey"    };
 
-    result.encode(encoder);
-    pubkey.encode(encoder);
+    // outfile.write(reinterpret_cast<const char*>(out_data.data()), encoder.size());
 
-    std::cout << "Encoding the new packet results in " << encoder.size() << " bytes" << std::endl;
+    while (!decoder.empty()) {
+        pgp::packet     packet          { decoder                           };
 
-    std::ofstream               newfile { "/home/martijn/newkey" };
+        std::cout << "Packet has tag: " << pgp::packet_tag_description(packet.tag()) << std::endl;
 
-    newfile.write(reinterpret_cast<const char*>(output.data()), encoder.size());
+        if (packet.tag() == pgp::packet_tag::public_key) {
+            auto &key = mpark::get<pgp::public_key>(packet.body());
+
+            std::cout << "Found public key created at " << key.creation_time() << std::endl;
+            std::cout << "Key type: " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+        } else if (packet.tag() == pgp::packet_tag::secret_key) {
+            auto &key = mpark::get<pgp::secret_key>(packet.body());
+
+            std::cout << "Found secret key created at " << key.creation_time() << std::endl;
+            std::cout << "Key type: " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+        }
+    }
 }

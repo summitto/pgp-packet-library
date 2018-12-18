@@ -8,15 +8,15 @@
 namespace pgp {
 
     /**
-     *  A class for working with arbitrary-precision integer numbers
+     *  Class representing a curve object identifier
      */
-    class multiprecision_integer
+    class curve_oid
     {
         public:
             /**
              *  Constructor
              */
-            multiprecision_integer() = default;
+            curve_oid() = default;
 
             /**
              *  Constructor
@@ -24,15 +24,15 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              *  @throws std::out_of_range
              */
-            multiprecision_integer(decoder &parser);
+            curve_oid(decoder &parser);
 
             /**
              *  Constructor
              *
              *  @param  that    The integer to copy or move
              */
-            multiprecision_integer(const multiprecision_integer &that) = default;
-            multiprecision_integer(multiprecision_integer &&that) = default;
+            curve_oid(const curve_oid &that) = default;
+            curve_oid(curve_oid &&that) = default;
 
             /**
              *  Assignment
@@ -40,15 +40,15 @@ namespace pgp {
              *  @param  that    The integer to assign
              *  @return Same object for chaining
              */
-            multiprecision_integer &operator=(const multiprecision_integer &that) = default;
-            multiprecision_integer &operator=(multiprecision_integer &&that) = default;
+            curve_oid &operator=(const curve_oid &that) = default;
+            curve_oid &operator=(curve_oid &&that) = default;
 
             /**
              *  Constructor
              *
              *  @param  data    The range of numbers
              */
-            multiprecision_integer(gsl::span<const uint8_t> data) noexcept;
+            curve_oid(gsl::span<const uint8_t> data) noexcept;
 
             /**
              *  Determine the size used in encoded format

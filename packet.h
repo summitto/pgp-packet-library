@@ -2,7 +2,10 @@
 
 #include <gsl/span>
 #include <stdexcept>
-#include <boost/optional.hpp>
+#include <mpark/variant.hpp>
+#include "unknown_packet.h"
+#include "public_key.h"
+#include "secret_key.h"
 #include "packet_tag.h"
 #include "decoder.h"
 #include "encoder.h"
@@ -11,13 +14,22 @@
 namespace pgp {
 
     /**
-     *  Class for working with a single packet encoded
+     *  Class for working with a single packet header encoded
      *  according to the specification in RFC 4880
      *  @see: https://tools.ietf.org/html/rfc4880#section-4
      */
     class packet
     {
         public:
+            /**
+             *  The valid packets we can decode
+             */
+            using packet_variant = mpark::variant<
+                unknown_packet,
+                public_key,
+                secret_key
+            >;
+
             /**
              *  Constructor
              *
@@ -29,11 +41,13 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  tag     The packet tag
-             *  @param  size    The size of the body
-             *  @throws std::runtime_error
+             *  @param  ...,    The parameters to provide to the body constructor
+             *  @throws Forwards exception from body constructor
              */
-            packet(packet_tag tag, boost::optional<size_t> size);
+            template <class T, typename... Arguments>
+            packet(mpark::in_place_type_t<T>, Arguments&& ...parameters) :
+                _body{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
+            {}
 
             /**
              *  Retrieve the packet tag
@@ -47,7 +61,14 @@ namespace pgp {
              *  @note   If the body length is unknown, no size will be returned
              *  @return The number of bytes in the body of the packet
              */
-            boost::optional<size_t> size() const noexcept;
+            size_t size() const;
+
+            /**
+             *  Retrieve the decoded packet
+             *
+             *  @return The packet that was parsed
+             */
+            const packet_variant &body() const noexcept;
 
             /**
              *  Write the data to an encoder
@@ -57,8 +78,7 @@ namespace pgp {
              */
             void encode(encoder &writer) const;
         private:
-            packet_tag              _tag    { packet_tag::reserved  };  // the packet tag
-            boost::optional<size_t> _size   { 0                     };  // number of bytes in the body
+            packet_variant  _body;  // the decoded packet
     };
 
 }

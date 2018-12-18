@@ -35,6 +35,17 @@ namespace pgp {
             }
 
             /**
+             *  Determine the size used in encoded format
+             *  @return The number of bytes used for encoded storage
+             *  @throws std::runtime_error
+             */
+            constexpr static size_t size()
+            {
+                // this is just the size of the number type
+                return sizeof(T);
+            }
+
+            /**
              *  The value of the number
              *  @return The expected number
              */

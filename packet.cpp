@@ -1,5 +1,5 @@
 #include "packet.h"
-#include <arpa/inet.h>
+#include <boost/optional.hpp>
 #include <cstring>
 
 
@@ -19,56 +19,67 @@ namespace pgp {
             throw std::runtime_error{ "Invalid packet: Required header tag bit not set"};
         }
 
+        // the packet tag we are processing and the size of it
+        packet_tag              tag;
+        boost::optional<size_t> size;
+
         // is this a packet using the new formatting?
         if (parser.extract_bits(1)) {
             // extract packet type
-            _tag = packet_tag{ parser.extract_bits(6) };
+            tag = packet_tag{ parser.extract_bits(6) };
 
             // peek at the number to determine the size of the body length
             if (parser.peek_number<uint8_t>() < 192) {
                 // just a regular single-octet number
-                _size = parser.extract_number<uint8_t>();
+                size = parser.extract_number<uint8_t>();
             } else if (parser.peek_number<uint8_t>() < 224) {
                 // it's a two-octet number, remove upper two bits
                 // and append 192 to get to the correct number
-                _size = (parser.extract_number<uint16_t>() & 0b0011111111111111) + 192;
+                size = (parser.extract_number<uint16_t>() & 0b0011111111111111) + 192;
             } else if (parser.peek_number<uint8_t>() == 255) {
                 // simple four-octet number
-                _size = parser.extract_number<uint32_t>();
+                size = parser.extract_number<uint32_t>();
             } else {
                 // error: we don't support par
                 throw std::runtime_error{ "Partial body length not implemented" };
             }
         } else {
             // extract packet type
-            _tag = packet_tag{ parser.extract_bits(4) };
+            tag = packet_tag{ parser.extract_bits(4) };
 
             // what length type do we have
             switch (parser.extract_bits(2)) {
-                case 0: _size = parser.extract_number<uint8_t>();   break;
-                case 1: _size = parser.extract_number<uint16_t>();  break;
-                case 2: _size = parser.extract_number<uint32_t>();  break;
+                case 0: size = parser.extract_number<uint8_t>();    break;
+                case 1: size = parser.extract_number<uint16_t>();   break;
+                case 2: size = parser.extract_number<uint32_t>();   break;
                 case 3:  /* no size is known */                     break;
             }
         }
-    }
 
-    /**
-     *  Constructor
-     *
-     *  @param  tag     The packet tag
-     *  @param  size    The size of the body
-     *  @throws std::runtime_error
-     */
-    packet::packet(packet_tag tag, boost::optional<size_t> size) :
-        _tag{ tag },
-        _size{ size }
-    {
-        // check whether the size is given, and if not
-        // if the tag is compatible with the old format
-        if (!size && !packet_tag_compatible_with_old_format(tag)) {
-            // this scenario is not possible
-            throw std::runtime_error{ "Unspecified size incompatible with newer packet tags" };
+        // create a parser to hold only the body data
+        // and a pointer to the parser we will use
+        decoder body_parser;
+        decoder *parser_ptr;
+
+        // if we have a known size, we splice off the data,
+        // otherwise we keep using the existing decoder
+        if (size) {
+            // splice off the data and use the body parser
+            body_parser = parser.splice(*size);
+            parser_ptr  = &body_parser;
+        } else {
+            // we don't know the size, so we will use
+            // the entire, unrestrained parser instead
+            parser_ptr  = &parser;
+        }
+
+        // can we decode the packet?
+        switch (tag) {
+            case packet_tag::public_key:    _body.emplace<public_key>(*parser_ptr);     break;
+            case packet_tag::secret_key:    _body.emplace<secret_key>(*parser_ptr);     break;
+            default:
+                // TODO
+                break;
         }
     }
 
@@ -78,8 +89,17 @@ namespace pgp {
      */
     packet_tag packet::tag() const noexcept
     {
-        // return the pre-parsed type
-        return _tag;
+        // the tag to return
+        packet_tag result;
+
+        // retrieve the body
+        mpark::visit([&result](auto &body) {
+            // retrieve the tag from the body
+            result = body.tag();
+        }, _body);
+
+        // return the retrieved tag
+        return result;
     }
 
     /**
@@ -88,10 +108,30 @@ namespace pgp {
      *  @note   If the body length is unknown, no size will be returned
      *  @return The number of bytes in the body of the packet
      */
-    boost::optional<size_t> packet::size() const noexcept
+    size_t packet::size() const
     {
-        // return the stored size
-        return _size;
+        // the body size to return
+        size_t result;
+
+        // retrieve the body
+        mpark::visit([&result](auto &body) {
+            // retrieve the size from the body
+            result = body.size();
+        }, _body);
+
+        // return the retrieved size
+        return result;
+    }
+
+    /**
+     *  Retrieve the decoded packet
+     *
+     *  @return The packet that was parsed
+     */
+    const packet::packet_variant &packet::body() const noexcept
+    {
+        // return the decoded body
+        return _body;
     }
 
     /**
@@ -106,27 +146,24 @@ namespace pgp {
         writer.insert_bits(1, 1);
 
         // can we encode the packet in the old format?
-        if (packet_tag_compatible_with_old_format(_tag)) {
+        if (packet_tag_compatible_with_old_format(tag())) {
             // we are using the old packet format
             writer.insert_bits(1, 0);
-            writer.insert_bits(4, static_cast<typename std::underlying_type_t<packet_tag>>(_tag));
+            writer.insert_bits(4, static_cast<typename std::underlying_type_t<packet_tag>>(tag()));
 
             // do we know the size? determine the right storage type
-            if (_size && *_size > 65535) {
+            if (size() > 65535) {
                 // we are using a 4-octet length field
                 writer.insert_bits(2, 2);
-                writer.insert_number(static_cast<uint32_t>(*_size));
-            } else if (_size && *_size > 255) {
+                writer.insert_number(static_cast<uint32_t>(size()));
+            } else if (size() > 255) {
                 // we are using a 2-octet length field
                 writer.insert_bits(2, 1);
-                writer.insert_number(static_cast<uint16_t>(*_size));
-            } else if (_size) {
+                writer.insert_number(static_cast<uint16_t>(size()));
+            } else {
                 // it fits in a single octet
                 writer.insert_bits(2, 0);
-                writer.insert_number(static_cast<uint8_t>(*_size));
-            } else {
-                // no length is known
-                writer.insert_bits(2, 3);
+                writer.insert_number(static_cast<uint8_t>(size()));
             }
         } else {
             // we are using the new packet format
@@ -135,6 +172,12 @@ namespace pgp {
             // not supported yet
             throw std::runtime_error{ "Uh-oh, not implemented yet" };
         }
+
+        // now retrieve the body
+        mpark::visit([&writer](auto &body) {
+            // and encode it as well
+            body.encode(writer);
+        }, body());
     }
 
 }

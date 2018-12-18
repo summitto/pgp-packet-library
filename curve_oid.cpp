@@ -1,4 +1,4 @@
-#include "multiprecision_integer.h"
+#include "curve_oid.h"
 
 
 namespace pgp {
@@ -9,11 +9,10 @@ namespace pgp {
      *  @param  parser  The decoder to parse the data
      *  @throws std::out_of_range
      */
-    multiprecision_integer::multiprecision_integer(decoder &parser)
+    curve_oid::curve_oid(decoder &parser)
     {
-        // first read the number of elements, since it is in bits,
-        // we have to round it up to the nears byte and read it
-        auto count = (parser.extract_number<uint16_t>() + 7) / 8;
+        // first read the number of elements
+        auto count = parser.extract_number<uint8_t>();
 
         // allocate memory for the number
         _data.reserve(count);
@@ -30,7 +29,7 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept :
+    curve_oid::curve_oid(gsl::span<const uint8_t> data) noexcept :
         _data{ data.begin(), data.end() }
     {}
 
@@ -38,19 +37,19 @@ namespace pgp {
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
-    size_t multiprecision_integer::size() const noexcept
+    size_t curve_oid::size() const noexcept
     {
-        // two bytes for the header plus all the fields
-        return _data.size() + 2;
+        // one byte for the header, plus the data itself
+        return _data.size() + 1;
     }
 
     /**
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> multiprecision_integer::data() const
+    gsl::span<const uint8_t> curve_oid::data() const
     {
-        // provide access to the underlying vector
+        // provide access to the underlying data
         return _data;
     }
 
@@ -60,12 +59,12 @@ namespace pgp {
      *  @param  writer  The encoder to write to
      *  @throws std::out_of_range, std::range_error
      */
-    void multiprecision_integer::encode(encoder &writer) const
+    void curve_oid::encode(encoder &writer) const
     {
         // write out the number of elements first
-        writer.insert_number(static_cast<uint16_t>(_data.size() * 8));
+        writer.insert_number(static_cast<uint8_t>(_data.size()));
 
-        // now write out all the elements
+        // now add all the elements
         for (auto number : _data) {
             // add the number
             writer.insert_number(number);
