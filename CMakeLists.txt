@@ -16,6 +16,7 @@ add_executable(dump
     rsa_secret_key.cpp
     dsa_public_key.cpp
     dsa_secret_key.cpp
+    variable_number.cpp
     eddsa_public_key.cpp
     eddsa_secret_key.cpp
     elgamal_public_key.cpp

@@ -3,6 +3,7 @@
 #include "decoder.h"
 #include "packet_tag.h"
 #include "unknown_key.h"
+#include "fixed_number.h"
 #include "key_algorithm.h"
 #include "expected_number.h"
 #include <mpark/variant.hpp>
@@ -37,7 +38,7 @@ namespace pgp {
              */
             basic_key(decoder &parser) :
                 _version{ parser },
-                _creation_time{ parser.extract_number<uint32_t>() },
+                _creation_time{ parser },
                 _algorithm{ parser.extract_number<uint8_t>() }
             {
                 // create the correct key based on the algorithm
@@ -94,7 +95,7 @@ namespace pgp {
             size_t size() const
             {
                 // the size of all the members
-                auto result = _version.size() + sizeof(_creation_time) + sizeof(_algorithm);
+                auto result = _version.size() + _creation_time.size() + sizeof(_algorithm);
 
                 // retrieve the key
                 mpark::visit([&result](auto &key) {
@@ -146,7 +147,7 @@ namespace pgp {
             {
                 // write out all the components of the key
                 _version.encode(writer);
-                writer.insert_number(_creation_time);
+                _creation_time.encode(writer);
                 writer.insert_enum(_algorithm);
 
                 // retrieve the key
@@ -157,7 +158,7 @@ namespace pgp {
             }
         private:
             expected_number<uint8_t, 4>         _version;               // the expected key version format
-            uint32_t                            _creation_time  { 0 };  // UNIX timestamp the key was created at
+            fixed_number<uint32_t>              _creation_time;         // the UNIX timestamp the key was created at
             key_algorithm                       _algorithm      { 0 };  // the algorithm for creating the key
             key_variant                         _key;                   // the specific key
 

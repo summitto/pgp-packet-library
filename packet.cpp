@@ -1,5 +1,6 @@
 #include "packet.h"
 #include <boost/optional.hpp>
+#include "variable_number.h"
 #include <cstring>
 
 
@@ -20,29 +21,14 @@ namespace pgp {
         }
 
         // the packet tag we are processing and the size of it
-        packet_tag              tag;
-        boost::optional<size_t> size;
+        packet_tag                  tag;
+        boost::optional<uint32_t>   size;
 
         // is this a packet using the new formatting?
         if (parser.extract_bits(1)) {
-            // extract packet type
-            tag = packet_tag{ parser.extract_bits(6) };
-
-            // peek at the number to determine the size of the body length
-            if (parser.peek_number<uint8_t>() < 192) {
-                // just a regular single-octet number
-                size = parser.extract_number<uint8_t>();
-            } else if (parser.peek_number<uint8_t>() < 224) {
-                // it's a two-octet number, remove upper two bits
-                // and append 192 to get to the correct number
-                size = (parser.extract_number<uint16_t>() & 0b0011111111111111) + 192;
-            } else if (parser.peek_number<uint8_t>() == 255) {
-                // simple four-octet number
-                size = parser.extract_number<uint32_t>();
-            } else {
-                // error: we don't support par
-                throw std::runtime_error{ "Partial body length not implemented" };
-            }
+            // extract packet type and size
+            tag  = packet_tag{ parser.extract_bits(6) };
+            size = variable_number{ parser };
         } else {
             // extract packet type
             tag = packet_tag{ parser.extract_bits(4) };
@@ -170,9 +156,10 @@ namespace pgp {
         } else {
             // we are using the new packet format
             writer.insert_bits(1, 1);
+            writer.insert_bits(6, static_cast<typename std::underlying_type_t<packet_tag>>(tag()));
 
-            // not supported yet
-            throw std::runtime_error{ "Uh-oh, not implemented yet" };
+            // add the size of the packet as well
+            variable_number{ static_cast<uint32_t>(size()) }.encode(writer);
         }
 
         // now retrieve the body
