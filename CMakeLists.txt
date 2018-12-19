@@ -11,6 +11,7 @@ add_executable(dump
     packet.cpp
     user_id.cpp
     curve_oid.cpp
+    signature.cpp
     rsa_public_key.cpp
     rsa_secret_key.cpp
     dsa_public_key.cpp

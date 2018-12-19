@@ -50,20 +50,26 @@ int main(int argc, char **argv)
 
         std::cout << "Packet has tag: " << pgp::packet_tag_description(packet.tag()) << std::endl;
 
-        if (packet.tag() == pgp::packet_tag::public_key) {
+        if (packet.tag() == pgp::packet_tag::signature) {
+            auto &signature = mpark::get<pgp::signature>(packet.body());
+
+            std::cout << " * type => " << pgp::signature_type_description(signature.type()) << std::endl;
+            std::cout << " * key algorithm => " << pgp::key_algorithm_description(signature.public_key_algorithm()) << std::endl;
+            std::cout << " * hashing algorithm => " << pgp::hash_algorithm_description(signature.hashing_algorithm()) << std::endl;
+        } else if (packet.tag() == pgp::packet_tag::public_key) {
             auto &key = mpark::get<pgp::public_key>(packet.body());
 
-            std::cout << "Found public key created at " << key.creation_time() << std::endl;
-            std::cout << "Key type: " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+            std::cout << " * created => " << key.creation_time() << std::endl;
+            std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
         } else if (packet.tag() == pgp::packet_tag::secret_key) {
             auto &key = mpark::get<pgp::secret_key>(packet.body());
 
-            std::cout << "Found secret key created at " << key.creation_time() << std::endl;
-            std::cout << "Key type: " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+            std::cout << " * created => " << key.creation_time() << std::endl;
+            std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
         } else if (packet.tag() == pgp::packet_tag::user_id) {
             auto &id = mpark::get<pgp::user_id>(packet.body());
 
-            std::cout << "Found user id packet for user '" << id.id() << "'" << std::endl;
+            std::cout << " * id => " << id.id() << std::endl;
         }
     }
 }

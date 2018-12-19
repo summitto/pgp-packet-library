@@ -7,6 +7,7 @@
 #include "public_key.h"
 #include "secret_key.h"
 #include "packet_tag.h"
+#include "signature.h"
 #include "user_id.h"
 #include "decoder.h"
 #include "encoder.h"
@@ -27,6 +28,7 @@ namespace pgp {
              */
             using packet_variant = mpark::variant<
                 unknown_packet,
+                signature,
                 secret_key,
                 public_key,
                 user_id
