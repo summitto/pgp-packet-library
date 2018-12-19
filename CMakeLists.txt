@@ -9,6 +9,7 @@ add_executable(dump
     decoder.cpp
     encoder.cpp
     packet.cpp
+    user_id.cpp
     curve_oid.cpp
     rsa_public_key.cpp
     rsa_secret_key.cpp

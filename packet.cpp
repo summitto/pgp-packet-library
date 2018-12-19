@@ -75,8 +75,9 @@ namespace pgp {
 
         // can we decode the packet?
         switch (tag) {
-            case packet_tag::public_key:    _body.emplace<public_key>(*parser_ptr);     break;
             case packet_tag::secret_key:    _body.emplace<secret_key>(*parser_ptr);     break;
+            case packet_tag::public_key:    _body.emplace<public_key>(*parser_ptr);     break;
+            case packet_tag::user_id:       _body.emplace<user_id>(*parser_ptr);        break;
             default:
                 // TODO
                 break;

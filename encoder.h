@@ -102,6 +102,32 @@ namespace pgp {
                 // cast it to a number and insert it
                 return insert_number(static_cast<typename std::underlying_type_t<T>>(value));
             }
+
+            /**
+             *  Insert a blob of data
+             *
+             *  @param  value   The data to insert
+             *  @return self, for chaining
+             *  @throws std::out_of_range
+             */
+            template <typename T>
+            encoder &insert_blob(gsl::span<const T> value)
+            {
+                // make sure we have enough data for inserting the number
+                if (_data.size() < _size + sizeof(T) * value.size()) {
+                    // trying to write out-of-bounds
+                    throw std::out_of_range{ "Buffer too small for inserting blob" };
+                }
+
+                // copy the data into the buffer
+                std::memcpy(_data.data() + _size, value.data(), value.size() * sizeof(T));
+
+                // register the bytes in the buffer
+                _size += value.size() * sizeof(T);
+
+                // allow chaining
+                return *this;
+            }
         private:
             gsl::span<uint8_t>  _data;              // the range to encode to
             size_t              _size       { 0 };  // number of bytes written

@@ -135,6 +135,32 @@ namespace pgp {
                 // return the result
                 return result;
             }
+
+            /**
+             *  Extract a blob of data
+             *
+             *  @param  size    Number of bytes to extract
+             *  @return A blob of data of the requested size
+             *  @throws std::out_of_range
+             */
+            template <typename T>
+            gsl::span<const T> extract_blob(size_t size)
+            {
+                // we must be using a single-octet wide type,
+                // otherwise we might get alignment issues
+                static_assert(sizeof(T) == 1, "extract_blob can only be used with single-octet types");
+
+                // create the result variable containing the data - we do not
+                // check the bounds here, but the subspan below will fail in
+                // case the read is out-of-bounds
+                gsl::span<const T> result{ reinterpret_cast<const T*>(_data.data()), static_cast<typename gsl::span<uint8_t>::index_type>(size) };
+
+                // remove the bytes from the local data
+                _data = _data.subspan(size);
+
+                // return the requested result
+                return result;
+            }
         private:
             /**
              *  Mask the number, removing already-ready bits

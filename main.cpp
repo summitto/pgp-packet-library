@@ -60,6 +60,10 @@ int main(int argc, char **argv)
 
             std::cout << "Found secret key created at " << key.creation_time() << std::endl;
             std::cout << "Key type: " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+        } else if (packet.tag() == pgp::packet_tag::user_id) {
+            auto &id = mpark::get<pgp::user_id>(packet.body());
+
+            std::cout << "Found user id packet for user '" << id.id() << "'" << std::endl;
         }
     }
 }
