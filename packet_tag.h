@@ -35,7 +35,7 @@ namespace pgp {
      *  Get a description of the packet tag
      *
      *  @param  tag     The packet tag to get a description for
-     *  @return The packet tag to describe
+     *  @return The description of the packet tag
      */
     constexpr boost::string_view packet_tag_description(packet_tag tag) noexcept
     {
