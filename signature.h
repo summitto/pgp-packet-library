@@ -1,10 +1,15 @@
 #pragma once
 
 #include "signature_subpacket_set.h"
+#include <mpark/variant.hpp>
 #include "expected_number.h"
+#include "eddsa_signature.h"
 #include "signature_type.h"
 #include "hash_algorithm.h"
 #include "key_algorithm.h"
+#include "dsa_signature.h"
+#include "rsa_signature.h"
+#include "fixed_number.h"
 #include "packet_tag.h"
 #include "decoder.h"
 #include "encoder.h"
@@ -18,6 +23,15 @@ namespace pgp {
     class signature
     {
         public:
+            /**
+             *  The valid signatures we can hold
+             */
+            using signature_variant = mpark::variant<
+                dsa_signature,
+                rsa_signature,
+                eddsa_signature
+            >;
+
             /**
              *  Constructor
              *
@@ -88,6 +102,13 @@ namespace pgp {
             const signature_subpacket_set &unhashed_subpackets() const noexcept;
 
             /**
+             *  Retrieve the signature data
+             *
+             *  @return The signature data
+             */
+            const signature_variant &data() const noexcept;
+
+            /**
              *  Write the data to an encoder
              *
              *  @param  writer  The encoder to write to
@@ -101,6 +122,8 @@ namespace pgp {
             hash_algorithm                      _hash_algorithm;        // the used hashing algorithm
             signature_subpacket_set             _hashed_subpackets;     // the set of hashed subpackets
             signature_subpacket_set             _unhashed_subpackets;   // the set of unhashed subpackets
+            uint16                              _signature_bits;        // the 16 most significant bits of the signature
+            signature_variant                   _signature;             // the actual signature
     };
 
 }

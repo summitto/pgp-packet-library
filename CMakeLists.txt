@@ -12,11 +12,14 @@ add_executable(dump
     user_id.cpp
     curve_oid.cpp
     signature.cpp
+    rsa_signature.cpp
+    dsa_signature.cpp
     rsa_public_key.cpp
     rsa_secret_key.cpp
     dsa_public_key.cpp
     dsa_secret_key.cpp
     variable_number.cpp
+    eddsa_signature.cpp
     eddsa_public_key.cpp
     eddsa_secret_key.cpp
     elgamal_public_key.cpp

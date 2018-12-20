@@ -3,6 +3,30 @@
 
 namespace pgp {
 
+    namespace {
+        /**
+         *  Construct the signature variant
+         *
+         *  @param  algorithm   The key algorithm
+         *  @param  parser      The decoder to parse the data
+         */
+        signature::signature_variant construct_signature(key_algorithm algorithm, decoder &parser)
+        {
+            // check the provided algorithm
+            switch (algorithm) {
+                case key_algorithm::rsa_encrypt_or_sign:
+                case key_algorithm::rsa_sign_only:
+                    return rsa_signature{ parser };
+                case key_algorithm::dsa:
+                    return dsa_signature{ parser };
+                case key_algorithm::eddsa:
+                    return eddsa_signature{ parser };
+                default:
+                    throw std::runtime_error{ "Unknown signature type" };
+            }
+        }
+    }
+
     /**
      *  Constructor
      *
@@ -14,7 +38,9 @@ namespace pgp {
         _key_algorithm{ parser.extract_number<uint8_t>() },
         _hash_algorithm{ parser.extract_number<uint8_t>() },
         _hashed_subpackets{ parser },
-        _unhashed_subpackets{ parser }
+        _unhashed_subpackets{ parser },
+        _signature_bits{ parser },
+        _signature{ construct_signature(_key_algorithm, parser) }
     {}
 
     /**
@@ -24,8 +50,26 @@ namespace pgp {
      */
     size_t signature::size() const
     {
-        // we need the size of the version
-        return _version.size() + sizeof(_type) + sizeof(_key_algorithm) + sizeof(_hash_algorithm) + _hashed_subpackets.size() + _unhashed_subpackets.size();
+        // the size of all the components
+        size_t result{ 0 };
+
+        // add components
+        result += _version.size();
+        result += sizeof(_type);
+        result += sizeof(_key_algorithm);
+        result += sizeof(_hash_algorithm);
+        result += _hashed_subpackets.size();
+        result += _unhashed_subpackets.size();
+        result += _signature_bits.size();
+
+        // retrieve the signature
+        mpark::visit([&result](auto &data) {
+            // add the signature size to the total
+            result += data.size();
+        }, _signature);
+
+        // return the total size
+        return result;
     }
 
     /**
@@ -83,6 +127,17 @@ namespace pgp {
     }
 
     /**
+     *  Retrieve the signature data
+     *
+     *  @return The signature data
+     */
+    const signature::signature_variant &signature::data() const noexcept
+    {
+        // return the stored signature
+        return _signature;
+    }
+
+    /**
      *  Write the data to an encoder
      *
      *  @param  writer  The encoder to write to
@@ -97,6 +152,7 @@ namespace pgp {
         writer.insert_enum(_hash_algorithm);
         _hashed_subpackets.encode(writer);
         _unhashed_subpackets.encode(writer);
+        _signature_bits.encode(writer);
     }
 
 }
