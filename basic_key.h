@@ -158,7 +158,7 @@ namespace pgp {
             }
         private:
             expected_number<uint8_t, 4>         _version;               // the expected key version format
-            fixed_number<uint32_t>              _creation_time;         // the UNIX timestamp the key was created at
+            uint32                              _creation_time;         // the UNIX timestamp the key was created at
             key_algorithm                       _algorithm      { 0 };  // the algorithm for creating the key
             key_variant                         _key;                   // the specific key
 

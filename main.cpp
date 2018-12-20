@@ -56,6 +56,16 @@ int main(int argc, char **argv)
             std::cout << " * type => " << pgp::signature_type_description(signature.type()) << std::endl;
             std::cout << " * key algorithm => " << pgp::key_algorithm_description(signature.public_key_algorithm()) << std::endl;
             std::cout << " * hashing algorithm => " << pgp::hash_algorithm_description(signature.hashing_algorithm()) << std::endl;
+
+            for (auto &subpacket : signature.hashed_subpackets()) {
+                std::cout << "   * hashed subpacket" << std::endl;
+                std::cout << "     * type => " <<  signature_subpacket_type_description(subpacket.type()) << std::endl;
+            }
+
+            for (auto &subpacket : signature.unhashed_subpackets()) {
+                std::cout << "   * unhashed subpacket" << std::endl;
+                std::cout << "     * type => " <<  signature_subpacket_type_description(subpacket.type()) << std::endl;
+            }
         } else if (packet.tag() == pgp::packet_tag::public_key) {
             auto &key = mpark::get<pgp::public_key>(packet.body());
 

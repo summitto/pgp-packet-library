@@ -21,7 +21,9 @@ add_executable(dump
     eddsa_secret_key.cpp
     elgamal_public_key.cpp
     elgamal_secret_key.cpp
+    signature_subpacket.cpp
     multiprecision_integer.cpp
+    signature_subpacket_set.cpp
 )
 
 set_property(TARGET dump PROPERTY CXX_STANDARD 17)

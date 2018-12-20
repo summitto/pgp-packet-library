@@ -1,5 +1,6 @@
 #pragma once
 
+#include "signature_subpacket_set.h"
 #include "expected_number.h"
 #include "signature_type.h"
 #include "hash_algorithm.h"
@@ -73,6 +74,20 @@ namespace pgp {
             hash_algorithm hashing_algorithm() const noexcept;
 
             /**
+             *  Retrieve the hashed subpackets
+             *
+             *  @return The hashed subpackets
+             */
+            const signature_subpacket_set &hashed_subpackets() const noexcept;
+
+            /**
+             *  Retrieve the unhashed subpackets
+             *
+             *  @return The unhashed subpackets
+             */
+            const signature_subpacket_set &unhashed_subpackets() const noexcept;
+
+            /**
              *  Write the data to an encoder
              *
              *  @param  writer  The encoder to write to
@@ -84,6 +99,8 @@ namespace pgp {
             signature_type                      _type;                  // the signature type used
             key_algorithm                       _key_algorithm;         // the used key algorithm
             hash_algorithm                      _hash_algorithm;        // the used hashing algorithm
+            signature_subpacket_set             _hashed_subpackets;     // the set of hashed subpackets
+            signature_subpacket_set             _unhashed_subpackets;   // the set of unhashed subpackets
     };
 
 }

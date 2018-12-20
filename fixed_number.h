@@ -57,7 +57,7 @@ namespace pgp {
              *
              *  @return The number of bytes used for encoded storage
              */
-            size_t size() const noexcept
+            static size_t size() noexcept
             {
                 // just use the size of the value
                 return sizeof(T);
@@ -88,5 +88,12 @@ namespace pgp {
         private:
             T   _value{ 0 };
     };
+
+    /**
+     *  Alias the commonly-used types
+     */
+    using uint8     = fixed_number<uint8_t>;
+    using uint16    = fixed_number<uint16_t>;
+    using uint32    = fixed_number<uint32_t>;
 
 }

@@ -48,7 +48,7 @@ namespace pgp {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> multiprecision_integer::data() const
+    gsl::span<const uint8_t> multiprecision_integer::data() const noexcept
     {
         // provide access to the underlying vector
         return _data;

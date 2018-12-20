@@ -12,7 +12,9 @@ namespace pgp {
         _version{ parser },
         _type{ parser.extract_number<uint8_t>() },
         _key_algorithm{ parser.extract_number<uint8_t>() },
-        _hash_algorithm{ parser.extract_number<uint8_t>() }
+        _hash_algorithm{ parser.extract_number<uint8_t>() },
+        _hashed_subpackets{ parser },
+        _unhashed_subpackets{ parser }
     {}
 
     /**
@@ -23,8 +25,7 @@ namespace pgp {
     size_t signature::size() const
     {
         // we need the size of the version
-        // and many other things: TODO
-        return _version.size();
+        return _version.size() + sizeof(_type) + sizeof(_key_algorithm) + sizeof(_hash_algorithm) + _hashed_subpackets.size() + _unhashed_subpackets.size();
     }
 
     /**
@@ -60,6 +61,28 @@ namespace pgp {
     }
 
     /**
+     *  Retrieve the hashed subpackets
+     *
+     *  @return The hashed subpackets
+     */
+    const signature_subpacket_set &signature::hashed_subpackets() const noexcept
+    {
+        // return the stored hashed subpackets
+        return _hashed_subpackets;
+    }
+
+    /**
+     *  Retrieve the unhashed subpackets
+     *
+     *  @return The unhashed subpackets
+     */
+    const signature_subpacket_set &signature::unhashed_subpackets() const noexcept
+    {
+        // return the stored unhashed subpackets
+        return _unhashed_subpackets;
+    }
+
+    /**
      *  Write the data to an encoder
      *
      *  @param  writer  The encoder to write to
@@ -72,6 +95,8 @@ namespace pgp {
         writer.insert_enum(_type);
         writer.insert_enum(_key_algorithm);
         writer.insert_enum(_hash_algorithm);
+        _hashed_subpackets.encode(writer);
+        _unhashed_subpackets.encode(writer);
     }
 
 }
