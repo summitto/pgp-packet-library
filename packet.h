@@ -31,7 +31,9 @@ namespace pgp {
                 signature,
                 secret_key,
                 public_key,
-                user_id
+                secret_subkey,
+                user_id,
+                public_subkey
             >;
 
             /**

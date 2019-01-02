@@ -64,7 +64,9 @@ namespace pgp {
             case packet_tag::signature:     _body.emplace<signature>(*parser_ptr);      break;
             case packet_tag::secret_key:    _body.emplace<secret_key>(*parser_ptr);     break;
             case packet_tag::public_key:    _body.emplace<public_key>(*parser_ptr);     break;
+            case packet_tag::secret_subkey: _body.emplace<secret_subkey>(*parser_ptr);  break;
             case packet_tag::user_id:       _body.emplace<user_id>(*parser_ptr);        break;
+            case packet_tag::public_subkey: _body.emplace<public_subkey>(*parser_ptr);  break;
             default:
                 // TODO
                 break;

@@ -27,6 +27,7 @@ namespace pgp {
                 typename key_traits::rsa_key_t,
                 typename key_traits::dsa_key_t,
                 typename key_traits::elgamal_key_t,
+                typename key_traits::ecdh_key_t,
                 typename key_traits::eddsa_key_t
             >;
 
@@ -53,6 +54,9 @@ namespace pgp {
                         break;
                     case key_algorithm::dsa:
                         _key.template emplace<typename key_traits::dsa_key_t>(parser);
+                        break;
+                    case key_algorithm::ecdh:
+                        _key.template emplace<typename key_traits::ecdh_key_t>(parser);
                         break;
                     case key_algorithm::eddsa:
                         _key.template emplace<typename key_traits::eddsa_key_t>(parser);

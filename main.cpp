@@ -71,10 +71,21 @@ int main(int argc, char **argv)
 
             std::cout << " * created => " << key.creation_time() << std::endl;
             std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+        } else if (packet.tag() == pgp::packet_tag::public_subkey) {
+            auto &key = mpark::get<pgp::public_subkey>(packet.body());
+
+            std::cout << " * created => " << key.creation_time() << std::endl;
+            std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
         } else if (packet.tag() == pgp::packet_tag::secret_key) {
             auto &key = mpark::get<pgp::secret_key>(packet.body());
 
             std::cout << " * created => " << key.creation_time() << std::endl;
+            std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
+        } else if (packet.tag() == pgp::packet_tag::secret_subkey) {
+            auto &key = mpark::get<pgp::secret_subkey>(packet.body());
+
+            std::cout << " * created => " << key.creation_time() << std::endl;
+            std::cout << " * type (int) => " << (int)key.algorithm() << std::endl;
             std::cout << " * type => " << pgp::key_algorithm_description(key.algorithm()) << std::endl;
         } else if (packet.tag() == pgp::packet_tag::user_id) {
             auto &id = mpark::get<pgp::user_id>(packet.body());

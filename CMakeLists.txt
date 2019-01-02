@@ -19,6 +19,8 @@ add_executable(dump
     dsa_public_key.cpp
     dsa_secret_key.cpp
     variable_number.cpp
+    ecdh_public_key.cpp
+    ecdh_secret_key.cpp
     eddsa_signature.cpp
     eddsa_public_key.cpp
     eddsa_secret_key.cpp
