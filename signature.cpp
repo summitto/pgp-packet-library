@@ -153,6 +153,12 @@ namespace pgp {
         _hashed_subpackets.encode(writer);
         _unhashed_subpackets.encode(writer);
         _signature_bits.encode(writer);
+
+        // retrieve the signature itself
+        mpark::visit([&writer](auto &signature) {
+            // encode the signature
+            signature.encode(writer);
+        }, _signature);
     }
 
 }
