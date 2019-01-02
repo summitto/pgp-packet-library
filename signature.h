@@ -40,6 +40,28 @@ namespace pgp {
             signature(decoder &parser);
 
             /**
+             *  Constructor
+             *
+             *  @param  type                    The signature type
+             *  @param  public_key_algorithm    The public key algorithm
+             *  @param  hashing_algorithm       The used hashing algorithm
+             *  @param  hashed_subpackets       The set of hashed subpackets
+             *  @param  unhashed_subpackets     The set of unhashed subpackets
+             *  @param  signature_bits          The 16 most significant bits of the signature
+             *  @param  ...,                    The parameters for constructing the signature
+             */
+            template <class T, typename... Arguments>
+            signature(signature_type type, key_algorithm public_key_algorithm, hash_algorithm hashing_algorithm, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets, uint16_t signature_bits, mpark::in_place_type_t<T>, Arguments&& ...parameters) :
+                _type{ type },
+                _key_algorithm{ public_key_algorithm },
+                _hash_algorithm{ hashing_algorithm },
+                _hashed_subpackets{ std::move(hashed_subpackets) },
+                _unhashed_subpackets{ std::move(unhashed_subpackets) },
+                _signature_bits{ signature_bits },
+                _signature{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
+            {}
+
+            /**
              *  Retrieve the packet tag used for this
              *  packet type
              *  @return The packet type to use
