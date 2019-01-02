@@ -1,6 +1,7 @@
 #pragma once
 
 #include "basic_key.h"
+#include "basic_secret_key.h"
 #include "rsa_secret_key.h"
 #include "dsa_secret_key.h"
 #include "elgamal_secret_key.h"
@@ -16,11 +17,11 @@ namespace pgp {
     template <packet_tag key_tag>
     struct secret_key_traits
     {
-        using rsa_key_t     = rsa_secret_key;
-        using elgamal_key_t = elgamal_secret_key;
-        using dsa_key_t     = dsa_secret_key;
-        using ecdh_key_t    = ecdh_secret_key;
-        using eddsa_key_t   = eddsa_secret_key;
+        using rsa_key_t     = basic_secret_key<rsa_public_key, rsa_secret_key>;
+        using elgamal_key_t = basic_secret_key<elgamal_public_key, elgamal_secret_key>;
+        using dsa_key_t     = basic_secret_key<dsa_public_key, dsa_secret_key>;
+        using ecdh_key_t    = basic_secret_key<ecdh_public_key, ecdh_secret_key>;
+        using eddsa_key_t   = basic_secret_key<eddsa_public_key, eddsa_secret_key>;
 
         /**
          *  Packet tag for secret keys

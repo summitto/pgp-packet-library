@@ -1,30 +1,28 @@
 #pragma once
 
-#include "ecdh_public_key.h"
-#include "basic_secret_key.h"
+#include "fixed_number.h"
 
 
 namespace pgp {
 
     /**
-     *  Class for working with an ECDH secret key
+     *  Class for holding the complete string-to-key
+     *  convention used for a secret or symmetric key
      */
-    class ecdh_secret_key
+    class string_to_key
     {
         public:
+            /**
+             *  Constructor
+             */
+            string_to_key() = default;
+
             /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
              */
-            ecdh_secret_key(decoder &parser);
-
-            /**
-             *  Constructor
-             *
-             *  @param  k               The secret scalar for the public point
-             */
-            ecdh_secret_key(multiprecision_integer k) noexcept;
+            string_to_key(decoder &parser);
 
             /**
              *  Determine the size used in encoded format
@@ -33,11 +31,11 @@ namespace pgp {
             size_t size() const noexcept;
 
             /**
-             *  Retrieve the secret scalar
+             *  Retrieve the convention used
              *
-             *  @return The secret scalar for the public point
+             *  @return The string-to-key convention
              */
-            const multiprecision_integer &k() const noexcept;
+            uint8_t convention() const noexcept;
 
             /**
              *  Write the data to an encoder
@@ -47,7 +45,7 @@ namespace pgp {
              */
             void encode(encoder &writer) const;
         private:
-            multiprecision_integer  _k;         // the secret scalar for the public point
+            uint8   _convention;    // the string-to-key usage convention
     };
 
 }

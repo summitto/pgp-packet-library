@@ -8,7 +8,7 @@ namespace pgp {
     /**
      *  Class for holding an elgamal secret key
      */
-    class elgamal_secret_key : public elgamal_public_key
+    class elgamal_secret_key
     {
         public:
             /**
@@ -21,12 +21,9 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  p       The prime p
-             *  @param  g       The group generator g
-             *  @param  y       The public key value: g**x mod p
              *  @param  x       The secret exponent x
              */
-            elgamal_secret_key(multiprecision_integer p, multiprecision_integer g, multiprecision_integer y, multiprecision_integer x) noexcept;
+            elgamal_secret_key(multiprecision_integer x) noexcept;
 
             /**
              *  Determine the size used in encoded format

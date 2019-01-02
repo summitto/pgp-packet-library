@@ -6,7 +6,7 @@ namespace pgp {
     /**
      *  Class holding an RSA secret key
      */
-    class rsa_secret_key : public rsa_public_key
+    class rsa_secret_key
     {
         public:
             /**
@@ -19,14 +19,12 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  n   The public modulus n
-             *  @param  e   The encryption exponent e
              *  @param  d   The secret exponent d
              *  @param  p   The secret prime value p
              *  @param  q   The secret prime value q
              *  @param  u   The multiplicative inverse p mod q
              */
-            rsa_secret_key(multiprecision_integer n, multiprecision_integer e, multiprecision_integer d, multiprecision_integer p, multiprecision_integer q, multiprecision_integer u) noexcept;
+            rsa_secret_key(multiprecision_integer d, multiprecision_integer p, multiprecision_integer q, multiprecision_integer u) noexcept;
 
             /**
              *  Determine the size used in encoded format

@@ -9,21 +9,15 @@ namespace pgp {
      *  @param  parser  The decoder to parse the data
      */
     dsa_secret_key::dsa_secret_key(decoder &parser) :
-        dsa_public_key{ parser },
         _x{ parser }
     {}
 
     /**
      *  Constructor
      *
-     *  @param  p   The prime p
-     *  @param  q   The group order q
-     *  @param  g   The generator g
-     *  @param  y   The public key value
      *  @param  x   The secret exponent
      */
-    dsa_secret_key::dsa_secret_key(multiprecision_integer p, multiprecision_integer q, multiprecision_integer g, multiprecision_integer y, multiprecision_integer x) noexcept :
-        dsa_public_key{ std::move(p), std::move(q), std::move(g), std::move(y) },
+    dsa_secret_key::dsa_secret_key(multiprecision_integer x) noexcept :
         _x{ std::move(x) }
     {}
 
@@ -33,8 +27,8 @@ namespace pgp {
      */
     size_t dsa_secret_key::size() const noexcept
     {
-        // we need the size from the parent and to encode the secret exponent
-        return dsa_public_key::size() + _x.size();
+        // we need to encode the secret exponent
+        return _x.size();
     }
 
     /**
@@ -56,8 +50,7 @@ namespace pgp {
      */
     void dsa_secret_key::encode(encoder &writer) const
     {
-        // first encode the parent and then add the secret exponent
-        dsa_public_key::encode(writer);
+        // encode the secret exponent
         _x.encode(writer);
     }
 

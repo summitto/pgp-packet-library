@@ -40,6 +40,21 @@ namespace pgp {
             /**
              *  Assignment operator
              *
+             *  @param  parser  The parser to assign the value from
+             *  @retuen self, for chainign
+             */
+            fixed_number &operator=(decoder &parser)
+            {
+                // update value
+                _value = parser.extract_number<T>();
+
+                // allow chaining
+                return *this;
+            }
+
+            /**
+             *  Assignment operator
+             *
              *  @param  value   The value to assign
              *  @return self, for chaining
              */            
@@ -57,7 +72,7 @@ namespace pgp {
              *
              *  @return The number of bytes used for encoded storage
              */
-            static size_t size() noexcept
+            static constexpr size_t size() noexcept
             {
                 // just use the size of the value
                 return sizeof(T);

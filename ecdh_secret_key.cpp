@@ -9,7 +9,6 @@ namespace pgp {
      *  @param  parser  The decoder to parse the data
      */
     ecdh_secret_key::ecdh_secret_key(decoder &parser) :
-        ecdh_public_key{ parser },
         _k{ parser }
     {}
 
@@ -22,8 +21,7 @@ namespace pgp {
      *  @param  algorithm       The symmetric alforithm for wrapping the symmetric key
      *  @param  k               The secret scalar for the public point
      */
-    ecdh_secret_key::ecdh_secret_key(curve_oid curve, multiprecision_integer Q, uint8_t hash_function, uint8_t algorithm, multiprecision_integer k) noexcept :
-        ecdh_public_key{ std::move(curve), std::move(Q), hash_function, algorithm },
+    ecdh_secret_key::ecdh_secret_key(multiprecision_integer k) noexcept :
         _k{ std::move(k) }
     {}
 
@@ -33,8 +31,8 @@ namespace pgp {
      */
     size_t ecdh_secret_key::size() const noexcept
     {
-        // we need the size of the parent plus the size for the secret key
-        return ecdh_public_key::size() + _k.size();
+        // we need to store the secret scalar
+        return _k.size();
     }
 
     /**
@@ -56,8 +54,7 @@ namespace pgp {
      */
     void ecdh_secret_key::encode(encoder &writer) const
     {
-        // first encode the parent, then add the secret key k
-        ecdh_public_key::encode(writer);
+        // encode the secret scalar
         _k.encode(writer);
     }
 

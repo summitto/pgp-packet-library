@@ -142,6 +142,17 @@ namespace pgp {
             }
 
             /**
+             *  Retrieve the key-specific data
+             *
+             *  @return The variant with the specifics
+             */
+            const key_variant &key() const noexcept
+            {
+                // return the stored key
+                return _key;
+            }
+
+            /**
              *  Write the data to an encoder
              *
              *  @param  writer  The encoder to write to

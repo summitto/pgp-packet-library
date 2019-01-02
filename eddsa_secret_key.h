@@ -8,7 +8,7 @@ namespace pgp {
     /**
      *  Class for working with an EdDSA secret key
      */
-    class eddsa_secret_key : public eddsa_public_key
+    class eddsa_secret_key
     {
         public:
             /**
@@ -21,11 +21,9 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  curve   The curve object identifier
-             *  @param  Q       The public curve point Q
-             *  @param  k       The secret scalar for the public point
+             *  @param  k           The secret scalar for the public point
              */
-            eddsa_secret_key(curve_oid curve, multiprecision_integer Q, multiprecision_integer k) noexcept;
+            eddsa_secret_key(multiprecision_integer k) noexcept;
 
             /**
              *  Determine the size used in encoded format

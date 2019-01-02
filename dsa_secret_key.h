@@ -6,7 +6,7 @@ namespace pgp {
     /**
      *  Class holding a DSA secret key
      */
-    class dsa_secret_key : public dsa_public_key
+    class dsa_secret_key
     {
         public:
             /**
@@ -19,13 +19,9 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  p   The prime p
-             *  @param  q   The group order q
-             *  @param  g   The generator g
-             *  @param  y   The public key value
              *  @param  x   The secret exponent
              */
-            dsa_secret_key(multiprecision_integer p, multiprecision_integer q, multiprecision_integer g, multiprecision_integer y, multiprecision_integer x) noexcept;
+            dsa_secret_key(multiprecision_integer x) noexcept;
 
             /**
              *  Determine the size used in encoded format

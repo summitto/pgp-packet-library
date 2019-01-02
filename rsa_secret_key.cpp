@@ -9,7 +9,6 @@ namespace pgp {
      *  @param  parser  The decoder to parse the data
      */
     rsa_secret_key::rsa_secret_key(decoder &parser) :
-        rsa_public_key{ parser },
         _d{ parser },
         _p{ parser },
         _q{ parser },
@@ -19,15 +18,12 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  n   The public modulus n
-     *  @param  e   The encryption exponent e
      *  @param  d   The secret exponent d
      *  @param  p   The secret prime value p
      *  @param  q   The secret prime value q
      *  @param  u   The multiplicative inverse p mod q
      */
-    rsa_secret_key::rsa_secret_key(multiprecision_integer n, multiprecision_integer e, multiprecision_integer d, multiprecision_integer p, multiprecision_integer q, multiprecision_integer u) noexcept :
-        rsa_public_key{ std::move(n), std::move(e) },
+    rsa_secret_key::rsa_secret_key(multiprecision_integer d, multiprecision_integer p, multiprecision_integer q, multiprecision_integer u) noexcept :
         _d{ std::move(d) },
         _p{ std::move(p) },
         _q{ std::move(q) },
@@ -40,8 +36,8 @@ namespace pgp {
      */
     size_t rsa_secret_key::size() const noexcept
     {
-        // we need the size of the parent plus the size of the secret components
-        return rsa_public_key::size() + _d.size() + _p.size() + _q.size() + _u.size();
+        // we need the size of secret components
+        return _d.size() + _p.size() + _q.size() + _u.size();
     }
 
     /**
@@ -96,8 +92,7 @@ namespace pgp {
      */
     void rsa_secret_key::encode(encoder &writer) const
     {
-        // encode parent first and then add all the secret fields
-        rsa_public_key::encode(writer);
+        // encode all the secret fields
         _d.encode(writer);
         _p.encode(writer);
         _q.encode(writer);
