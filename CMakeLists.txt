@@ -5,6 +5,8 @@ project(pgp-packet-library
     LANGUAGES   CXX
 )
 
+find_package(Boost REQUIRED)
+
 set(pgp-packet-headers
     basic_key.h
     dsa_signature.h
@@ -73,6 +75,8 @@ set(pgp-packet-sources
 )
 
 add_library(pgp-packet ${pgp-packet-sources})
+
+target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>
