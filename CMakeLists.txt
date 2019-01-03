@@ -1,11 +1,51 @@
-cmake_minimum_required(VERSION 2.8.2)
-project(rfc4480)
+cmake_minimum_required(VERSION 3.0.2)
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/GSL/include")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/variant/include")
+project(pgp-packet-library
+    VERSION     0.1.1
+    LANGUAGES   CXX
+)
 
-add_executable(dump
-    main.cpp
+set(pgp-packet-headers
+    basic_key.h
+    dsa_signature.h
+    elgamal_public_key.h
+    hash_algorithm.h
+    signature_subpacket.h
+    unknown_packet.h
+    basic_secret_key.h
+    ecdh_public_key.h
+    elgamal_secret_key.h
+    key_algorithm.h
+    rsa_public_key.h
+    signature_subpacket_set.h
+    user_id.h
+    curve_oid.h
+    ecdh_secret_key.h
+    encoder.h
+    multiprecision_integer.h
+    rsa_secret_key.h
+    signature_subpacket_type.h
+    variable_number.h
+    decoder.h
+    eddsa_public_key.h
+    packet.h
+    rsa_signature.h
+    signature_type.h
+    dsa_public_key.h
+    eddsa_secret_key.h
+    expected_number.h
+    packet_tag.h
+    secret_key.h
+    string_to_key.h
+    dsa_secret_key.h
+    eddsa_signature.h
+    fixed_number.h
+    public_key.h
+    signature.h
+    unknown_key.h
+)
+
+set(pgp-packet-sources
     decoder.cpp
     encoder.cpp
     packet.cpp
@@ -32,4 +72,65 @@ add_executable(dump
     signature_subpacket_set.cpp
 )
 
-set_property(TARGET dump PROPERTY CXX_STANDARD 17)
+add_library(pgp-packet ${pgp-packet-sources})
+
+target_include_directories(pgp-packet PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>
+    $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
+)
+
+target_include_directories(pgp-packet PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/variant/include>
+    $<INSTALL_INTERFACE:include/pgp-packet/variant/include>
+)
+
+set_property(TARGET pgp-packet PROPERTY CXX_STANDARD 17)
+
+install(
+    TARGETS     pgp-packet
+    EXPORT      pgp-packet-targets
+    DESTINATION lib
+)
+
+install(
+    EXPORT      pgp-packet-targets
+    DESTINATION lib/cmake/pgp-packet
+)
+
+install(
+    FILES       ${pgp-packet-headers}
+    DESTINATION include/pgp-packet
+)
+
+install(
+    DIRECTORY
+        GSL
+        util
+        variant
+    DESTINATION include/pgp-packet
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/pgp-packet/pgp-packet-config-version.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+export(
+    EXPORT pgp-packet-targets
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/pgp-packet/pgp-packet-targets.cmake"
+)
+
+configure_file(cmake/pgp-packet-config.cmake
+    "${CMAKE_CURRENT_BINARY_DIR}/pgp-packet/pgp-packet-config.cmake"
+    COPYONLY
+)
+
+install(
+    FILES
+        cmake/pgp-packet-config.cmake
+        "${CMAKE_CURRENT_BINARY_DIR}/pgp-packet/pgp-packet-config-version.cmake"
+    DESTINATION
+        lib/cmake/pgp-packet
+)
