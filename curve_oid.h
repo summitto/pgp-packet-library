@@ -51,6 +51,13 @@ namespace pgp {
             curve_oid(gsl::span<const uint8_t> data) noexcept;
 
             /**
+             *  Constructor
+             *
+             *  @param  data    The range of numbers
+             */
+            curve_oid(std::initializer_list<const uint8_t> data) noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

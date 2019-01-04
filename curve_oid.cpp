@@ -34,6 +34,15 @@ namespace pgp {
     {}
 
     /**
+     *  Constructor
+     *
+     *  @param  data    The range of numbers
+     */
+    curve_oid::curve_oid(std::initializer_list<const uint8_t> data) noexcept :
+        _data{ data.begin(), data.end() }
+    {}
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
