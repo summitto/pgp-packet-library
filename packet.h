@@ -64,8 +64,8 @@ namespace pgp {
             /**
              *  Retrieve the body length
              *
-             *  @note   If the body length is unknown, no size will be returned
-             *  @return The number of bytes in the body of the packet
+             *  Determine the size used in encoded format
+             *  @return The number of bytes used for encoded storage
              */
             size_t size() const;
 

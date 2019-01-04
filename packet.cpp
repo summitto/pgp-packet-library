@@ -95,13 +95,13 @@ namespace pgp {
     /**
      *  Retrieve the body length
      *
-     *  @note   If the body length is unknown, no size will be returned
-     *  @return The number of bytes in the body of the packet
+     *  Determine the size used in encoded format
+     *  @return The number of bytes used for encoded storage
      */
     size_t packet::size() const
     {
         // the body size to return
-        size_t result;
+        uint32_t result;
 
         // retrieve the body
         mpark::visit([&result](auto &body) {
@@ -109,8 +109,27 @@ namespace pgp {
             result = body.size();
         }, _body);
 
-        // return the retrieved size
-        return result;
+        // is the packet compatible with the old format?
+        if (packet_tag_compatible_with_old_format(tag())) {
+            // determine the storage type used
+            if (result > 65535) {
+                // we need four bytes for the body length, plus
+                // an additional byte for storing the packet tag
+                return result + 1 + 4;
+            } else if (result > 255) {
+                // we need two bytes for the body length, plus an
+                // additional byte for storing the packet tag
+                return result + 1 + 2;
+            } else {
+                // we need a single byte for the body length, plus
+                // an additional byte for storing the packet tag
+                return result + 1 + 1;
+            }
+        } else {
+            // we need one byte for the tag and a variable number
+            // to store the length of the body data
+            return result + 1 + variable_number{ result }.size();
+        }
     }
 
     /**
@@ -135,6 +154,15 @@ namespace pgp {
         // write the required bit
         writer.insert_bits(1, 1);
 
+        // retrieve the size of the body - we need to encode this in the header
+        uint32_t size;
+
+        // retrieve the body
+        mpark::visit([&size](auto &body) {
+            // retrieve the size from the body
+            size = body.size();
+        }, _body);
+
         // can we encode the packet in the old format?
         if (packet_tag_compatible_with_old_format(tag())) {
             // we are using the old packet format
@@ -142,18 +170,18 @@ namespace pgp {
             writer.insert_bits(4, static_cast<typename std::underlying_type_t<packet_tag>>(tag()));
 
             // do we know the size? determine the right storage type
-            if (size() > 65535) {
+            if (size > 65535) {
                 // we are using a 4-octet length field
                 writer.insert_bits(2, 2);
-                writer.insert_number(static_cast<uint32_t>(size()));
-            } else if (size() > 255) {
+                writer.insert_number(static_cast<uint32_t>(size));
+            } else if (size > 255) {
                 // we are using a 2-octet length field
                 writer.insert_bits(2, 1);
-                writer.insert_number(static_cast<uint16_t>(size()));
+                writer.insert_number(static_cast<uint16_t>(size));
             } else {
                 // it fits in a single octet
                 writer.insert_bits(2, 0);
-                writer.insert_number(static_cast<uint8_t>(size()));
+                writer.insert_number(static_cast<uint8_t>(size));
             }
         } else {
             // we are using the new packet format
@@ -161,7 +189,7 @@ namespace pgp {
             writer.insert_bits(6, static_cast<typename std::underlying_type_t<packet_tag>>(tag()));
 
             // add the size of the packet as well
-            variable_number{ static_cast<uint32_t>(size()) }.encode(writer);
+            variable_number{ static_cast<uint32_t>(size) }.encode(writer);
         }
 
         // now retrieve the body
