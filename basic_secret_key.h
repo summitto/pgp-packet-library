@@ -4,6 +4,8 @@
 #include "util/tuple.h"
 #include <numeric>
 
+#include <iostream>
+
 
 namespace pgp {
 
@@ -55,7 +57,7 @@ namespace pgp {
                 secret_key_t{ util::make_from_tuple<secret_key_t>(std::forward<secret_arguments>(secret_tuple)) }
             {
                 // data buffer to store the encoded data
-                std::vector<uint8_t>    data    { secret_key_t::size()  };
+                std::vector<uint8_t>    data    ( secret_key_t::size()  );
                 encoder                 writer  { data                  };
 
                 // encode the secret key data
