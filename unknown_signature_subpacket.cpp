@@ -1,4 +1,4 @@
-#include "signature_subpacket.h"
+#include "unknown_signature_subpacket.h"
 #include "variable_number.h"
 
 
@@ -7,29 +7,21 @@ namespace pgp {
     /**
      *  Constructor
      *
+     *  @param  type    The subpacket type
      *  @param  parser  The decoder to parse the data
      */
-    signature_subpacket::signature_subpacket(decoder &parser)
+    unknown_signature_subpacket::unknown_signature_subpacket(signature_subpacket_type type, decoder &parser) :
+        _type{ type }
     {
-        // first, read the size of the subpacket
-        uint32_t length = variable_number{ parser };
-
-        // now read the subpacket type
-        _type = signature_subpacket_type{ parser.extract_number<uint8_t>() };
-
-        // the length includes the type - which we already read
-        --length;
-
         // reserve memory for the data
-        _data.reserve(length);
+        _data.reserve(parser.size());
 
         // and fill the buffer
-        while (_data.size() < length) {
+        while (!parser.empty()) {
             // add another byte
             _data.push_back(parser.extract_number<uint8_t>());
         }
     }
-        
 
     /**
      *  Constructor
@@ -37,7 +29,7 @@ namespace pgp {
      *  @param  type    The signature subpacket type
      *  @param  data    The data contained in the subpacket
      */
-    signature_subpacket::signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data) :
+    unknown_signature_subpacket::unknown_signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data) :
         _type{ type },
         _data{ data.begin(), data.end() }
     {}
@@ -46,7 +38,7 @@ namespace pgp {
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
-    size_t signature_subpacket::size() const noexcept
+    size_t unknown_signature_subpacket::size() const noexcept
     {
         // we need to encode the type and the data and encode that
         // size again using variable-length packet encoding
@@ -60,7 +52,7 @@ namespace pgp {
      *  Get the signature subpacket type
      *  @return The type of signature subpacket
      */
-    signature_subpacket_type signature_subpacket::type() const noexcept
+    signature_subpacket_type unknown_signature_subpacket::type() const noexcept
     {
         // return the stored type
         return _type;
@@ -70,7 +62,7 @@ namespace pgp {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> signature_subpacket::data() const noexcept
+    gsl::span<const uint8_t> unknown_signature_subpacket::data() const noexcept
     {
         // return the stored data
         return _data;
@@ -82,7 +74,7 @@ namespace pgp {
      *  @param  writer  The encoder to write to
      *  @throws std::out_of_range, std::range_error
      */
-    void signature_subpacket::encode(encoder &writer) const
+    void unknown_signature_subpacket::encode(encoder &writer) const
     {
         // first encode the length of the subpacket
         variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.encode(writer);

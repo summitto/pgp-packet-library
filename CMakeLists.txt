@@ -12,8 +12,8 @@ set(pgp-packet-headers
     dsa_signature.h
     elgamal_public_key.h
     hash_algorithm.h
-    signature_subpacket.h
     unknown_packet.h
+    unknown_signature_subpacket.h
     basic_secret_key.h
     ecdh_public_key.h
     elgamal_secret_key.h
@@ -25,6 +25,7 @@ set(pgp-packet-headers
     ecdh_secret_key.h
     encoder.h
     multiprecision_integer.h
+    numeric_signature_subpacket.h
     rsa_secret_key.h
     signature_subpacket_type.h
     variable_number.h
@@ -69,9 +70,9 @@ set(pgp-packet-sources
     eddsa_secret_key.cpp
     elgamal_public_key.cpp
     elgamal_secret_key.cpp
-    signature_subpacket.cpp
     multiprecision_integer.cpp
     signature_subpacket_set.cpp
+    unknown_signature_subpacket.cpp
 )
 
 add_library(pgp-packet ${pgp-packet-sources})

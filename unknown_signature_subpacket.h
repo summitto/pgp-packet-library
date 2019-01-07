@@ -9,17 +9,18 @@
 namespace pgp {
 
     /**
-     *  Class holding a single subpacket
+     *  Class holding a single subpacket of unknown type
      */
-    class signature_subpacket
+    class unknown_signature_subpacket
     {
         public:
             /**
              *  Constructor
              *
+             *  @param  type    The subpacket type
              *  @param  parser  The decoder to parse the data
              */
-            signature_subpacket(decoder &parser);
+            unknown_signature_subpacket(signature_subpacket_type type, decoder &parser);
 
             /**
              *  Constructor
@@ -27,7 +28,7 @@ namespace pgp {
              *  @param  type    The signature subpacket type
              *  @param  data    The data contained in the subpacket
              */
-            signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data);
+            unknown_signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data);
 
             /**
              *  Determine the size used in encoded format
