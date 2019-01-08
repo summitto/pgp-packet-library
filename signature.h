@@ -12,7 +12,6 @@
 #include "fixed_number.h"
 #include "packet_tag.h"
 #include "decoder.h"
-#include "encoder.h"
 
 
 namespace pgp {
@@ -136,7 +135,24 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // encode all the fields of the signature
+                _version.encode(writer);
+                writer.push(_type);
+                writer.push(_key_algorithm);
+                writer.push(_hash_algorithm);
+                _hashed_subpackets.encode(writer);
+                _unhashed_subpackets.encode(writer);
+                _signature_bits.encode(writer);
+
+                // retrieve the signature itself
+                mpark::visit([&writer](auto &signature) {
+                    // encode the signature
+                    signature.encode(writer);
+                }, _signature);
+            }
         private:
             expected_number<uint8_t, 4>         _version;               // the expected signature version format
             signature_type                      _type;                  // the signature type used

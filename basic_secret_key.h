@@ -1,5 +1,6 @@
 #pragma once
 
+#include "range_encoder.h"
 #include "string_to_key.h"
 #include "util/tuple.h"
 #include <numeric>
@@ -58,7 +59,7 @@ namespace pgp {
             {
                 // data buffer to store the encoded data
                 std::vector<uint8_t>    data    ( secret_key_t::size()  );
-                encoder                 writer  { data                  };
+                range_encoder           writer  { data                  };
 
                 // encode the secret key data
                 secret_key_t::encode(writer);
@@ -86,7 +87,8 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
             {
                 // encode all the fields
                 public_key_t::encode(writer);

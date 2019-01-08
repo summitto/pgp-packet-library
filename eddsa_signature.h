@@ -52,7 +52,13 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // encode both values
+                _r.encode(writer);
+                _s.encode(writer);
+            }
         private:
             multiprecision_integer  _r;     // the EdDSA r value
             multiprecision_integer  _s;     // the EdDSA s value

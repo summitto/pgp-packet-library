@@ -80,22 +80,4 @@ namespace pgp {
         return _data;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void multiprecision_integer::encode(encoder &writer) const
-    {
-        // write out the number of elements first
-        _bits.encode(writer);
-
-        // now write out all the elements
-        for (auto number : _data) {
-            // add the number
-            writer.insert_number(number);
-        }
-    }
-
 }

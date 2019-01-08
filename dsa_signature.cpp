@@ -56,17 +56,4 @@ namespace pgp {
         return _s;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void dsa_signature::encode(encoder &writer) const
-    {
-        // encode both values
-        _r.encode(writer);
-        _s.encode(writer);
-    }
-
 }

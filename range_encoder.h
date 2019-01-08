@@ -11,8 +11,9 @@ namespace pgp {
 
     /**
      *  Class for encoding packet data
+     *  into a pre-allocated range of bytes
      */
-    class encoder
+    class range_encoder
     {
         public:
             /**
@@ -20,7 +21,7 @@ namespace pgp {
              *
              *  @param  data    The range to encode to
              */
-            encoder(gsl::span<uint8_t> data);
+            range_encoder(gsl::span<uint8_t> data);
 
             /**
              *  Flush the encoder, so any partial-written bytes
@@ -45,17 +46,18 @@ namespace pgp {
              *  @return self, for chaining
              *  @throws std::out_of_range, std::range_error
              */
-            encoder &insert_bits(size_t count, uint8_t value);
+            range_encoder &insert_bits(size_t count, uint8_t value);
 
             /**
-             *  Insert a number
+             *  Push a number to the encoder
              *
-             *  @param  value   The number to insert
+             *  @param  value   The number to push
              *  @return self, for chaining
              *  @throws std::out_of_range, std::range_error
              */
             template <typename T>
-            encoder &insert_number(T value)
+            typename std::enable_if_t<std::numeric_limits<T>::is_integer, range_encoder&>
+            push(T value)
             {
                 // make sure we have enough data for inserting the number
                 if (_data.size() < _size + sizeof(T)) {
@@ -97,10 +99,11 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <typename T>
-            encoder &insert_enum(T value)
+            typename std::enable_if_t<std::is_enum<T>::value, range_encoder&>
+            push(T value)
             {
                 // cast it to a number and insert it
-                return insert_number(static_cast<typename std::underlying_type_t<T>>(value));
+                return push(static_cast<typename std::underlying_type_t<T>>(value));
             }
 
             /**
@@ -111,7 +114,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <typename T>
-            encoder &insert_blob(gsl::span<const T> value)
+            range_encoder &insert_blob(gsl::span<const T> value)
             {
                 // make sure we have enough data for inserting the number
                 if (_data.size() < _size + sizeof(T) * value.size()) {

@@ -52,16 +52,4 @@ namespace pgp {
         return _id;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void user_id::encode(encoder &writer) const
-    {
-        // insert the id into the encoder
-        writer.insert_blob<char>(_id);
-    }
-
 }

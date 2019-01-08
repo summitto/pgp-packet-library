@@ -224,12 +224,13 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
             {
                 // write out all the components of the key
                 _version.encode(writer);
                 _creation_time.encode(writer);
-                writer.insert_enum(_algorithm);
+                writer.push(_algorithm);
 
                 // retrieve the key
                 mpark::visit([&writer](auto &key) {

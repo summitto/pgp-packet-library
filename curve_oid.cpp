@@ -62,22 +62,4 @@ namespace pgp {
         return _data;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void curve_oid::encode(encoder &writer) const
-    {
-        // write out the number of elements first
-        writer.insert_number(static_cast<uint8_t>(_data.size()));
-
-        // now add all the elements
-        for (auto number : _data) {
-            // add the number
-            writer.insert_number(number);
-        }
-    }
-
 }

@@ -78,15 +78,34 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
             {
                 // first get the size for the data itself
                 uint32_t size = _data.size() + sizeof(subpacket_type);
 
                 // encode the size, the type, and the number
                 variable_number{ size }.encode(writer);
-                writer.insert_enum(subpacket_type);
+                writer.push(subpacket_type);
                 _data.encode(writer);
+            }
+
+            /**
+             *  Push the value to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // first get the size for the data itself and the subpacket type
+                uint32_t size = _data.size() + sizeof(subpacket_type);
+                auto type = subpacket_type;
+
+                // encode the size, the type, and the number
+                variable_number{ size }.hash(hasher);
+                hasher.Update(reinterpret_cast<const uint8_t*>(&type), sizeof(type));
+                _data.hash(hasher);
             }
         private:
             fixed_number<T> _data;  // the actual number we store

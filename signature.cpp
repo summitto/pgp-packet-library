@@ -137,28 +137,4 @@ namespace pgp {
         return _signature;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void signature::encode(encoder &writer) const
-    {
-        // encode all the fields of the signature
-        _version.encode(writer);
-        writer.insert_enum(_type);
-        writer.insert_enum(_key_algorithm);
-        writer.insert_enum(_hash_algorithm);
-        _hashed_subpackets.encode(writer);
-        _unhashed_subpackets.encode(writer);
-        _signature_bits.encode(writer);
-
-        // retrieve the signature itself
-        mpark::visit([&writer](auto &signature) {
-            // encode the signature
-            signature.encode(writer);
-        }, _signature);
-    }
-
 }

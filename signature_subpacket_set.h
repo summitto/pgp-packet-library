@@ -84,7 +84,48 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // the size of the packet - but without the size of the header itself
+                uint16_t data_size = size() - uint16::size();
+
+                // add the size header
+                uint16{ data_size }.encode(writer);
+
+                // iterate over the subpackets
+                for (auto &subpacket : _subpackets) {
+                    // retrieve the specific type
+                    mpark::visit([&writer](auto &&subpacket) {
+                        // encode the subpacket as well
+                        subpacket.encode(writer);
+                    }, subpacket);
+                }
+            }
+
+            /**
+             *  Push the value to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // the size of the packet - but without the size of the header itself
+                uint16_t data_size = size() - uint16::size();
+
+                // add the size header
+                uint16{ data_size }.hash(hasher);
+
+                // iterate over the subpackets
+                for (auto &subpacket : _subpackets) {
+                    // retrieve the specific type
+                    mpark::visit([&hasher](auto &&subpacket) {
+                        // encode the subpacket as well
+                        subpacket.hash(hasher);
+                    }, subpacket);
+                }
+            }
         private:
             std::vector<subpacket_variant>  _subpackets;    // the subpackets in the set
     };

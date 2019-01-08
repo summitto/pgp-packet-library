@@ -86,21 +86,4 @@ namespace pgp {
         return _algorithm;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void ecdh_public_key::encode(encoder &writer) const
-    {
-        // add all the parts to the writer
-        _curve.encode(writer);
-        _Q.encode(writer);
-        _kdf_size.encode(writer);
-        _reserved.encode(writer);
-        _hash_function.encode(writer);
-        _algorithm.encode(writer);
-    }
-
 }

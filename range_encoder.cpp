@@ -1,4 +1,4 @@
-#include "encoder.h"
+#include "range_encoder.h"
 
 
 namespace pgp {
@@ -8,7 +8,7 @@ namespace pgp {
      *
      *  @param  data    The range to encode to
      */
-    encoder::encoder(gsl::span<uint8_t> data) :
+    range_encoder::range_encoder(gsl::span<uint8_t> data) :
         _data{ data }
     {}
 
@@ -19,7 +19,7 @@ namespace pgp {
      *
      *  @throws std::out_of_range
      */
-    void encoder::flush()
+    void range_encoder::flush()
     {
         // do we have any partially-filled bytes?
         if (_skip_bits > 0) {
@@ -37,7 +37,7 @@ namespace pgp {
      *  Retrieve the number of encoded bytes
      *  @return The number of bytes stored in the encoder
      */
-    size_t encoder::size() const noexcept
+    size_t range_encoder::size() const noexcept
     {
         // return the stored size
         return _size;
@@ -51,7 +51,7 @@ namespace pgp {
      *  @return self, for chaining
      *  @throws std::out_of_range, std::range_error
      */
-    encoder &encoder::insert_bits(size_t count, uint8_t value)
+    range_encoder &range_encoder::insert_bits(size_t count, uint8_t value)
     {
         // check whether the number fits within the given bit-size
         if (value > (1 << count) - 1) {

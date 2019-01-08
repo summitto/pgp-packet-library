@@ -67,7 +67,18 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // write out the number of elements first
+                _bits.encode(writer);
+
+                // now write out all the elements
+                for (auto number : _data) {
+                    // add the number
+                    writer.push(number);
+                }
+            }
 
             /**
              *  Push the key to the hasher

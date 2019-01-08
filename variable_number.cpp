@@ -82,26 +82,4 @@ namespace pgp {
         return _value;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void variable_number::encode(encoder &writer) const
-    {
-        // encoding depends on the value
-        if (_value < 192) {
-            // directly encode the number
-            writer.insert_number<uint8_t>(_value);
-        } else if (_value < 8384) {
-            // enable the two most significant bits and remove
-            // 192 from the number according to rfc 4480
-            writer.insert_number<uint16_t>(0b1100000000000000 | (_value - 192));
-        } else {
-            // write the number to the encoder
-            writer.insert_number<uint32_t>(_value);
-        }
-    }
-
 }

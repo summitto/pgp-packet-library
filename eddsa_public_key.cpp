@@ -56,17 +56,4 @@ namespace pgp {
         return _Q;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void eddsa_public_key::encode(encoder &writer) const
-    {
-        // encode the curve id and public point
-        _curve.encode(writer);
-        _Q.encode(writer);
-    }
-
 }

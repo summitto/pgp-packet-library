@@ -26,7 +26,6 @@ set(pgp-packet-headers
     user_id.h
     curve_oid.h
     ecdh_secret_key.h
-    encoder.h
     multiprecision_integer.h
     numeric_signature_subpacket.h
     rsa_secret_key.h
@@ -35,6 +34,7 @@ set(pgp-packet-headers
     decoder.h
     eddsa_public_key.h
     packet.h
+    range_encoder.h
     rsa_signature.h
     signature_type.h
     dsa_public_key.h
@@ -53,12 +53,12 @@ set(pgp-packet-headers
 
 set(pgp-packet-sources
     decoder.cpp
-    encoder.cpp
     packet.cpp
     user_id.cpp
     curve_oid.cpp
     signature.cpp
     string_to_key.cpp
+    range_encoder.cpp
     rsa_signature.cpp
     dsa_signature.cpp
     rsa_public_key.cpp

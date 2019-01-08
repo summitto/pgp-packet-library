@@ -1,6 +1,6 @@
 #include "packet_tag.h"
-#include "decoder.h"
-#include "encoder.h"
+#include "expected_number.h"
+#include "fixed_number.h"
 #include <string>
 
 
@@ -64,7 +64,29 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // insert the id into the encoder
+                writer.insert_blob(gsl::span<const char>{ _id });
+            }
+
+            /**
+             *  Push the key to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // the magic constant to use for key user id hashing
+                static constexpr const expected_number<uint8_t, 0xB4> hash_magic;
+
+                // hash the size of the packet and the data itself
+                hash_magic.hash(hasher);
+                uint32{ static_cast<uint32_t>(_id.size()) }.hash(hasher);
+                hasher.Update(reinterpret_cast<const uint8_t*>(_id.data()), _id.size());
+            }
         private:
             std::string     _id;    // the user id representation
     };

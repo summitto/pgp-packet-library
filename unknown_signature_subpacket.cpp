@@ -1,5 +1,4 @@
 #include "unknown_signature_subpacket.h"
-#include "variable_number.h"
 
 
 namespace pgp {
@@ -66,27 +65,6 @@ namespace pgp {
     {
         // return the stored data
         return _data;
-    }
-
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void unknown_signature_subpacket::encode(encoder &writer) const
-    {
-        // first encode the length of the subpacket
-        variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.encode(writer);
-
-        // add the subpacket type
-        writer.insert_enum(_type);
-
-        // now go over the whole data set
-        for (auto number : _data) {
-            // add the number
-            writer.insert_number<uint8_t>(number);
-        }
     }
 
 }

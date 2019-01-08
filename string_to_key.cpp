@@ -35,16 +35,4 @@ namespace pgp {
         return _convention;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void string_to_key::encode(encoder &writer) const
-    {
-        // encode the convention
-        _convention.encode(writer);
-    }
-
 }

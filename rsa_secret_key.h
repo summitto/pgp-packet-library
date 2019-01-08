@@ -66,7 +66,15 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // encode all the secret fields
+                _d.encode(writer);
+                _p.encode(writer);
+                _q.encode(writer);
+                _u.encode(writer);
+            }
         private:
              multiprecision_integer     _d;     // the secret exponent d
              multiprecision_integer     _p;     // the secret prime value p

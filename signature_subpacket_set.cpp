@@ -109,28 +109,4 @@ namespace pgp {
         return _subpackets;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void signature_subpacket_set::encode(encoder &writer) const
-    {
-        // the size of the packet - but without the size of the header itself
-        uint16_t data_size = size() - uint16::size();
-
-        // add the size header
-        uint16{ data_size }.encode(writer);
-
-        // iterate over the subpackets
-        for (auto &subpacket : _subpackets) {
-            // retrieve the specific type
-            mpark::visit([&writer](auto &&subpacket) {
-                // encode the subpacket as well
-                subpacket.encode(writer);
-            }, subpacket);
-        }
-    }
-
 }

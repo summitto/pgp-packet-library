@@ -1,8 +1,7 @@
 #pragma once
 
 #include "signature_subpacket_type.h"
-#include "decoder.h"
-#include "encoder.h"
+#include "variable_number.h"
 #include <vector>
 
 
@@ -54,7 +53,37 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // first encode the length of the subpacket
+                variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.encode(writer);
+
+                // add the subpacket type
+                writer.push(_type);
+
+                // now go over the whole data set
+                for (auto number : _data) {
+                    // add the number
+                    writer.push(number);
+                }
+            }
+
+            /**
+             *  Push the value to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // first encode the length of the subpacket
+                variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.hash(hasher);
+
+                // add the subpacket type and the data
+                hasher.Update(reinterpret_cast<const uint8_t*>(&_type), sizeof(_type));
+                hasher.Update(_data.data(), _data.size());
+            }
         private:
             signature_subpacket_type    _type;
             std::vector<uint8_t>        _data;

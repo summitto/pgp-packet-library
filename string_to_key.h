@@ -43,7 +43,12 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const;
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
+            {
+                // encode the convention
+                _convention.encode(writer);
+            }
         private:
             uint8   _convention;    // the string-to-key usage convention
     };

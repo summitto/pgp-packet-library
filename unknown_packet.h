@@ -1,6 +1,5 @@
 #include "packet_tag.h"
 #include "decoder.h"
-#include "encoder.h"
 
 
 namespace pgp {
@@ -52,7 +51,8 @@ namespace pgp {
              *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
-            void encode(encoder &writer) const
+            template <class encoder_t>
+            void encode(encoder_t &writer) const
             {
                 // unknown packets cannot be encoded
                 throw std::runtime_error{ "Failed to encode unknown packet" };

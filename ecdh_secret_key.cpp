@@ -46,16 +46,4 @@ namespace pgp {
         return _k;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void ecdh_secret_key::encode(encoder &writer) const
-    {
-        // encode the secret scalar
-        _k.encode(writer);
-    }
-
 }

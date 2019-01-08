@@ -70,18 +70,4 @@ namespace pgp {
         return _y;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void elgamal_public_key::encode(encoder &writer) const
-    {
-        // encode all the components
-        _p.encode(writer);
-        _g.encode(writer);
-        _y.encode(writer);
-    }
-
 }

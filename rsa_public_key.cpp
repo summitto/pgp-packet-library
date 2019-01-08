@@ -56,17 +56,4 @@ namespace pgp {
         return _e;
     }
 
-    /**
-     *  Write the data to an encoder
-     *
-     *  @param  writer  The encoder to write to
-     *  @throws std::out_of_range, std::range_error
-     */
-    void rsa_public_key::encode(encoder &writer) const
-    {
-        // encode the modulus and the exponent
-        _n.encode(writer);
-        _e.encode(writer);
-    }
-
 }
