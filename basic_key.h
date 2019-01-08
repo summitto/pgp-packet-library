@@ -119,14 +119,14 @@ namespace pgp {
              */
             std::array<uint8_t, 8> fingerprint() const noexcept
             {
+                // the hashing context to create the fingerprint
+                CryptoPP::SHA hasher;
+
                 // the magic constant to use for key fingerprints
                 static constexpr const expected_number<uint8_t, 0x99> fingerprint_magic;
 
-                // the hashing context to create the fingerprint
-                CryptoPP::SHA hash;
-
                 // retrieve the key
-                mpark::visit([this, &hash](auto &&key) {
+                mpark::visit([this, &hasher](auto &&key) {
                     // determine key type
                     using key_type_t    = std::decay_t<decltype(key)>;
                     using public_type_t = typename key_type_t::public_key_t;
@@ -141,14 +141,14 @@ namespace pgp {
                     };
 
                     // add magic constant and base fields
-                    fingerprint_magic.hash(hash);
-                    size.hash(hash);
-                    _version.hash(hash);
-                    _creation_time.hash(hash);
-                    hash.Update(reinterpret_cast<const uint8_t*>(&_algorithm), sizeof _algorithm);
+                    fingerprint_magic.hash(hasher);
+                    size.hash(hasher);
+                    _version.hash(hasher);
+                    _creation_time.hash(hasher);
+                    hasher.Update(reinterpret_cast<const uint8_t*>(&_algorithm), sizeof _algorithm);
 
                     // // also hash the key data
-                    key.hash(hash);
+                    key.hash(hasher);
                 }, _key);
 
                 // the container for the digest and the result container
@@ -156,7 +156,7 @@ namespace pgp {
                 std::array<uint8_t, 8>  result;
 
                 // finalize the hashing
-                hash.Final(data.data());
+                hasher.Final(data.data());
 
                 // copy the last 8 bytes over
                 std::copy(data.begin() + 12, data.end(), result.begin());
