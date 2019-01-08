@@ -113,15 +113,13 @@ namespace pgp {
             }
 
             /**
-             *  Retrieve the fingerprint for this key
+             *  Hash the key into a given hash context
              *
-             *  @return The 8-byte fingerprint
+             *  @param  hasher  The hasher to update
              */
-            std::array<uint8_t, 8> fingerprint() const noexcept
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
             {
-                // the hashing context to create the fingerprint
-                CryptoPP::SHA hasher;
-
                 // the magic constant to use for key fingerprints
                 static constexpr const expected_number<uint8_t, 0x99> fingerprint_magic;
 
@@ -150,6 +148,20 @@ namespace pgp {
                     // // also hash the key data
                     key.hash(hasher);
                 }, _key);
+            }
+
+            /**
+             *  Retrieve the fingerprint for this key
+             *
+             *  @return The 8-byte fingerprint
+             */
+            std::array<uint8_t, 8> fingerprint() const noexcept
+            {
+                // the hashing context to create the fingerprint
+                CryptoPP::SHA hasher;
+
+                // hash the key into the context
+                hash(hasher);
 
                 // the container for the digest and the result container
                 std::array<uint8_t, 20> data;
