@@ -14,6 +14,11 @@ namespace pgp {
     {
         public:
             /**
+             *  The public key type we belong to
+             */
+            using public_key_t = eddsa_public_key;
+
+            /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
@@ -55,6 +60,19 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             void encode(encoder &writer) const;
+
+            /**
+             *  Push the key to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // hash all the fields
+                _curve.hash(hasher);
+                _Q.hash(hasher);
+            }
         private:
             curve_oid               _curve; // the curve object identifier
             multiprecision_integer  _Q;     // the public curve point

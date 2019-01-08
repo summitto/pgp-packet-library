@@ -5,7 +5,10 @@ project(pgp-packet-library
     LANGUAGES   CXX
 )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+
 find_package(Boost REQUIRED)
+find_package(CryptoPP REQUIRED)
 
 set(pgp-packet-headers
     basic_key.h
@@ -78,6 +81,9 @@ set(pgp-packet-sources
 add_library(pgp-packet ${pgp-packet-sources})
 
 target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
+
+target_include_directories(pgp-packet PUBLIC ${CRYPTOPP_INCLUDE_DIR})
+target_link_libraries(pgp-packet ${CRYPTOPP_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>

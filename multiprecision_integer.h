@@ -1,7 +1,6 @@
 #pragma once
 
-#include "decoder.h"
-#include "encoder.h"
+#include "fixed_number.h"
 #include <vector>
 
 
@@ -69,7 +68,21 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             void encode(encoder &writer) const;
+
+            /**
+             *  Push the key to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // add the size as well as the data
+                _bits.hash(hasher);
+                hasher.Update(_data.data(), _data.size());
+            }
         private:
+            uint16                  _bits;
             std::vector<uint8_t>    _data;
     };
 

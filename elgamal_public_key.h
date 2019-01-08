@@ -13,6 +13,11 @@ namespace pgp {
     {
         public:
             /**
+             *  The public key type we belong to
+             */
+            using public_key_t = elgamal_public_key;
+
+            /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data from
@@ -62,6 +67,20 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             void encode(encoder &writer) const;
+
+            /**
+             *  Push the key to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // hash all the fields
+                _p.hash(hasher);
+                _g.hash(hasher);
+                _y.hash(hasher);
+            }
         private:
             multiprecision_integer  _p;     // the prime p
             multiprecision_integer  _g;     // the group generator g

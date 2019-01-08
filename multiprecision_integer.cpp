@@ -9,11 +9,12 @@ namespace pgp {
      *  @param  parser  The decoder to parse the data
      *  @throws std::out_of_range
      */
-    multiprecision_integer::multiprecision_integer(decoder &parser)
+    multiprecision_integer::multiprecision_integer(decoder &parser) :
+        _bits{ parser }
     {
         // first read the number of elements, since it is in bits,
-        // we have to round it up to the nears byte and read it
-        auto count = (parser.extract_number<uint16_t>() + 7) / 8;
+        // we have to round it up to the nearest byte and read it
+        auto count = (_bits + 7) / 8;
 
         // allocate memory for the number
         _data.reserve(count);
@@ -30,9 +31,19 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept :
-        _data{ data.begin(), data.end() }
-    {}
+    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept
+    {
+        // eliminate leading zeroes
+        while (!data.empty() && data[0] == 0) {
+            // detected zero entry - eliminating
+            data = data.subspan<1>();
+        }
+
+        // assign bit count and the data
+        // TODO: count leading zeroes
+        _bits = data.size() * 8;
+        _data.assign(data.begin(), data.end());
+    }
 
     /**
      *  Determine the size used in encoded format
@@ -41,7 +52,7 @@ namespace pgp {
     size_t multiprecision_integer::size() const noexcept
     {
         // two bytes for the header plus all the fields
-        return _data.size() + 2;
+        return _bits.size() + _data.size();
     }
 
     /**
@@ -63,7 +74,7 @@ namespace pgp {
     void multiprecision_integer::encode(encoder &writer) const
     {
         // write out the number of elements first
-        writer.insert_number(static_cast<uint16_t>(_data.size() * 8));
+        _bits.encode(writer);
 
         // now write out all the elements
         for (auto number : _data) {

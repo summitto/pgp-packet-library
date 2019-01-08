@@ -17,7 +17,7 @@ namespace pgp {
             /**
              *  Constructor
              */
-            fixed_number() = default;
+            constexpr fixed_number() = default;
 
             /**
              *  Constructor
@@ -33,7 +33,7 @@ namespace pgp {
              *
              *  @param  value   The value to hold
              */
-            fixed_number(T value) noexcept :
+            constexpr fixed_number(T value) noexcept :
                 _value{ value }
             {}
 
@@ -58,7 +58,7 @@ namespace pgp {
              *  @param  value   The value to assign
              *  @return self, for chaining
              */            
-            fixed_number &operator=(T value) noexcept
+            constexpr fixed_number &operator=(T value) noexcept
             {              
                 // update value
                 _value = value;
@@ -83,7 +83,7 @@ namespace pgp {
              *
              *  @return The stored value
              */
-            operator T() const noexcept
+            constexpr operator T() const noexcept
             {
                 // return the stored value
                 return _value;
@@ -99,6 +99,21 @@ namespace pgp {
             {
                 // write the number to the encoder
                 writer.insert_number(_value);
+            }
+
+            /**
+             *  Push the value to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const noexcept
+            {
+                // conver the value to big-endian for hashing
+                T value = boost::endian::native_to_big(_value);
+
+                // push the value to the hasher
+                hasher.Update(reinterpret_cast<const uint8_t*>(&value), sizeof value);
             }
         private:
             T   _value{ 0 };

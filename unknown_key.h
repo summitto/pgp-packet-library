@@ -13,6 +13,11 @@ namespace pgp {
     {
         public:
             /**
+             *  The public key type we belong to
+             */
+            using public_key_t = unknown_key;
+
+            /**
              *  Constructor
              */
             unknown_key() = default;
@@ -45,6 +50,18 @@ namespace pgp {
             {
                 // unknown key cannot be encoded
                 throw std::runtime_error{ "Failed to encode unknown key" };
+            }
+
+            /**
+             *  Push the key to the hasher
+             *
+             *  @param  hasher  The hasher to push the value to
+             */
+            template <class hasher_t>
+            void hash(hasher_t &hasher) const
+            {
+                // unknown key cannot be hashed
+                throw std::runtime_error{ "Failed to hash unknown key" };
             }
     };
 
