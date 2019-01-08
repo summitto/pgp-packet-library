@@ -39,9 +39,24 @@ namespace pgp {
             data = data.subspan<1>();
         }
 
+        // if there is no data we have nothing to do
+        if (data.empty()) {
+            // no need to calculate anything
+            return;
+        }
+
+        // lookup table for number of leading zeroes
+        static constexpr std::array<uint8_t, 16> clz_lookup{ 4, 3, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        // split the number up into the upper- and lower 4-bit bounds
+        auto upper = data[0] >> 4;
+        auto lower = data[0] & 0x0F;
+
+        // calculate number of leading zeroes
+        auto leading_zeroes = upper ? clz_lookup[upper] : 4 + clz_lookup[lower];
+
         // assign bit count and the data
-        // TODO: count leading zeroes
-        _bits = data.size() * 8;
+        _bits = data.size() * 8 - leading_zeroes;
         _data.assign(data.begin(), data.end());
     }
 
