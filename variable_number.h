@@ -77,32 +77,6 @@ namespace pgp {
                     writer.push(_value);
                 }
             }
-
-            /**
-             *  Push the value to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // encoding depends on the value
-                if (_value < 192) {
-                    // directly encode the number
-                    uint8_t value = _value;
-                    hasher.Update(&value, sizeof value);
-                } else if (_value < 8384) {
-                    // enable the two most significant bits and remove
-                    // 192 from the number according to rfc 4480
-                    uint16_t value = 0b1100000000000000 | (_value - 192);
-                    boost::endian::native_to_big_inplace(value);
-                    hasher.Update(reinterpret_cast<uint8_t*>(&value), sizeof value);
-                } else {
-                    // convert to big endian before writing
-                    auto value = boost::endian::native_to_big(_value);
-                    hasher.Update(reinterpret_cast<uint8_t*>(&value), sizeof value);
-                }
-            }
         private:
             uint32_t    _value{ 0 };
     };

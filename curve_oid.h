@@ -86,22 +86,6 @@ namespace pgp {
                     writer.push(number);
                 }
             }
-
-            /**
-             *  Push the curve oid to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // retrieve the size of the curve first
-                uint8 size = _data.size();
-
-                // encode the size as well as the data
-                size.hash(hasher);
-                hasher.Update(_data.data(), _data.size());
-            }
         private:
             std::vector<uint8_t>    _data;
     };

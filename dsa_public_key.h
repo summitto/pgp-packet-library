@@ -83,21 +83,6 @@ namespace pgp {
                 _g.encode(writer);
                 _y.encode(writer);
             }
-
-            /**
-             *  Push the key to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // hash all the fields
-                _p.hash(hasher);
-                _q.hash(hasher);
-                _g.hash(hasher);
-                _y.hash(hasher);
-            }
         private:
             multiprecision_integer  _p;     // the prime
             multiprecision_integer  _q;     // the group order

@@ -100,21 +100,6 @@ namespace pgp {
                 // write the number to the encoder
                 writer.push(_value);
             }
-
-            /**
-             *  Push the value to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // conver the value to big-endian for hashing
-                T value = boost::endian::native_to_big(_value);
-
-                // push the value to the hasher
-                hasher.Update(reinterpret_cast<const uint8_t*>(&value), sizeof value);
-            }
         private:
             T   _value{ 0 };
     };

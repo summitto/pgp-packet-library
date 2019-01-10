@@ -8,10 +8,11 @@
 namespace pgp {
 
     /**
-     *  Generic class for a simple, numeric signature subpacket
+     *  Generic class for a simple signature subpacket
+     *  with a fixed-size array of bytes
      */
-    template <typename T, signature_subpacket_type subpacket_type>
-    class numeric_signature_subpacket
+    template <size_t data_size, signature_subpacket_type subpacket_type>
+    class array_signature_subpacket
     {
         public:
             /**
@@ -19,23 +20,22 @@ namespace pgp {
              *
              *  @param  parser  The parser to decode the data
              */
-            numeric_signature_subpacket(decoder &parser) :
-                _data{ parser }
+            array_signature_subpacket(decoder &parser)
             {
-                // all data should be consumed
-                if (!parser.empty()) {
-                    // this is probably not the correct subpacket type
-                    throw std::runtime_error{ "Incorrect subpacket type detected" };
-                }
+                // retrieve data from the decoder
+                auto data = parser.extract_blob<uint8_t>(data_size);
+
+                // copy the data over
+                std::copy(data.begin(), data.end(), _data.begin());
             }
 
             /**
              *  Constructor
              *
-             *  @param  number  The number to store
+             *  @param  array   The array of data
              */
-            numeric_signature_subpacket(T number) :
-                _data{ number }
+            array_signature_subpacket(std::array<uint8_t, data_size> data) :
+                _data{ data }
             {}
 
             /**
@@ -62,13 +62,13 @@ namespace pgp {
             }
 
             /**
-             *  Retrieve the stored number
+             *  Retrieve the stored array
              *
-             *  @return The stored number
+             *  @return The stored array
              */
-            T data() const noexcept
+            std::array<uint8_t, data_size> &data() const noexcept
             {
-                // retrieve the stored number
+                // retrieve the stored array
                 return _data;
             }
 
@@ -87,20 +87,15 @@ namespace pgp {
                 // encode the size, the type, and the number
                 variable_number{ size }.encode(writer);
                 writer.push(subpacket_type);
-                _data.encode(writer);
+                writer.template insert_blob<uint8_t>(_data);
             }
         private:
-            fixed_number<T> _data;  // the actual number we store
+            std::array<uint8_t, data_size>  _data;  // the array of data
     };
 
     /**
      *  Specialize the different subpacket types available
      */
-    using signature_creation_time_subpacket     = numeric_signature_subpacket<uint32_t, signature_subpacket_type::signature_creation_time>;
-    using signature_expiration_time_subpacket   = numeric_signature_subpacket<uint32_t, signature_subpacket_type::signature_expiration_time>;
-    using exportable_certification_subpacket    = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::exportable_certification>;
-    using revocable_subpacket                   = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::revocable>;
-    using primary_user_id_subpacket             = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::primary_user_id>;
-    using key_expiration_time_subpacket         = numeric_signature_subpacket<uint32_t, signature_subpacket_type::key_expiration_time>;
+    using issuer_subpacket  = array_signature_subpacket<8, signature_subpacket_type::issuer>;
 
 }

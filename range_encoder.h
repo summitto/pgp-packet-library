@@ -107,6 +107,46 @@ namespace pgp {
             }
 
             /**
+             *  Push a range of data
+             *
+             *  @param  begin   The iterator to the beginning of the data
+             *  @param  end     The iterator to the end of the data
+             *  @return self, for chaining
+             *  @throws std::out_of_range, std::range_error
+             */
+            template <typename iterator_t>
+            range_encoder &push(iterator_t begin, iterator_t end)
+            {
+                // note: possible c++20 optimization
+                // // do we have a contiguous range of memory?
+                // if constexpr(std::is_same_v<std::iterator_traits<iterator_t>::iterator_category, std::contiguous_iterator_tag>) {
+                //     // make sure we have enough data for inserting the data
+                //     if (_data.size() < _size + sizeof(T) * value.size()) {
+                //         // trying to write out-of-bounds
+                //         throw std::out_of_range{ "Buffer too small for inserting blob" };
+                //     }
+                //
+                //     // push the whole range at once
+                //     std::memcpy(_data.data() + _size, value.data(), value.size() * sizeof(T));
+                //
+                //     // register the bytes in the buffer
+                //     _size += value.size() * sizeof(T);
+                // }
+
+                // iterate over the range
+                while (begin != end) {
+                    // push the data
+                    push(*begin);
+
+                    // move to next element
+                    ++begin;
+                }
+
+                // allow chaining
+                return *this;
+            }
+
+            /**
              *  Insert a blob of data
              *
              *  @param  value   The data to insert

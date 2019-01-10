@@ -65,19 +65,6 @@ namespace pgp {
                 _n.encode(writer);
                 _e.encode(writer);
             }
-
-            /**
-             *  Push the key to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // hash all the fields
-                _n.hash(hasher);
-                _e.hash(hasher);
-            }
         private:
             multiprecision_integer  _n; // the public modulus n
             multiprecision_integer  _e; // the encryption exponent e

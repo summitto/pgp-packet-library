@@ -2,7 +2,9 @@
 
 #include "unknown_signature_subpacket.h"
 #include "numeric_signature_subpacket.h"
+#include "array_signature_subpacket.h"
 #include "signature_subpacket_type.h"
+#include "key_flags_subpacket.h"
 #include <mpark/variant.hpp>
 
 
@@ -19,11 +21,13 @@ namespace pgp {
              */
             using subpacket_variant = mpark::variant<
                 unknown_signature_subpacket,
+                issuer_subpacket,
                 signature_creation_time_subpacket,
                 signature_expiration_time_subpacket,
                 exportable_certification_subpacket,
                 primary_user_id_subpacket,
-                key_expiration_time_subpacket
+                key_expiration_time_subpacket,
+                key_flags_subpacket
             >;
 
             /**
@@ -99,30 +103,6 @@ namespace pgp {
                     mpark::visit([&writer](auto &&subpacket) {
                         // encode the subpacket as well
                         subpacket.encode(writer);
-                    }, subpacket);
-                }
-            }
-
-            /**
-             *  Push the value to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // the size of the packet - but without the size of the header itself
-                uint16_t data_size = size() - uint16::size();
-
-                // add the size header
-                uint16{ data_size }.hash(hasher);
-
-                // iterate over the subpackets
-                for (auto &subpacket : _subpackets) {
-                    // retrieve the specific type
-                    mpark::visit([&hasher](auto &&subpacket) {
-                        // encode the subpacket as well
-                        subpacket.hash(hasher);
                     }, subpacket);
                 }
             }

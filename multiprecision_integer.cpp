@@ -33,6 +33,19 @@ namespace pgp {
      */
     multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept
     {
+        // assign the data
+        operator=(data);
+    }
+
+
+    /**
+     *  Assignment
+     *
+     *  @param  that    The integer to assign
+     *  @return Same object for chaining
+     */
+    multiprecision_integer &multiprecision_integer::operator=(gsl::span<const uint8_t> data) noexcept
+    {
         // eliminate leading zeroes
         while (!data.empty() && data[0] == 0) {
             // detected zero entry - eliminating
@@ -42,7 +55,7 @@ namespace pgp {
         // if there is no data we have nothing to do
         if (data.empty()) {
             // no need to calculate anything
-            return;
+            return *this;
         }
 
         // lookup table for number of leading zeroes
@@ -58,6 +71,9 @@ namespace pgp {
         // assign bit count and the data
         _bits = data.size() * 8 - leading_zeroes;
         _data.assign(data.begin(), data.end());
+
+        // allow chaining
+        return *this;
     }
 
     /**

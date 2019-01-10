@@ -68,22 +68,6 @@ namespace pgp {
                     writer.push(number);
                 }
             }
-
-            /**
-             *  Push the value to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // first encode the length of the subpacket
-                variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.hash(hasher);
-
-                // add the subpacket type and the data
-                hasher.Update(reinterpret_cast<const uint8_t*>(&_type), sizeof(_type));
-                hasher.Update(_data.data(), _data.size());
-            }
         private:
             signature_subpacket_type    _type;
             std::vector<uint8_t>        _data;

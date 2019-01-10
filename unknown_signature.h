@@ -1,42 +1,33 @@
 #pragma once
 
-#include "decoder.h"
-
 
 namespace pgp {
 
     /**
-     *  Class representing a key using an unknown algorithm
+     *  Class for holding an unknown signature
      */
-    class unknown_key
+    class unknown_signature
     {
         public:
             /**
-             *  The public key type we belong to
-             */
-            using public_key_t = unknown_key;
-
-            /**
              *  Constructor
              */
-            unknown_key() = default;
-
+            unknown_signature() = default;
             /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
              */
-            unknown_key(decoder &parser) noexcept {};
+            unknown_signature(decoder &parser) noexcept {}
 
             /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
-             *  @throws std::runtime_error for the unknown key
              */
             size_t size() const
             {
                 // we do not know the size
-                throw std::runtime_error{ "Unknown keys have an unknown size" };
+                throw std::runtime_error{ "Unknown signatures have an unknown size" };
             }
 
             /**
@@ -49,7 +40,7 @@ namespace pgp {
             void encode(encoder_t &writer) const
             {
                 // unknown key cannot be encoded
-                throw std::runtime_error{ "Failed to encode unknown key" };
+                throw std::runtime_error{ "Failed to encode unknown signature" };
             }
     };
 

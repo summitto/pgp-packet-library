@@ -66,21 +66,6 @@ namespace pgp {
                 // write out the number
                 writer.push(value());
             }
-
-            /**
-             *  Push the value to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // conver the value to big-endian for hashing
-                T value = boost::endian::native_to_big(number);
-
-                // push the value to the hasher
-                hasher.Update(&value, sizeof value);
-            }
     };
 
 }

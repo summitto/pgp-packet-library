@@ -3,30 +3,6 @@
 
 namespace pgp {
 
-    namespace {
-        /**
-         *  Construct the signature variant
-         *
-         *  @param  algorithm   The key algorithm
-         *  @param  parser      The decoder to parse the data
-         */
-        signature::signature_variant construct_signature(key_algorithm algorithm, decoder &parser)
-        {
-            // check the provided algorithm
-            switch (algorithm) {
-                case key_algorithm::rsa_encrypt_or_sign:
-                case key_algorithm::rsa_sign_only:
-                    return rsa_signature{ parser };
-                case key_algorithm::dsa:
-                    return dsa_signature{ parser };
-                case key_algorithm::eddsa:
-                    return eddsa_signature{ parser };
-                default:
-                    throw std::runtime_error{ "Unknown signature type" };
-            }
-        }
-    }
-
     /**
      *  Constructor
      *
@@ -39,9 +15,25 @@ namespace pgp {
         _hash_algorithm{ parser.extract_number<uint8_t>() },
         _hashed_subpackets{ parser },
         _unhashed_subpackets{ parser },
-        _signature_bits{ parser },
-        _signature{ construct_signature(_key_algorithm, parser) }
-    {}
+        _hash_prefix{ parser }
+    {
+        // what kind of signature should we construct?
+        switch (_key_algorithm) {
+            case key_algorithm::rsa_encrypt_or_sign:
+            case key_algorithm::rsa_sign_only:
+                _signature.emplace<rsa_signature>(parser);
+                break;
+            case key_algorithm::dsa:
+                _signature.emplace<dsa_signature>(parser);
+                break;
+            case key_algorithm::eddsa:
+                _signature.emplace<eddsa_signature>(parser);
+                break;
+            default:
+                // do nothing, use the unknown_key
+                break;
+        }
+    }
 
     /**
      *  Determine the size used in encoded format
@@ -60,7 +52,7 @@ namespace pgp {
         result += sizeof(_hash_algorithm);
         result += _hashed_subpackets.size();
         result += _unhashed_subpackets.size();
-        result += _signature_bits.size();
+        result += _hash_prefix.size();
 
         // retrieve the signature
         mpark::visit([&result](auto &data) {
@@ -124,6 +116,17 @@ namespace pgp {
     {
         // return the stored unhashed subpackets
         return _unhashed_subpackets;
+    }
+
+    /**
+     *  Retrieve the 16 most significant bits from the signed hash
+     *
+     *  @return Two bytes of hash data
+     */
+    uint16_t signature::hash_prefix() const noexcept
+    {
+        // return the stored bits
+        return _hash_prefix;
     }
 
     /**

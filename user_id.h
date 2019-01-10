@@ -1,3 +1,5 @@
+#pragma once
+
 #include "packet_tag.h"
 #include "expected_number.h"
 #include "fixed_number.h"
@@ -69,23 +71,6 @@ namespace pgp {
             {
                 // insert the id into the encoder
                 writer.insert_blob(gsl::span<const char>{ _id });
-            }
-
-            /**
-             *  Push the key to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // the magic constant to use for key user id hashing
-                static constexpr const expected_number<uint8_t, 0xB4> hash_magic;
-
-                // hash the size of the packet and the data itself
-                hash_magic.hash(hasher);
-                uint32{ static_cast<uint32_t>(_id.size()) }.hash(hasher);
-                hasher.Update(reinterpret_cast<const uint8_t*>(_id.data()), _id.size());
             }
         private:
             std::string     _id;    // the user id representation

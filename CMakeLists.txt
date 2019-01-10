@@ -7,20 +7,29 @@ project(pgp-packet-library
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-find_package(Boost REQUIRED)
-find_package(CryptoPP REQUIRED)
+find_package(Boost      REQUIRED)
+find_package(CryptoPP   REQUIRED)
+find_package(LibGcrypt  REQUIRED)
+find_package(sodium     REQUIRED)
 
 set(pgp-packet-headers
+    array_signature_subpacket.h
     basic_key.h
     dsa_signature.h
     elgamal_public_key.h
     hash_algorithm.h
+    hash_encoder.h
     unknown_packet.h
     unknown_signature_subpacket.h
+    unknown_signature.h
     basic_secret_key.h
     ecdh_public_key.h
     elgamal_secret_key.h
+    gcrypt_encoder.h
+    gcrypt_encoder_type.h
     key_algorithm.h
+    key_flags_subpacket.h
+    range_encoder.h
     rsa_public_key.h
     signature_subpacket_set.h
     user_id.h
@@ -80,10 +89,16 @@ set(pgp-packet-sources
 
 add_library(pgp-packet ${pgp-packet-sources})
 
+target_include_directories(pgp-packet PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
+target_link_libraries(pgp-packet ${LIBGCRYPT_LIBRARIES})
+
 target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_include_directories(pgp-packet PUBLIC ${CRYPTOPP_INCLUDE_DIR})
 target_link_libraries(pgp-packet ${CRYPTOPP_LIBRARIES})
+
+target_include_directories(pgp-packet PUBLIC ${SODIUM_INCLUDE_DIRS})
+target_link_libraries(pgp-packet ${SODIUM_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>

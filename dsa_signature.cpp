@@ -16,6 +16,18 @@ namespace pgp {
     /**
      *  Constructor
      *
+     *  @param  key     The key to use for signing
+     *  @param  digest  The hash that needs to be signed
+     */
+    dsa_signature::dsa_signature(const secret_key &key, std::array<uint8_t, 32> &digest)
+    {
+        // TODO
+        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
+    }
+
+    /**
+     *  Constructor
+     *
      *  @param  r       The DSA r value
      *  @param  s       The DSA s value
      */

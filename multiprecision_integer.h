@@ -34,6 +34,13 @@ namespace pgp {
             multiprecision_integer(multiprecision_integer &&that) = default;
 
             /**
+             *  Constructor
+             *
+             *  @param  data    The range of numbers
+             */
+            multiprecision_integer(gsl::span<const uint8_t> data) noexcept;
+
+            /**
              *  Assignment
              *
              *  @param  that    The integer to assign
@@ -41,13 +48,7 @@ namespace pgp {
              */
             multiprecision_integer &operator=(const multiprecision_integer &that) = default;
             multiprecision_integer &operator=(multiprecision_integer &&that) = default;
-
-            /**
-             *  Constructor
-             *
-             *  @param  data    The range of numbers
-             */
-            multiprecision_integer(gsl::span<const uint8_t> data) noexcept;
+            multiprecision_integer &operator=(gsl::span<const uint8_t> data) noexcept;
 
             /**
              *  Determine the size used in encoded format
@@ -78,19 +79,6 @@ namespace pgp {
                     // add the number
                     writer.push(number);
                 }
-            }
-
-            /**
-             *  Push the key to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // add the size as well as the data
-                _bits.hash(hasher);
-                hasher.Update(_data.data(), _data.size());
             }
         private:
             uint16                  _bits;

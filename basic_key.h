@@ -4,8 +4,8 @@
 #include "packet_tag.h"
 #include "unknown_key.h"
 #include "fixed_number.h"
-#include <crypto++/sha.h>
 #include "key_algorithm.h"
+#include "gcrypt_encoder.h"
 #include "expected_number.h"
 #include <mpark/variant.hpp>
 #include "multiprecision_integer.h"
@@ -115,16 +115,16 @@ namespace pgp {
             /**
              *  Hash the key into a given hash context
              *
-             *  @param  hasher  The hasher to update
+             *  @param  writer  The hasher to write to
              */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
+            template <class encoder_t>
+            void hash(encoder_t &writer) const noexcept
             {
                 // the magic constant to use for key fingerprints
                 static constexpr const expected_number<uint8_t, 0x99> fingerprint_magic;
 
                 // retrieve the key
-                mpark::visit([this, &hasher](auto &&key) {
+                mpark::visit([this, &writer](auto &&key) {
                     // determine key type
                     using key_type_t    = std::decay_t<decltype(key)>;
                     using public_type_t = typename key_type_t::public_key_t;
@@ -139,14 +139,14 @@ namespace pgp {
                     };
 
                     // add magic constant and base fields
-                    fingerprint_magic.hash(hasher);
-                    size.hash(hasher);
-                    _version.hash(hasher);
-                    _creation_time.hash(hasher);
-                    hasher.Update(reinterpret_cast<const uint8_t*>(&_algorithm), sizeof _algorithm);
+                    fingerprint_magic.encode(writer);
+                    size.encode(writer);
+                    _version.encode(writer);
+                    _creation_time.encode(writer);
+                    writer.push(_algorithm);
 
                     // // also hash the key data
-                    key.hash(hasher);
+                    key.public_type_t::encode(writer);
                 }, _key);
             }
 
@@ -158,17 +158,14 @@ namespace pgp {
             std::array<uint8_t, 8> fingerprint() const noexcept
             {
                 // the hashing context to create the fingerprint
-                CryptoPP::SHA hasher;
+                gcrypt_encoder<gcrypt_sha1_encoding>    encoder;
 
                 // hash the key into the context
-                hash(hasher);
+                hash(encoder);
 
-                // the container for the digest and the result container
-                std::array<uint8_t, 20> data;
+                // the digest and the result container
+                std::array<uint8_t, 20> data    { encoder.digest() };
                 std::array<uint8_t, 8>  result;
-
-                // finalize the hashing
-                hasher.Final(data.data());
 
                 // copy the last 8 bytes over
                 std::copy(data.begin() + 12, data.end(), result.begin());

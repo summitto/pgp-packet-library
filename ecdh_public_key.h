@@ -87,23 +87,6 @@ namespace pgp {
                 _hash_function.encode(writer);
                 _algorithm.encode(writer);
             }
-
-            /**
-             *  Push the key to the hasher
-             *
-             *  @param  hasher  The hasher to push the value to
-             */
-            template <class hasher_t>
-            void hash(hasher_t &hasher) const noexcept
-            {
-                // hash all the fields
-                _curve.hash(hasher);
-                _Q.hash(hasher);
-                _kdf_size.hash(hasher);
-                _reserved.hash(hasher);
-                _hash_function.hash(hasher);
-                _algorithm.hash(hasher);
-            }
         private:
             curve_oid                   _curve;         // the curve oid for this key
             multiprecision_integer      _Q;             // the public key

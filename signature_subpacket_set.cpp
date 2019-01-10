@@ -34,6 +34,10 @@ namespace pgp {
                     // add the signature creation time
                     _subpackets.emplace_back(mpark::in_place_type_t<signature_creation_time_subpacket>{}, subpacket_parser);
                     break;
+                case signature_subpacket_type::issuer:
+                    // add the issuer key id
+                    _subpackets.emplace_back(mpark::in_place_type_t<issuer_subpacket>{}, subpacket_parser);
+                    break;
                 case signature_subpacket_type::signature_expiration_time:
                     // add the signature expiration time
                     _subpackets.emplace_back(mpark::in_place_type_t<signature_expiration_time_subpacket>{}, subpacket_parser);
@@ -49,6 +53,10 @@ namespace pgp {
                 case signature_subpacket_type::primary_user_id:
                     // add whether this signature constitutes the primary user id
                     _subpackets.emplace_back(mpark::in_place_type_t<primary_user_id_subpacket>{}, subpacket_parser);
+                    break;
+                case signature_subpacket_type::key_flags:
+                    // add the flags for this subpacket
+                    _subpackets.emplace_back(mpark::in_place_type_t<key_flags_subpacket>{}, subpacket_parser);
                     break;
                 default:
                     // add another packet with the remaining data
