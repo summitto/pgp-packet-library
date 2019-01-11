@@ -37,6 +37,9 @@ namespace pgp {
             case hash_algorithm::sha512:    return "SHA512";
             case hash_algorithm::sha224:    return "SHA224";
         }
+
+        // unknown hash algorithm found
+        return "unknown hash algorithm";
     }
 
 }

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "curve_oid.h"
-#include "fixed_number.h"
+#include "hash_algorithm.h"
 #include "expected_number.h"
 #include "multiprecision_integer.h"
+#include "symmetric_key_algorithm.h"
 
 
 namespace pgp {
@@ -34,7 +35,7 @@ namespace pgp {
              *  @param  hash_function   The used KDF hash function
              *  @param  algorithm       The symmetric alforithm for wrapping the symmetric key
              */
-            ecdh_public_key(curve_oid curve, multiprecision_integer Q, uint8_t hash_function, uint8_t algorithm) noexcept;
+            ecdh_public_key(curve_oid curve, multiprecision_integer Q, hash_algorithm hash_function, symmetric_key_algorithm algorithm) noexcept;
 
             /**
              *  Determine the size used in encoded format
@@ -61,14 +62,14 @@ namespace pgp {
              *
              *  @return The KDF hash function
              */
-            uint8_t hash_function() const noexcept;
+            hash_algorithm hash_function() const noexcept;
 
             /**
-             *  Retrieve the symmetric algorithm
+             *  Retrieve the symmetric key algorithm
              *
-             *  @return The symmetrict algorithm for wrapping the symmetric key
+             *  @return The symmetrict key algorithm
              */
-            uint8_t algorithm() const noexcept;
+            symmetric_key_algorithm algorithm() const noexcept;
 
             /**
              *  Write the data to an encoder
@@ -84,16 +85,16 @@ namespace pgp {
                 _Q.encode(writer);
                 _kdf_size.encode(writer);
                 _reserved.encode(writer);
-                _hash_function.encode(writer);
-                _algorithm.encode(writer);
+                writer.push(_hash_function);
+                writer.push(_algorithm);
             }
         private:
             curve_oid                   _curve;         // the curve oid for this key
             multiprecision_integer      _Q;             // the public key
             expected_number<uint8_t, 3> _kdf_size;      // the - totally useless - size of the fields below
             expected_number<uint8_t, 1> _reserved;      // some reserved field
-            uint8                       _hash_function; // the used KDF hash function
-            uint8                       _algorithm;     // the symmetric algorithm for wrapping the symmetric key
+            hash_algorithm              _hash_function; // the used KDF hash function
+            symmetric_key_algorithm     _algorithm;     // the symmetric algorithm for wrapping the symmetric key
     };
 
 }

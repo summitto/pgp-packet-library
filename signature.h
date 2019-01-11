@@ -127,8 +127,8 @@ namespace pgp {
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
             template <class T, typename... Arguments>
-            signature( mpark::in_place_type_t<T>, const secret_key &owner, const public_key &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
-                _type{ signature_type::subkey_binding},
+            signature( mpark::in_place_type_t<T>, const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
+                _type{ signature_type::subkey_binding },
                 _key_algorithm{ owner.algorithm() },
                 _hash_algorithm{ hash_algorithm::sha256 },
                 _hashed_subpackets{ std::move(hashed_subpackets) },

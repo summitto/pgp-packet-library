@@ -21,15 +21,24 @@ namespace pgp {
     {
         public:
             /**
+             *  Expose the key types
+             */
+            using rsa_key_t     = typename key_traits::rsa_key_t;
+            using dsa_key_t     = typename key_traits::dsa_key_t;
+            using elgamal_key_t = typename key_traits::elgamal_key_t;
+            using ecdh_key_t    = typename key_traits::ecdh_key_t;
+            using eddsa_key_t   = typename key_traits::eddsa_key_t;
+
+            /**
              *  A variant with all supported key types
              */
             using key_variant = mpark::variant<
                 unknown_key,
-                typename key_traits::rsa_key_t,
-                typename key_traits::dsa_key_t,
-                typename key_traits::elgamal_key_t,
-                typename key_traits::ecdh_key_t,
-                typename key_traits::eddsa_key_t
+                rsa_key_t,
+                dsa_key_t,
+                elgamal_key_t,
+                ecdh_key_t,
+                eddsa_key_t
             >;
 
             /**

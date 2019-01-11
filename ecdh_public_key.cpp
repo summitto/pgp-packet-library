@@ -13,8 +13,8 @@ namespace pgp {
         _Q{ parser },
         _kdf_size{ parser },
         _reserved{ parser },
-        _hash_function{ parser },
-        _algorithm{ parser }
+        _hash_function{ parser.extract_number<uint8_t>() },
+        _algorithm{ parser.extract_number<uint8_t>() }
     {}
 
     /**
@@ -25,7 +25,7 @@ namespace pgp {
      *  @param  hash_function   The used KDF hash function
      *  @param  algorithm       The symmetric alforithm for wrapping the symmetric key
      */
-    ecdh_public_key::ecdh_public_key(curve_oid curve, multiprecision_integer Q, uint8_t hash_function, uint8_t algorithm) noexcept :
+    ecdh_public_key::ecdh_public_key(curve_oid curve, multiprecision_integer Q, hash_algorithm hash_function, symmetric_key_algorithm algorithm) noexcept :
         _curve{ std::move(curve) },
         _Q{ std::move(Q) },
         _hash_function{ hash_function },
@@ -39,7 +39,7 @@ namespace pgp {
     size_t ecdh_public_key::size() const noexcept
     {
         // add the size of all the components
-        return _curve.size() + _Q.size() + _kdf_size.size() + _reserved.size() + _hash_function.size() + _algorithm.size();
+        return _curve.size() + _Q.size() + _kdf_size.size() + _reserved.size() + sizeof _hash_function + sizeof _algorithm;
     }
 
     /**
@@ -69,7 +69,7 @@ namespace pgp {
      *
      *  @return The KDF hash function
      */
-    uint8_t ecdh_public_key::hash_function() const noexcept
+    hash_algorithm ecdh_public_key::hash_function() const noexcept
     {
         // return the stored hash function
         return _hash_function;
@@ -80,7 +80,7 @@ namespace pgp {
      *
      *  @return The symmetrict algorithm for wrapping the symmetric key
      */
-    uint8_t ecdh_public_key::algorithm() const noexcept
+    symmetric_key_algorithm ecdh_public_key::algorithm() const noexcept
     {
         // return the stored algorithm
         return _algorithm;
