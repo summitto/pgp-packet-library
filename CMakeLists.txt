@@ -7,9 +7,9 @@ project(pgp-packet-library
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-find_package(Boost      REQUIRED)
-find_package(LibGcrypt  REQUIRED)
-find_package(sodium     REQUIRED)
+find_package(Boost              REQUIRED)
+find_package(LibGcrypt          REQUIRED)
+find_package(sodium     1.0.16  REQUIRED)
 
 set(pgp-packet-headers
     array_signature_subpacket.h
