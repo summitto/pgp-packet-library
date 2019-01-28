@@ -63,7 +63,7 @@ namespace pgp {
              */
             static curve_oid ed25519()      { return {{ 0x2b, 0x06, 0x01, 0x04, 0x01, 0xda, 0x47, 0x0f, 0x01         }};    }
             static curve_oid curve_25519()  { return {{ 0x2B, 0x06, 0x01, 0x04, 0x01, 0x97, 0x55, 0x01, 0x05, 0x01   }};    }
-
+			static curve_oid ecdsa()		{ return {{ 0x2A, 0x86, 0x48, 0xCE, 0x3D, 0x03, 0x01, 0x07 				 }};	}
             /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage

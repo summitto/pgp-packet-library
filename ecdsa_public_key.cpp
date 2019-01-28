@@ -1,0 +1,59 @@
+#include "ecdsa_public_key.h"
+
+
+namespace pgp {
+
+    /**
+     *  Constructor
+     *
+     *  @param  parser  The decoder to parse the data
+     */
+    ecdsa_public_key::ecdsa_public_key(decoder &parser) :
+        _curve{ parser },
+        _Q{ parser }
+    {}
+
+    /**
+     *  Constructor
+     *
+     *  @param  curve   The curve object identifier
+     *  @param  Q       The public curve point Q
+     */
+    ecdsa_public_key::ecdsa_public_key(curve_oid curve, multiprecision_integer Q) noexcept :
+        _curve{ std::move(curve) },
+        _Q{ std::move(Q) }
+    {}
+
+    /**
+     *  Determine the size used in encoded format
+     *  @return The number of bytes used for encoded storage
+     */
+    size_t ecdsa_public_key::size() const noexcept
+    {
+        // we need to store the curve oid and the curve point
+        return _curve.size() + _Q.size();
+    }
+
+    /**
+     *  Retrieve the curve object identifier
+     *
+     *  @return The curve object identifier
+     */
+    const curve_oid &ecdsa_public_key::curve() const noexcept
+    {
+        // return the curve object identifier
+        return _curve;
+    }
+
+    /**
+     *  Retrieve the public curve point Q
+     *
+     *  @return The public curve point Q, in compressed format
+     */
+    const multiprecision_integer &ecdsa_public_key::Q() const noexcept
+    {
+        // return the public point
+        return _Q;
+    }
+
+}

@@ -16,6 +16,7 @@ namespace pgp {
         elgamal_encrypt_only    = 16,
         dsa                     = 17,
         ecdh                    = 18,
+		ecdsa					= 19,
         eddsa                   = 22
     };
 
@@ -35,6 +36,7 @@ namespace pgp {
             case key_algorithm::elgamal_encrypt_only:   return "Elgamal (encrypt only)";
             case key_algorithm::dsa:                    return "DSA";
             case key_algorithm::ecdh:                   return "ECDH";
+			case key_algorithm::ecdsa:                  return "ECDSA";
             case key_algorithm::eddsa:                  return "EdDSA";
         }
     }
