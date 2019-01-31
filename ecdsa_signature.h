@@ -7,7 +7,7 @@
 namespace pgp {
 
     /**
-     *  Class for holding EdDSA signature-specific fields
+     *  Class for holding ECDSA signature-specific fields
      */
     class ecdsa_signature
     {
@@ -30,8 +30,8 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  r       The EdDSA r value
-             *  @param  s       The EdDSA s value
+             *  @param  r       The ECDSA r value
+             *  @param  s       The ECDSA s value
              */
             ecdsa_signature(multiprecision_integer r, multiprecision_integer s) noexcept;
 
@@ -42,14 +42,14 @@ namespace pgp {
             size_t size() const noexcept;
 
             /**
-             *  Retrieve the EdDSA r value
+             *  Retrieve the ECDSA r value
              *
              *  @return The r value
              */
             const multiprecision_integer &r() const noexcept;
 
             /**
-             *  Retrieve the EdDSA s value
+             *  Retrieve the ECDSA s value
              *
              *  @return The s value
              */
@@ -69,8 +69,8 @@ namespace pgp {
                 _s.encode(writer);
             }
         private:
-            multiprecision_integer  _r;     // the EdDSA r value
-            multiprecision_integer  _s;     // the EdDSA s value
+            multiprecision_integer  _r;     // the ECDSA r value
+            multiprecision_integer  _s;     // the ECDSA s value
     };
 
 }

@@ -6,7 +6,7 @@
 namespace pgp {
 
     /**
-     *  Class for working with an EdDSA secret key
+     *  Class for working with an ECDSA secret key
      */
     class ecdsa_secret_key
     {

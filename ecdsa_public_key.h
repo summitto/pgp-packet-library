@@ -8,7 +8,7 @@
 namespace pgp {
 
     /**
-     *  Class for holding an EdDSA public key
+     *  Class for holding an ECDSA public key
      */
     class ecdsa_public_key
     {

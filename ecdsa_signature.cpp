@@ -6,9 +6,53 @@
 #include <cryptopp/hex.h>
 #include <cryptopp/osrng.h>
 
-
 namespace pgp {
-	using namespace CryptoPP;
+
+	template <unsigned int HASH_SIZE = 32>
+	class IdentityHash : public CryptoPP::HashTransformation
+	{
+	public:
+	    constexpr const static auto DIGESTSIZE = HASH_SIZE;
+
+	    static const char * StaticAlgorithmName()
+	    {
+	        return "IdentityHash";
+	    }
+
+	    IdentityHash() : m_digest(HASH_SIZE), m_idx(0) {}
+
+	    virtual unsigned int DigestSize() const
+	    {
+	        return DIGESTSIZE;
+	    }
+
+	    virtual void Update(const CryptoPP::byte *input, size_t length)
+	    {
+	        size_t s = CryptoPP::STDMIN(CryptoPP::STDMIN<size_t>(DIGESTSIZE, length),
+	                                         DIGESTSIZE - m_idx);    
+	        if (s)
+	            ::memcpy(&m_digest[m_idx], input, s);
+	        m_idx += s;
+	    }
+
+	    virtual void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize)
+	    {
+	        ThrowIfInvalidTruncatedSize(digestSize);
+
+	        if (m_idx != DIGESTSIZE)
+	            throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + CryptoPP::IntToString(DIGESTSIZE));
+
+	        if (digest)
+	            ::memcpy(digest, m_digest, digestSize);
+
+	        m_idx = 0;
+	    }
+
+	private:
+	    CryptoPP::SecByteBlock m_digest;
+	    size_t m_idx;
+	};
+	
     /**
      *  Constructor
      *
@@ -32,56 +76,34 @@ namespace pgp {
 
         // the buffer for the signed message and the concatenated key
         std::array<uint8_t, crypto_sign_BYTES>  signed_message;
-        // std::array<uint8_t, 64>                 key_data;
 
         // retrieve the key data - ignore the silly leading byte from the public key
         auto public_data = ecdsa_key.Q().data().subspan<1>();
         auto secret_data = ecdsa_key.k().data();
 
-        //crypto_sign_detached(signed_message.data(), nullptr, digest.data(), digest.size(), key_data.data());
-
-		AutoSeededRandomPool prng;
+		//ECDSA needs randomness for signatures
+		CryptoPP::AutoSeededRandomPool prng;
 		
-		ECDSA<ECP, SHA1>::PrivateKey k1;
-		CryptoPP::Integer mainKeySecret_x;
-		mainKeySecret_x.Decode(secret_data.data(), 32);
+		CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::PrivateKey k1;
+		CryptoPP::Integer k1_exponent;
+			
+		k1_exponent.Decode(secret_data.data(), secret_data.size());
+		k1.Initialize(CryptoPP::ASN1::secp256r1(), k1_exponent);
 
-		k1.Initialize(ASN1::secp256r1(), mainKeySecret_x);
-		// std::cout << std::dec;
-		// std::cout << "Private Key: " << mainKeySecret_x << " - Secret Data Size: " <<  secret_data.size() << std::endl;
-		// std::cout << "Private Key: " << std::hex << mainKeySecret_x << std::dec << " - Secret Data Size: " <<  secret_data.size() << std::endl;
-
-		ECDSA<ECP, SHA1>::Signer signer(k1);
+		CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::Signer signer(k1);
         // now sign the message
 		signer.SignMessage( prng, digest.data(), digest.size(), signed_message.data() );
 	
-		ECDSA<ECP, SHA1>::PublicKey publicKey;
-		k1.MakePublicKey(publicKey);
-		ECDSA<ECP, SHA1>::Verifier verifier(publicKey);
-				
-		bool result = verifier.VerifyMessage( digest.data(), digest.size(), signed_message.data(), signed_message.size() );
-		if( !result ) {
-			std::cerr << "Failed to verify signature on message" << std::endl;
-		} else {
-			std::cout << "All good! " << std::endl;
-		}
-		
-		std::cout << "Signed message: ";
-		for(const auto& s: signed_message)
-			std::cout << std::hex << (unsigned int) s;
-
-		std::cout << "\n" << std::endl;
-
         // split up the data and assign it
         _r = gsl::span{ signed_message.data(),      32 };
         _s = gsl::span{ signed_message.data() + 32, 32 };
-    }
+	}
 
     /**
      *  Constructor
      *
-     *  @param  r       The EdDSA r value
-     *  @param  s       The EdDSA s value
+     *  @param  r       The ECDSA r value
+     *  @param  s       The ECDSA s value
      */
     ecdsa_signature::ecdsa_signature(multiprecision_integer r, multiprecision_integer s) noexcept :
         _r{ std::move(r) },
@@ -99,7 +121,7 @@ namespace pgp {
     }
 
     /**
-     *  Retrieve the EdDSA r value
+     *  Retrieve the ECDSA r value
      *
      *  @return The r value
      */
@@ -110,7 +132,7 @@ namespace pgp {
     }
 
     /**
-     *  Retrieve the EdDSA s value
+     *  Retrieve the ECDSA s value
      *
      *  @return The s value
      */
