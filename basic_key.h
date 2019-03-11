@@ -144,7 +144,7 @@ namespace pgp {
                         _version.size() +
                         _creation_time.size() +
                         sizeof(_algorithm) +
-                        key.public_key_t::size()
+                        key.public_type_t::size()
                     };
 
                     // add magic constant and base fields
