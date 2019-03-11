@@ -74,6 +74,24 @@ namespace pgp {
     }
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool packet::operator==(const packet &other) const noexcept
+    {
+        return body() == other.body();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool packet::operator!=(const packet &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Retrieve the packet tag
      *  @return The packet tag, as described in https://tools.ietf.org/html/rfc4880#section-4.3
      */
@@ -106,7 +124,7 @@ namespace pgp {
         // retrieve the body
         mpark::visit([&result](auto &body) {
             // retrieve the size from the body
-            result = body.size();
+            result = gsl::narrow_cast<uint32_t>(body.size());
         }, _body);
 
         // is the packet compatible with the old format?

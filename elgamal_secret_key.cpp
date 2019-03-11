@@ -22,6 +22,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool elgamal_secret_key::operator==(const elgamal_secret_key &other) const noexcept
+    {
+        return x() == other.x();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool elgamal_secret_key::operator!=(const elgamal_secret_key &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */

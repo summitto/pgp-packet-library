@@ -33,6 +33,14 @@ namespace pgp {
             rsa_public_key(multiprecision_integer n, multiprecision_integer e) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const rsa_public_key &other) const noexcept;
+            bool operator!=(const rsa_public_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

@@ -21,6 +21,12 @@ namespace pgp {
      */
     decoder decoder::splice(size_t size)
     {
+        // check whether we have enough data
+        if (size > _data.size()) {
+            // trying to read out-of-bounds
+            throw std::out_of_range{ "Not enough data available to splice" };
+        }
+
         // first create a new decoder with the spliced data
         decoder result{ _data.first(size) };
 
@@ -64,6 +70,12 @@ namespace pgp {
      */
     uint8_t decoder::peek_bits(size_t count) const
     {
+        // check whether we have enough data
+        if (empty()) {
+            // trying to read out-of-bounds
+            throw std::out_of_range{ "No more data left to read" };
+        }
+
         // retrieve the current leading byte and mask already-read bytes
         uint8_t result = mask(_data[0]);
 

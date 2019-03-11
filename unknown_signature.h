@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdexcept>
+#include "decoder.h"
+
 
 namespace pgp {
 
@@ -15,10 +18,22 @@ namespace pgp {
             unknown_signature() = default;
             /**
              *  Constructor
-             *
-             *  @param  parser  The decoder to parse the data
              */
-            unknown_signature(decoder &parser) noexcept {}
+            unknown_signature(decoder&) noexcept {}
+
+            /**
+             *  Comparison operators
+             */
+            bool operator==(const unknown_signature&) const noexcept
+            {
+                return true;
+            }
+
+            /**
+             *  Comparison operators
+             */
+            bool operator!=(const unknown_signature &other) const noexcept
+            { return !(*this == other); }
 
             /**
              *  Determine the size used in encoded format
@@ -33,11 +48,10 @@ namespace pgp {
             /**
              *  Write the data to an encoder
              *
-             *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&) const
             {
                 // unknown key cannot be encoded
                 throw std::runtime_error{ "Failed to encode unknown signature" };

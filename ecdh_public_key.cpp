@@ -33,6 +33,27 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdh_public_key::operator==(const ecdh_public_key &other) const noexcept
+    {
+        return curve() == other.curve() &&
+                Q() == other.Q() &&
+                hash_function() == other.hash_function() &&
+                algorithm() == other.algorithm();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdh_public_key::operator!=(const ecdh_public_key &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */

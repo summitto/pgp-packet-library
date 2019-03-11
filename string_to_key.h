@@ -25,6 +25,14 @@ namespace pgp {
             string_to_key(decoder &parser);
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const string_to_key &other) const noexcept;
+            bool operator!=(const string_to_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

@@ -72,6 +72,27 @@ namespace pgp {
             }
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const basic_secret_key<public_key_t, secret_key_t> &other) const noexcept
+            {
+                return public_key_t::operator==(other) &&
+                        string_to_key::operator==(other) &&
+                        secret_key_t::operator==(other) &&
+                        _checksum == other._checksum;
+            }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator!=(const basic_secret_key<public_key_t, secret_key_t> &other) const noexcept
+            { return !(*this == other); }
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

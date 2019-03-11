@@ -19,6 +19,8 @@ namespace pgp {
             // and append 192 to get to the correct number
             _value = (parser.extract_number<uint16_t>() & 0b0011111111111111) + 192;
         } else if (parser.peek_number<uint8_t>() == 255) {
+            // skip the byte we just peeked
+            parser.extract_number<uint8_t>();
             // simple four-octet number
             _value = parser.extract_number<uint32_t>();
         } else {

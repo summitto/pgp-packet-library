@@ -35,6 +35,14 @@ namespace pgp {
             rsa_signature(multiprecision_integer s) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const rsa_signature &other) const noexcept;
+            bool operator!=(const rsa_signature &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

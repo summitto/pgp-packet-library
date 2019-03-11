@@ -40,7 +40,7 @@ namespace pgp {
              *  Assignment operator
              *
              *  @param  parser  The parser to assign the value from
-             *  @retuen self, for chainign
+             *  @return self, for chaining
              */
             fixed_number &operator=(decoder &parser)
             {

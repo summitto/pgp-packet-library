@@ -38,6 +38,14 @@ namespace pgp {
             ecdh_public_key(curve_oid curve, multiprecision_integer Q, hash_algorithm hash_function, symmetric_key_algorithm algorithm) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const ecdh_public_key &other) const noexcept;
+            bool operator!=(const ecdh_public_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

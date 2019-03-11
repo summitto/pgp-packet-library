@@ -4,3 +4,6 @@
 [submodule "variant"]
 	path = variant
 	url = https://github.com/mpark/variant.git
+[submodule "tests/googletest"]
+	path = tests/googletest
+	url = https://github.com/google/googletest

@@ -53,7 +53,7 @@ namespace pgp {
              *  @param  hashed_subpackets       The set of hashed subpackets
              *  @param  unhashed_subpackets     The set of unhashed subpackets
              *  @param  hash_prefix             The 16 most significant bits of the signed hash
-             *  @param  ...,                    The parameters for constructing the signature
+             *  @param  parameters              The parameters for constructing the signature
              */
             template <class T, typename... Arguments>
             signature(signature_type type, key_algorithm public_key_algorithm, hash_algorithm hashing_algorithm, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets, uint16_t hash_prefix, mpark::in_place_type_t<T>, Arguments&& ...parameters) :
@@ -74,8 +74,7 @@ namespace pgp {
              *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
-            template <class T, typename... Arguments>
-            signature( mpark::in_place_type_t<T>, const secret_key &bound_key, const user_id &user, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
+            signature(const secret_key &bound_key, const user_id &user, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
                 _type{ signature_type::positive_user_id_and_public_key_certification },
                 _key_algorithm{ bound_key.algorithm() },
                 _hash_algorithm{ hash_algorithm::sha256 },
@@ -90,7 +89,7 @@ namespace pgp {
 
                 // hash the user id
                 hash_encoder.push<uint8_t>(0xB4);
-                hash_encoder.push<uint32_t>(user.size());
+                hash_encoder.push<uint32_t>(gsl::narrow_cast<uint32_t>(user.size()));
                 user.encode(hash_encoder);
 
                 // now hash the signature data itself
@@ -126,8 +125,7 @@ namespace pgp {
              *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
-            template <class T, typename... Arguments>
-            signature( mpark::in_place_type_t<T>, const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
+            signature(const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
                 _type{ signature_type::subkey_binding },
                 _key_algorithm{ owner.algorithm() },
                 _hash_algorithm{ hash_algorithm::sha256 },
@@ -165,6 +163,14 @@ namespace pgp {
                         break;
                 }
             }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const signature &other) const noexcept;
+            bool operator!=(const signature &other) const noexcept;
 
             /**
              *  Retrieve the packet tag used for this
@@ -286,11 +292,13 @@ namespace pgp {
                 hash_encoder.push(version());
                 hash_encoder.template push<uint8_t>(0xFF);
                 hash_encoder.template push<uint32_t>(
-                    sizeof(version())               +
-                    sizeof(type())                  +
-                    sizeof(public_key_algorithm())  +
-                    sizeof(hashing_algorithm())     +
-                    _hashed_subpackets.size()
+                    gsl::narrow_cast<uint32_t>(
+                        sizeof(version())               +
+                        sizeof(type())                  +
+                        sizeof(public_key_algorithm())  +
+                        sizeof(hashing_algorithm())     +
+                        _hashed_subpackets.size()
+                    )
                 );
             }
 

@@ -36,6 +36,14 @@ namespace pgp {
             user_id(std::string id) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const user_id &other) const noexcept;
+            bool operator!=(const user_id &other) const noexcept;
+
+            /**
              *  Retrieve the packet tag used for this
              *  packet type
              *  @return The packet type to use

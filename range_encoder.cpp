@@ -16,10 +16,8 @@ namespace pgp {
      *  Flush the encoder, so any partial-written bytes
      *  are written out. Note that after this operation,
      *  bitwise operations start at the beginning again.
-     *
-     *  @throws std::out_of_range
      */
-    void range_encoder::flush()
+    void range_encoder::flush() noexcept
     {
         // do we have any partially-filled bytes?
         if (_skip_bits > 0) {
@@ -63,6 +61,11 @@ namespace pgp {
         if (count + _skip_bits > 8) {
             // cannot encode the value, does not fit within byte
             throw std::out_of_range{ "Cannot encode value, bit-wise operation may not cross byte boundaries" };
+        }
+
+        if (_size >= _data.size()) {
+            // trying to write out-of-bounds
+            throw std::out_of_range{ "Buffer too small for inserting bits" };
         }
 
         // shift the data so it fits with the existing data and add it
