@@ -33,7 +33,7 @@ namespace pgp {
              *  @param  flag    One or more flags to set
              */
             template <typename ...flags>
-            key_flags_subpacket(flags... flag) :
+            explicit key_flags_subpacket(flags... flag) :
                 _flags{ (flag + ...) }
             {}
 
