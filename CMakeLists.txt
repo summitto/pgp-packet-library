@@ -104,6 +104,9 @@ target_include_directories(pgp-packet PUBLIC ${SODIUM_INCLUDE_DIRS})
 target_link_libraries(pgp-packet ${SODIUM_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
+    $<INSTALL_INTERFACE:include>)
+
+target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>
     $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
 )
