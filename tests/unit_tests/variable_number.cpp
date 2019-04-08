@@ -21,3 +21,13 @@ TEST(variable_number, faithful_encoding)
         ASSERT_EQ(n, result);
     }
 }
+
+TEST(variable_number, assignment)
+{
+	for (uint32_t n = 0; n < 100; n++) {
+		pgp::variable_number varnum;
+		// Test the assignment operator
+		varnum = n;
+		ASSERT_EQ(varnum, n);
+	}
+}
