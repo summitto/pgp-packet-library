@@ -8,15 +8,15 @@ namespace util {
      *  committed
      */
     template <typename Func>
-    class Restorer {
+    class Transaction {
     public:
-        Restorer(Func func):
+        Transaction(Func func):
             _func{ func } {}
 
         /**
          *  If commit() was not called, the restore function will be called.
          */
-        ~Restorer()
+        ~Transaction()
         {
             if (!committed) {
                 _func();

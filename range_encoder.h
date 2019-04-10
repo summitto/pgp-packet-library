@@ -5,7 +5,7 @@
 #include <gsl/span>
 #include <cstring>
 #include <limits>
-#include "util/value_restorer.h"
+#include "util/transaction.h"
 
 
 namespace pgp {
@@ -140,7 +140,7 @@ namespace pgp {
                 //     _size += value.size() * sizeof(T);
                 // }
 
-                util::Restorer restorer([this, size_val=_size, current_val=_current, skip_bits_val=_skip_bits]() {
+                util::Transaction transaction([this, size_val=_size, current_val=_current, skip_bits_val=_skip_bits]() {
                     _size = size_val;
                     _current = current_val;
                     _skip_bits = skip_bits_val;
@@ -155,7 +155,7 @@ namespace pgp {
                     ++begin;
                 }
 
-                restorer.commit();
+                transaction.commit();
 
                 // allow chaining
                 return *this;
@@ -171,7 +171,7 @@ namespace pgp {
             template <typename T>
             range_encoder &insert_blob(gsl::span<const T> value)
             {
-                if (value.size() == 0) {
+                if (value.empty()) {
                     // nothing to do if the input is empty
                     return *this;
                 }

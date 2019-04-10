@@ -34,7 +34,7 @@ namespace pgp {
              *
              *  @param  data    The array of data
              */
-            array_signature_subpacket(std::array<uint8_t, data_size> data) :
+            array_signature_subpacket(std::array<uint8_t, data_size> data) noexcept :
                 _data{ data }
             {}
 

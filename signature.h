@@ -89,7 +89,7 @@ namespace pgp {
 
                 // hash the user id
                 hash_encoder.push<uint8_t>(0xB4);
-                hash_encoder.push<uint32_t>(gsl::narrow_cast<uint32_t>(user.size()));
+                hash_encoder.push(gsl::narrow_cast<uint32_t>(user.size()));
                 user.encode(hash_encoder);
 
                 // now hash the signature data itself
@@ -291,7 +291,7 @@ namespace pgp {
                 // add trailer
                 hash_encoder.push(version());
                 hash_encoder.template push<uint8_t>(0xFF);
-                hash_encoder.template push<uint32_t>(
+                hash_encoder.push(
                     gsl::narrow_cast<uint32_t>(
                         sizeof(version())               +
                         sizeof(type())                  +
