@@ -7,11 +7,11 @@ namespace util {
      *  Helper class to call a change-restoring function unless the changes are
      *  committed using commit()
      */
-    template <typename RestoreCallback>
+    template <typename Rollback>
     class transaction {
     public:
-        transaction(RestoreCallback restore_callback):
-            _restore_callback{ restore_callback } {}
+        transaction(Rollback rollback):
+            _rollback{ std::forward<Rollback>(rollback) } {}
 
         /**
          *  If commit() was not called, the restore function will be called.
@@ -19,7 +19,7 @@ namespace util {
         ~transaction()
         {
             if (!committed) {
-                _restore_callback();
+                _rollback();
             }
         }
 
@@ -32,7 +32,9 @@ namespace util {
         }
 
     private:
-        RestoreCallback _restore_callback;
+        using rollback_t = std::remove_cv_t<std::remove_reference_t<Rollback>>;
+
+        rollback_t _rollback;
         bool committed = false;
     };
 
