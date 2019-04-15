@@ -52,7 +52,7 @@ target_compile_options(tests PRIVATE
     -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare
     -g -O0 -fprofile-instr-generate -fcoverage-mapping)
 # target_compile_options(tests PRIVATE "-g" "-O0" "-fprofile-instr-generate" "-fcoverage-mapping" "-Weverything" "-Wno-c++98-compat" "-Wno-c++98-compat-pedantic" "-Wno-padded" "-Wno-shadow-uncaptured-local" "-Wno-global-constructors")
-target_link_options(tests PRIVATE "-fprofile-instr-generate" "-fcoverage-mapping")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping")
 
 target_include_directories(tests PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
 target_link_libraries(tests ${LIBGCRYPT_LIBRARIES})
