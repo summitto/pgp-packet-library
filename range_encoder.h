@@ -140,7 +140,7 @@ namespace pgp {
                 //     _size += value.size() * sizeof(T);
                 // }
 
-                util::Transaction transaction([this, size_val=_size, current_val=_current, skip_bits_val=_skip_bits]() {
+                util::transaction transaction([this, size_val=_size, current_val=_current, skip_bits_val=_skip_bits]() {
                     _size = size_val;
                     _current = current_val;
                     _skip_bits = skip_bits_val;

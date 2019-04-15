@@ -99,11 +99,9 @@ namespace pgp {
             template <class encoder_t>
             void encode(encoder_t &writer) const
             {
-                // the size of the packet - but without the size of the header itself
-                uint16_t data_size = gsl::narrow_cast<uint16_t>(size() - uint16::size());
-
-                // add the size header
-                uint16{ data_size }.encode(writer);
+                // add the size header; this is the size of the packet minus
+                // the size of the header itself
+                uint16{ gsl::narrow_cast<uint16_t>(size() - uint16::size()) }.encode(writer);
 
                 // iterate over the subpackets
                 for (auto &subpacket : _subpackets) {

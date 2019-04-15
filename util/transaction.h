@@ -5,21 +5,21 @@ namespace util {
 
     /**
      *  Helper class to call a change-restoring function unless the changes are
-     *  committed
+     *  committed using commit()
      */
-    template <typename Func>
-    class Transaction {
+    template <typename RestoreCallback>
+    class transaction {
     public:
-        Transaction(Func func):
-            _func{ func } {}
+        transaction(RestoreCallback restore_callback):
+            _restore_callback{ restore_callback } {}
 
         /**
          *  If commit() was not called, the restore function will be called.
          */
-        ~Transaction()
+        ~transaction()
         {
             if (!committed) {
-                _func();
+                _restore_callback();
             }
         }
 
@@ -32,7 +32,7 @@ namespace util {
         }
 
     private:
-        Func _func;
+        RestoreCallback _restore_callback;
         bool committed = false;
     };
 
