@@ -13,8 +13,14 @@ namespace tests {
 
         result_type operator()() noexcept;
 
-        static result_type min() noexcept;
-        static result_type max() noexcept;
+        static constexpr result_type min() noexcept
+        {
+            return driver_engine::min();
+        }
+        static constexpr result_type max() noexcept
+        {
+            return driver_engine::max();
+        }
 
     private:
         driver_engine engine;

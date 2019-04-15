@@ -10,14 +10,4 @@ namespace tests {
     {
         return engine();
     }
-
-    device_random_engine::result_type device_random_engine::min() noexcept
-    {
-        return driver_engine::min();
-    }
-
-    device_random_engine::result_type device_random_engine::max() noexcept
-    {
-        return driver_engine::max();
-    }
 }
