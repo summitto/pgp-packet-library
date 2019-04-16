@@ -5,6 +5,7 @@
 #include <gsl/span>
 #include <cstring>
 #include <limits>
+#include "util/transaction.h"
 
 
 namespace pgp {
@@ -27,10 +28,8 @@ namespace pgp {
              *  Flush the encoder, so any partial-written bytes
              *  are written out. Note that after this operation,
              *  bitwise operations start at the beginning again.
-             *
-             *  @throws std::out_of_range
              */
-            void flush();
+            void flush() noexcept;
 
             /**
              *  Retrieve the number of encoded bytes
@@ -72,13 +71,21 @@ namespace pgp {
                 }
 
                 // retrieve the currently-set bits and shift them to the left of the number
-                T result = _current << ((sizeof(T) - 1) * 8);
+                T result = static_cast<T>(static_cast<T>(_current) << ((sizeof(T) - 1) * 8));
 
                 // add the new value to it
                 result |= value;
 
                 // convert it to big-endian
-                boost::endian::native_to_big_inplace(result);
+                // Note that in some boost versions, boost::endian::endian_reverse is not
+                // explicitly overloaded for 'char' but only for the {,u}int{8,16,32,64}_t
+                // types. Since char != int8_t, the compiler selects the int=int32_t
+                // overload over the int8_t overload, making the conversion go awry.
+                // Explicitly converting to an unsigned type works around this issue.
+                // (Explicitly converting back avoids a possible -Wsign-conversion.)
+                result = static_cast<T>(
+                    boost::endian::native_to_big(static_cast<std::make_unsigned_t<T>>(result))
+                );
 
                 // copy the data over
                 std::memcpy(_data.data() + _size, &result, sizeof(T));
@@ -133,6 +140,12 @@ namespace pgp {
                 //     _size += value.size() * sizeof(T);
                 // }
 
+                util::transaction transaction([this, size_val=_size, current_val=_current, skip_bits_val=_skip_bits]() {
+                    _size = size_val;
+                    _current = current_val;
+                    _skip_bits = skip_bits_val;
+                });
+
                 // iterate over the range
                 while (begin != end) {
                     // push the data
@@ -141,6 +154,8 @@ namespace pgp {
                     // move to next element
                     ++begin;
                 }
+
+                transaction.commit();
 
                 // allow chaining
                 return *this;
@@ -151,22 +166,30 @@ namespace pgp {
              *
              *  @param  value   The data to insert
              *  @return self, for chaining
-             *  @throws std::out_of_range
+             *  @throws std::out_of_range, std::range_error
              */
             template <typename T>
             range_encoder &insert_blob(gsl::span<const T> value)
             {
+                if (value.empty()) {
+                    // nothing to do if the input is empty
+                    return *this;
+                }
+
                 // make sure we have enough data for inserting the number
                 if (_data.size() < _size + sizeof(T) * value.size()) {
                     // trying to write out-of-bounds
                     throw std::out_of_range{ "Buffer too small for inserting blob" };
                 }
 
-                // copy the data into the buffer
-                std::memcpy(_data.data() + _size, value.data(), value.size() * sizeof(T));
+                // add the first value using push() to merge in the possible queued bits
+                push(value[0]);
+
+                // then copy the rest of the data into the buffer
+                std::memcpy(_data.data() + _size, value.data() + 1, (value.size() - 1) * sizeof(T));
 
                 // register the bytes in the buffer
-                _size += value.size() * sizeof(T);
+                _size += (static_cast<size_t>(value.size()) - 1) * sizeof(T);
 
                 // allow chaining
                 return *this;

@@ -24,6 +24,14 @@ namespace pgp {
             dsa_secret_key(multiprecision_integer x) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const dsa_secret_key &other) const noexcept;
+            bool operator!=(const dsa_secret_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

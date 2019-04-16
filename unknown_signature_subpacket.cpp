@@ -34,6 +34,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool unknown_signature_subpacket::operator==(const unknown_signature_subpacket&) const noexcept
+    {
+        return true;
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool unknown_signature_subpacket::operator!=(const unknown_signature_subpacket &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
@@ -41,7 +59,7 @@ namespace pgp {
     {
         // we need to encode the type and the data and encode that
         // size again using variable-length packet encoding
-        uint32_t size = sizeof(_type) + _data.size();
+        uint32_t size = gsl::narrow_cast<uint32_t>(sizeof(_type) + _data.size());
 
         // now add the size necessary to encode the size itself
         return size + variable_number{ size }.size();

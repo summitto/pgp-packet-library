@@ -36,6 +36,32 @@ namespace pgp {
     }
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool signature::operator==(const signature &other) const noexcept
+    {
+        return
+            version() == other.version() &&
+            type() == other.type() &&
+            public_key_algorithm() == other.public_key_algorithm() &&
+            hashing_algorithm() == other.hashing_algorithm() &&
+            hashed_subpackets() == other.hashed_subpackets() &&
+            unhashed_subpackets() == other.unhashed_subpackets() &&
+            hash_prefix() == other.hash_prefix() &&
+            data() == other.data();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool signature::operator!=(const signature &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      *  @throws std::runtime_error for unknown signature types

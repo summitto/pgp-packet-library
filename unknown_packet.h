@@ -18,10 +18,22 @@ namespace pgp {
 
             /**
              *  Constructor
-             *
-             *  @param  parser  The decoder to parse the data
              */
-            unknown_packet(decoder &parser) {}
+            unknown_packet(decoder&) {}
+
+            /**
+             *  Comparison operators
+             */
+            bool operator==(const unknown_packet&) const noexcept
+            {
+                return true;
+            }
+
+            /**
+             *  Comparison operators
+             */
+            bool operator!=(const unknown_packet &other) const noexcept
+            { return !(*this == other); }
 
             /**
              *  Retrieve the packet tag used for this
@@ -48,11 +60,10 @@ namespace pgp {
             /**
              *  Write the data to an encoder
              *
-             *  @param  writer  The encoder to write to
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&) const
             {
                 // unknown packets cannot be encoded
                 throw std::runtime_error{ "Failed to encode unknown packet" };

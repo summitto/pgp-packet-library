@@ -36,6 +36,14 @@ namespace pgp {
             eddsa_signature(multiprecision_integer r, multiprecision_integer s) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const eddsa_signature &other) const noexcept;
+            bool operator!=(const eddsa_signature &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

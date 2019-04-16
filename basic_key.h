@@ -79,7 +79,7 @@ namespace pgp {
              *
              *  @param  creation_time   UNIX timestamp the key was created at
              *  @param  algorithm       The key algorithm used
-             *  @param  ...,            The parameters to forward to the key constructor
+             *  @param  parameters      The parameters to forward to the key constructor
              *  @throws std::runtime_error
              */
             template <class T, typename... Arguments>
@@ -89,6 +89,26 @@ namespace pgp {
                 _algorithm{ algorithm },
                 _key{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const basic_key<key_traits> &other) const noexcept
+            {
+                return creation_time() == other.creation_time() &&
+                        algorithm() == other.algorithm() &&
+                        key() == other.key();
+            }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator!=(const basic_key<key_traits> &other) const noexcept
+            { return !(*this == other); }
 
             /**
              *  Retrieve the packet tag used for this
@@ -141,10 +161,12 @@ namespace pgp {
                     // the size of the key data we hash
                     // note that we cast to the public key
                     uint16 size{
-                        _version.size() +
-                        _creation_time.size() +
-                        sizeof(_algorithm) +
-                        key.public_type_t::size()
+                        gsl::narrow_cast<uint16_t>(
+                            _version.size() +
+                            _creation_time.size() +
+                            sizeof(_algorithm) +
+                            key.public_type_t::size()
+                        )
                     };
 
                     // add magic constant and base fields
@@ -154,7 +176,7 @@ namespace pgp {
                     _creation_time.encode(writer);
                     writer.push(_algorithm);
 
-                    // // also hash the key data
+                    // also hash the key data
                     key.public_type_t::encode(writer);
                 }, _key);
             }

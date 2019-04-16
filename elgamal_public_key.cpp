@@ -28,6 +28,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool elgamal_public_key::operator==(const elgamal_public_key &other) const noexcept
+    {
+        return p() == other.p() && g() == other.g() && y() == other.y();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool elgamal_public_key::operator!=(const elgamal_public_key &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
@@ -42,7 +60,7 @@ namespace pgp {
      *
      *  @return The prime p
      */
-    const multiprecision_integer elgamal_public_key::p() const noexcept
+    const multiprecision_integer &elgamal_public_key::p() const noexcept
     {
         // return the stored prime
         return _p;
@@ -53,7 +71,7 @@ namespace pgp {
      *
      *  @return The group generator g
      */
-    const multiprecision_integer elgamal_public_key::g() const noexcept
+    const multiprecision_integer &elgamal_public_key::g() const noexcept
     {
         // return the stored generator
         return _g;
@@ -64,7 +82,7 @@ namespace pgp {
      *
      *  @return The public key value
      */
-    const multiprecision_integer elgamal_public_key::y() const noexcept
+    const multiprecision_integer &elgamal_public_key::y() const noexcept
     {
         // return the stored public key value
         return _y;

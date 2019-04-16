@@ -30,6 +30,14 @@ namespace pgp {
             unknown_signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data);
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const unknown_signature_subpacket &other) const noexcept;
+            bool operator!=(const unknown_signature_subpacket &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

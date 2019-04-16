@@ -28,23 +28,6 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  that    The integer to copy or move
-             */
-            curve_oid(const curve_oid &that) = default;
-            curve_oid(curve_oid &&that) = default;
-
-            /**
-             *  Assignment
-             *
-             *  @param  that    The integer to assign
-             *  @return Same object for chaining
-             */
-            curve_oid &operator=(const curve_oid &that) = default;
-            curve_oid &operator=(curve_oid &&that) = default;
-
-            /**
-             *  Constructor
-             *
              *  @param  data    The range of numbers
              */
             curve_oid(gsl::span<const uint8_t> data) noexcept;
@@ -63,6 +46,14 @@ namespace pgp {
              */
             static curve_oid ed25519()      { return {{ 0x2b, 0x06, 0x01, 0x04, 0x01, 0xda, 0x47, 0x0f, 0x01         }};    }
             static curve_oid curve_25519()  { return {{ 0x2B, 0x06, 0x01, 0x04, 0x01, 0x97, 0x55, 0x01, 0x05, 0x01   }};    }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const curve_oid &other) const noexcept;
+            bool operator!=(const curve_oid &other) const noexcept;
 
             /**
              *  Determine the size used in encoded format

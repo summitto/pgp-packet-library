@@ -31,6 +31,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool user_id::operator==(const user_id &other) const noexcept
+    {
+        return id() == other.id();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool user_id::operator!=(const user_id &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      *  @throws std::runtime_error for unknown key types

@@ -32,11 +32,29 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  array   The array of data
+             *  @param  data    The array of data
              */
-            array_signature_subpacket(std::array<uint8_t, data_size> data) :
+            array_signature_subpacket(std::array<uint8_t, data_size> data) noexcept :
                 _data{ data }
             {}
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const array_signature_subpacket<data_size, subpacket_type> &other) const noexcept
+            {
+                return data() == other.data();
+            }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator!=(const array_signature_subpacket<data_size, subpacket_type> &other) const noexcept
+            { return !(*this == other); }
 
             /**
              *  Determine the size used in encoded format
@@ -45,7 +63,7 @@ namespace pgp {
             size_t size() const noexcept
             {
                 // we need to store the number plus the type
-                uint32_t size = _data.size() + sizeof(subpacket_type);
+                uint32_t size = gsl::narrow_cast<uint32_t>(_data.size() + sizeof(subpacket_type));
 
                 // and then store this number in a variable number
                 return size + variable_number{ size }.size();
@@ -66,7 +84,7 @@ namespace pgp {
              *
              *  @return The stored array
              */
-            std::array<uint8_t, data_size> &data() const noexcept
+            const std::array<uint8_t, data_size> &data() const noexcept
             {
                 // retrieve the stored array
                 return _data;
@@ -82,7 +100,7 @@ namespace pgp {
             void encode(encoder_t &writer) const
             {
                 // first get the size for the data itself
-                uint32_t size = _data.size() + sizeof(subpacket_type);
+                uint32_t size = gsl::narrow_cast<uint32_t>(_data.size() + sizeof(subpacket_type));
 
                 // encode the size, the type, and the number
                 variable_number{ size }.encode(writer);

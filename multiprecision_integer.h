@@ -51,6 +51,14 @@ namespace pgp {
             multiprecision_integer &operator=(gsl::span<const uint8_t> data) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const multiprecision_integer &other) const noexcept;
+            bool operator!=(const multiprecision_integer &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

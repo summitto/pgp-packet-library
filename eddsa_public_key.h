@@ -34,6 +34,14 @@ namespace pgp {
             eddsa_public_key(curve_oid curve, multiprecision_integer Q) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const eddsa_public_key &other) const noexcept;
+            bool operator!=(const eddsa_public_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

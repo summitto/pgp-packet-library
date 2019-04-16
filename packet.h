@@ -46,13 +46,21 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  ...,    The parameters to provide to the body constructor
+             *  @param  parameters  The parameters to provide to the body constructor
              *  @throws Forwards exception from body constructor
              */
             template <class T, typename... Arguments>
             packet(mpark::in_place_type_t<T>, Arguments&& ...parameters) :
                 _body{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const packet &other) const noexcept;
+            bool operator!=(const packet &other) const noexcept;
 
             /**
              *  Retrieve the packet tag
@@ -93,7 +101,7 @@ namespace pgp {
                 // retrieve the body
                 mpark::visit([&size](auto &body) {
                     // retrieve the size from the body
-                    size = body.size();
+                    size = gsl::narrow_cast<uint32_t>(body.size());
                 }, _body);
 
                 // can we encode the packet in the old format?

@@ -34,6 +34,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool rsa_signature::operator==(const rsa_signature &other) const noexcept
+    {
+        return s() == other.s();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool rsa_signature::operator!=(const rsa_signature &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */

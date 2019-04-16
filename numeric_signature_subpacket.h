@@ -39,6 +39,24 @@ namespace pgp {
             {}
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const numeric_signature_subpacket<T, subpacket_type> &other) const noexcept
+            {
+                return data() == other.data();
+            }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator!=(const numeric_signature_subpacket<T, subpacket_type> &other) const noexcept
+            { return !(*this == other); }
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

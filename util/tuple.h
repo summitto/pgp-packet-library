@@ -18,12 +18,12 @@ namespace {
      *  @param  tuple   The tuple to construct from
      *  @return The constructed type T
      */
-	template <class T, class Tuple, std::size_t... I>
-	constexpr T make_from_tuple_impl( Tuple&& tuple, std::index_sequence<I...> )
-	{
+    template <class T, class Tuple, std::size_t... I>
+    constexpr T make_from_tuple_impl( Tuple&& tuple, std::index_sequence<I...> )
+    {
         // construct with all items from the tuple
-	    return T(std::get<I>(std::forward<Tuple>(tuple))...);
-	}
+        return T(std::get<I>(std::forward<Tuple>(tuple))...);
+    }
 
 }
  

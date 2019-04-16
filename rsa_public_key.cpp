@@ -25,6 +25,24 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool rsa_public_key::operator==(const rsa_public_key &other) const noexcept
+    {
+        return n() == other.n() && e() == other.e();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool rsa_public_key::operator!=(const rsa_public_key &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */

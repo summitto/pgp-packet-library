@@ -14,7 +14,7 @@ namespace pgp {
     {
         // first read the number of elements, since it is in bits,
         // we have to round it up to the nearest byte and read it
-        auto count = (_bits + 7) / 8;
+        size_t count = (_bits + 7) / 8;
 
         // allocate memory for the number
         _data.reserve(count);
@@ -41,7 +41,7 @@ namespace pgp {
     /**
      *  Assignment
      *
-     *  @param  that    The integer to assign
+     *  @param  data    The data to assign
      *  @return Same object for chaining
      */
     multiprecision_integer &multiprecision_integer::operator=(gsl::span<const uint8_t> data) noexcept
@@ -62,19 +62,37 @@ namespace pgp {
         static constexpr std::array<uint8_t, 16> clz_lookup{ 4, 3, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
 
         // split the number up into the upper- and lower 4-bit bounds
-        auto upper = data[0] >> 4;
-        auto lower = data[0] & 0x0F;
+        uint8_t upper = data[0] >> 4;
+        uint8_t lower = data[0] & 0x0F;
 
         // calculate number of leading zeroes
         auto leading_zeroes = upper ? clz_lookup[upper] : 4 + clz_lookup[lower];
 
         // assign bit count and the data
-        _bits = data.size() * 8 - leading_zeroes;
+        _bits = gsl::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
         _data.assign(data.begin(), data.end());
 
         // allow chaining
         return *this;
     }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool multiprecision_integer::operator==(const multiprecision_integer &other) const noexcept
+    {
+        return data() == other.data();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool multiprecision_integer::operator!=(const multiprecision_integer &other) const noexcept
+    { return !(*this == other); }
 
     /**
      *  Determine the size used in encoded format

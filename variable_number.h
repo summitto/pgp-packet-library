@@ -65,14 +65,16 @@ namespace pgp {
                 // encoding depends on the value
                 if (_value < 192) {
                     // directly encode the number
-                    uint8_t value = _value;
+                    uint8_t value = gsl::narrow_cast<uint8_t>(_value);
                     writer.push(value);
                 } else if (_value < 8384) {
                     // enable the two most significant bits and remove
-                    // 192 from the number according to rfc 4480
-                    uint16_t value = 0b1100000000000000 | (_value - 192);
+                    // 192 from the number according to rfc 4880
+                    uint16_t value = gsl::narrow_cast<uint16_t>(0b1100000000000000 | (_value - 192));
                     writer.push(value);
                 } else {
+                    // write the tag to indicate a full 4-byte number
+                    writer.push(static_cast<uint8_t>(0xff));
                     // write the number to the encoder
                     writer.push(_value);
                 }

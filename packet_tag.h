@@ -59,7 +59,7 @@ namespace pgp {
             case packet_tag::user_attribute:                                        return "user attribute packet";
             case packet_tag::symmetrically_encrypted_and_integrity_protected_data:  return "symmetrically encrypted and integrity protected data packet";
             case packet_tag::modification_detection_code:                           return "modification detection code";
-        };
+        }
     }
 
     /**

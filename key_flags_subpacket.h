@@ -2,6 +2,8 @@
 
 #include "signature_subpacket_type.h"
 #include "decoder.h"
+#include "fixed_number.h"
+#include "variable_number.h"
 
 
 namespace pgp {
@@ -34,8 +36,26 @@ namespace pgp {
              */
             template <typename ...flags>
             explicit key_flags_subpacket(flags... flag) :
-                _flags{ (flag + ...) }
+                _flags{ static_cast<uint8_t>((flag | ...)) }
             {}
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const key_flags_subpacket &other) const noexcept
+            {
+                return _flags == other._flags;
+            }
+
+            /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator!=(const key_flags_subpacket &other) const noexcept
+            { return !(*this == other); }
 
             /**
              *  Determine the size used in encoded format

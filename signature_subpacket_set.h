@@ -50,6 +50,14 @@ namespace pgp {
             signature_subpacket_set(std::vector<subpacket_variant> subpackets) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const pgp::signature_subpacket_set &other) const noexcept;
+            bool operator!=(const pgp::signature_subpacket_set &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */
@@ -91,11 +99,9 @@ namespace pgp {
             template <class encoder_t>
             void encode(encoder_t &writer) const
             {
-                // the size of the packet - but without the size of the header itself
-                uint16_t data_size = size() - uint16::size();
-
-                // add the size header
-                uint16{ data_size }.encode(writer);
+                // add the size header; this is the size of the packet minus
+                // the size of the header itself
+                uint16{ gsl::narrow_cast<uint16_t>(size() - uint16::size()) }.encode(writer);
 
                 // iterate over the subpackets
                 for (auto &subpacket : _subpackets) {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/endian/conversion.hpp>
+#include <gsl/span>
 #include "gcrypt_encoder_type.h"
 
 
@@ -24,7 +26,7 @@ namespace pgp {
                 // did we get an error?
                 if (code) {
                     // @todo: we should be making a more descriptive error!
-                    throw std::runtime_error{ "Failed to initialize hasing algorithm" };
+                    throw std::runtime_error{ "Failed to initialize hashing algorithm" };
                 }
             }
 

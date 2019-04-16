@@ -15,6 +15,24 @@ namespace pgp {
     }
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool string_to_key::operator==(const string_to_key &other) const noexcept
+    {
+        return convention() == other.convention();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool string_to_key::operator!=(const string_to_key &other) const noexcept
+    { return !(*this == other); }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
