@@ -10,6 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 find_package(Boost              REQUIRED)
 find_package(LibGcrypt          REQUIRED)
 find_package(sodium     1.0.16  REQUIRED)
+find_package(CryptoPP           REQUIRED)
 
 set(pgp-packet-headers
     array_signature_subpacket.h
@@ -103,6 +104,9 @@ target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
 
 target_include_directories(pgp-packet PUBLIC ${SODIUM_INCLUDE_DIRS})
 target_link_libraries(pgp-packet ${SODIUM_LIBRARIES})
+
+target_include_directories(pgp-packet PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
+target_link_libraries(pgp-packet ${CRYPTOPP_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
     $<INSTALL_INTERFACE:include>)
