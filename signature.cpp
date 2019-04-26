@@ -29,6 +29,9 @@ namespace pgp {
             case key_algorithm::eddsa:
                 _signature.emplace<eddsa_signature>(parser);
                 break;
+            case key_algorithm::ecdsa:
+                _signature.emplace<ecdsa_signature>(parser);
+                break;
             default:
                 // do nothing, use the unknown_key
                 break;

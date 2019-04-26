@@ -5,6 +5,7 @@
 #include <mpark/variant.hpp>
 #include "expected_number.h"
 #include "eddsa_signature.h"
+#include "ecdsa_signature.h"
 #include "util/to_lvalue.h"
 #include "signature_type.h"
 #include "hash_algorithm.h"
@@ -34,7 +35,8 @@ namespace pgp {
                 unknown_signature,
                 dsa_signature,
                 rsa_signature,
-                eddsa_signature
+                eddsa_signature,
+                ecdsa_signature
             >;
 
             /**
@@ -111,6 +113,9 @@ namespace pgp {
                     case key_algorithm::eddsa:
                         _signature.emplace<eddsa_signature>(bound_key, digest);
                         break;
+                    case key_algorithm::ecdsa:
+                        _signature.emplace<ecdsa_signature>(bound_key, digest);
+                        break;
                     default:
                         // do nothing, use the unknown_key
                         break;
@@ -157,6 +162,9 @@ namespace pgp {
                         break;
                     case key_algorithm::eddsa:
                         _signature.emplace<eddsa_signature>(owner, digest);
+                        break;
+                    case key_algorithm::ecdsa:
+                        _signature.emplace<ecdsa_signature>(owner, digest);
                         break;
                     default:
                         // do nothing, use the unknown_key

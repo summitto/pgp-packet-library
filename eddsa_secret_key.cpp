@@ -45,7 +45,7 @@ namespace pgp {
      */
     size_t eddsa_secret_key::size() const noexcept
     {
-        // we need the size for the secret key and the checksum
+        // we need to store the secret scalar
         return _k.size();
     }
 

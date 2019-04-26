@@ -41,23 +41,27 @@ set(pgp-packet-headers
     variable_number.h
     decoder.h
     eddsa_public_key.h
+    ecdsa_public_key.h
     packet.h
     range_encoder.h
     rsa_signature.h
     signature_type.h
     dsa_public_key.h
     eddsa_secret_key.h
+    ecdsa_secret_key.h
     expected_number.h
     packet_tag.h
     secret_key.h
     string_to_key.h
     dsa_secret_key.h
     eddsa_signature.h
+    ecdsa_signature.h
     fixed_number.h
     public_key.h
     signature.h
     symmetric_key_algorithm.h
     unknown_key.h
+    null_hash.h
 )
 
 set(pgp-packet-sources
@@ -80,6 +84,9 @@ set(pgp-packet-sources
     eddsa_signature.cpp
     eddsa_public_key.cpp
     eddsa_secret_key.cpp
+    ecdsa_signature.cpp
+    ecdsa_public_key.cpp
+    ecdsa_secret_key.cpp
     elgamal_public_key.cpp
     elgamal_secret_key.cpp
     multiprecision_integer.cpp
