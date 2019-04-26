@@ -1,4 +1,5 @@
 #include "ecdsa_signature.h"
+#include "null_hash.h"
 #include <sodium/crypto_sign.h>
 #include <cryptopp/eccrypto.h>
 #include <cryptopp/oids.h>
@@ -8,48 +9,6 @@
 #include <algorithm>
 
 namespace pgp {
-
-    template <size_t HASH_SIZE = 32>
-    class IdentityHash : public CryptoPP::HashTransformation
-    {
-    public:
-        constexpr const static auto DIGESTSIZE = HASH_SIZE;
-
-        static constexpr const char *StaticAlgorithmName()
-        {
-            return "IdentityHash";
-        }
-
-        unsigned int DigestSize() const override
-        {
-            return DIGESTSIZE;
-        }
-
-        void Update(const CryptoPP::byte *input, size_t length) override
-        {
-            size_t s = std::min({length, DIGESTSIZE, static_cast<size_t>(std::distance(_iter, _digest.end()))});
-            _iter = std::copy(input, input + s, _iter);
-        }
-
-        void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize) override
-        {
-            ThrowIfInvalidTruncatedSize(digestSize);
-
-            if (_iter != _digest.end()) {
-                throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + std::to_string(DIGESTSIZE));
-            }
-
-            if (digest != nullptr) {
-                std::copy(_digest.begin(), std::next(_digest.begin(), digestSize), digest);
-            }
-
-            _iter = _digest.begin();
-        }
-
-    private:
-        std::array<uint8_t, DIGESTSIZE> _digest;
-        typename std::array<uint8_t, DIGESTSIZE>::iterator _iter{_digest.begin()};
-    };
 
     /**
      *  Constructor
@@ -82,13 +41,13 @@ namespace pgp {
         //ECDSA needs randomness for signatures
         CryptoPP::AutoSeededRandomPool prng;
 
-        CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::PrivateKey k1;
+        CryptoPP::ECDSA<CryptoPP::ECP, NullHash<32>>::PrivateKey k1;
         CryptoPP::Integer k1_exponent;
 
         k1_exponent.Decode(secret_data.data(), secret_data.size());
         k1.Initialize(CryptoPP::ASN1::secp256r1(), k1_exponent);
 
-        CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::Signer signer(k1);
+        CryptoPP::ECDSA<CryptoPP::ECP, NullHash<32>>::Signer signer(k1);
         // now sign the message
         signer.SignMessage( prng, digest.data(), digest.size(), signed_message.data() );
 

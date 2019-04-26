@@ -61,6 +61,7 @@ set(pgp-packet-headers
     signature.h
     symmetric_key_algorithm.h
     unknown_key.h
+    null_hash.h
 )
 
 set(pgp-packet-sources
