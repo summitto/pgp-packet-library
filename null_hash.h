@@ -48,11 +48,11 @@ namespace pgp {
         {
             // If too much data is supplied, throw an exception
             if (length > static_cast<size_t>(std::distance(_iter, _digest.end()))) {
-                throw CryptoPP::Exception(
+                throw CryptoPP::Exception{
                     CryptoPP::Exception::OTHER_ERROR,
                     "Input to NullHash too large: given " + std::to_string(length) +
                         " while only space left for " + std::to_string(std::distance(_iter, _digest.end()))
-                );
+                };
             }
 
             // Append the input data to the "digest" buffer
@@ -75,7 +75,7 @@ namespace pgp {
             // allow providing a partial hash as input and then requesting only
             // a prefix of that part)
             if (std::distance(_digest.begin(), _iter) < digestSize) {
-                throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Not enough hash input provided to satisfy request");
+                throw CryptoPP::Exception{CryptoPP::Exception::OTHER_ERROR, "Not enough hash input provided to satisfy request"};
             }
 
             // If we have a buffer to put the data in, copy the data into the destination buffer
@@ -88,8 +88,8 @@ namespace pgp {
         }
 
     private:
-        std::array<uint8_t, DIGESTSIZE> _digest;
-        typename std::array<uint8_t, DIGESTSIZE>::iterator _iter{_digest.begin()};
+        std::array<uint8_t, DIGESTSIZE>                     _digest;
+        typename std::array<uint8_t, DIGESTSIZE>::iterator  _iter    {_digest.begin()};
     };
 
 }
