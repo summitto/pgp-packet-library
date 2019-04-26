@@ -296,16 +296,3 @@ namespace tests {
         };
     }
 }
-
-
-#define DEFINE_MEMBER_CLASS_BY_VALUE(_member_name) \
-        struct Member_ ## _member_name { \
-            template <typename T> \
-            static auto member(const T &instance) { return instance. _member_name(); } \
-        }
-
-#define DEFINE_MEMBER_CLASS_BY_REF(_member_name) \
-        struct Member_ ## _member_name { \
-            template <typename T> \
-            static const auto& member(const T &instance) { return instance. _member_name(); } \
-        }
