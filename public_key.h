@@ -22,7 +22,7 @@ namespace pgp {
         using dsa_key_t     = dsa_public_key;
         using ecdh_key_t    = ecdh_public_key;
         using eddsa_key_t   = eddsa_public_key;
-		using ecdsa_key_t	= ecdsa_public_key;
+        using ecdsa_key_t   = ecdsa_public_key;
 
         /**
          *  Packet tag for public keys

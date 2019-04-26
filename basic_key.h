@@ -28,7 +28,7 @@ namespace pgp {
             using elgamal_key_t = typename key_traits::elgamal_key_t;
             using ecdh_key_t    = typename key_traits::ecdh_key_t;
             using eddsa_key_t   = typename key_traits::eddsa_key_t;
-			using ecdsa_key_t	= typename key_traits::ecdsa_key_t;
+            using ecdsa_key_t   = typename key_traits::ecdsa_key_t;
 
             /**
              *  A variant with all supported key types
@@ -40,7 +40,7 @@ namespace pgp {
                 elgamal_key_t,
                 ecdh_key_t,
                 eddsa_key_t,
-				ecdsa_key_t
+                ecdsa_key_t
             >;
 
             /**

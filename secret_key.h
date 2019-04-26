@@ -23,7 +23,7 @@ namespace pgp {
         using dsa_key_t     = basic_secret_key<dsa_public_key, dsa_secret_key>;
         using ecdh_key_t    = basic_secret_key<ecdh_public_key, ecdh_secret_key>;
         using eddsa_key_t   = basic_secret_key<eddsa_public_key, eddsa_secret_key>;
-		using ecdsa_key_t	= basic_secret_key<ecdsa_public_key, ecdsa_secret_key>;
+        using ecdsa_key_t   = basic_secret_key<ecdsa_public_key, ecdsa_secret_key>;
 
         /**
          *  Packet tag for secret keys

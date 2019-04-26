@@ -36,7 +36,7 @@ namespace pgp {
                 dsa_signature,
                 rsa_signature,
                 eddsa_signature,
-				ecdsa_signature
+                ecdsa_signature
             >;
 
             /**

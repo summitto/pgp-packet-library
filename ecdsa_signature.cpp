@@ -8,51 +8,51 @@
 
 namespace pgp {
 
-	template <unsigned int HASH_SIZE = 32>
-	class IdentityHash : public CryptoPP::HashTransformation
-	{
-	public:
-	    constexpr const static auto DIGESTSIZE = HASH_SIZE;
+    template <unsigned int HASH_SIZE = 32>
+    class IdentityHash : public CryptoPP::HashTransformation
+    {
+    public:
+        constexpr const static auto DIGESTSIZE = HASH_SIZE;
 
-	    static const char * StaticAlgorithmName()
-	    {
-	        return "IdentityHash";
-	    }
+        static const char * StaticAlgorithmName()
+        {
+            return "IdentityHash";
+        }
 
-	    IdentityHash() : m_digest(HASH_SIZE), m_idx(0) {}
+        IdentityHash() : m_digest(HASH_SIZE), m_idx(0) {}
 
-	    virtual unsigned int DigestSize() const
-	    {
-	        return DIGESTSIZE;
-	    }
+        virtual unsigned int DigestSize() const
+        {
+            return DIGESTSIZE;
+        }
 
-	    virtual void Update(const CryptoPP::byte *input, size_t length)
-	    {
-	        size_t s = CryptoPP::STDMIN(CryptoPP::STDMIN<size_t>(DIGESTSIZE, length),
-	                                         DIGESTSIZE - m_idx);    
-	        if (s)
-	            ::memcpy(&m_digest[m_idx], input, s);
-	        m_idx += s;
-	    }
+        virtual void Update(const CryptoPP::byte *input, size_t length)
+        {
+            size_t s = CryptoPP::STDMIN(CryptoPP::STDMIN<size_t>(DIGESTSIZE, length),
+                                             DIGESTSIZE - m_idx);
+            if (s)
+                ::memcpy(&m_digest[m_idx], input, s);
+            m_idx += s;
+        }
 
-	    virtual void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize)
-	    {
-	        ThrowIfInvalidTruncatedSize(digestSize);
+        virtual void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize)
+        {
+            ThrowIfInvalidTruncatedSize(digestSize);
 
-	        if (m_idx != DIGESTSIZE)
-	            throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + CryptoPP::IntToString(DIGESTSIZE));
+            if (m_idx != DIGESTSIZE)
+                throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + CryptoPP::IntToString(DIGESTSIZE));
 
-	        if (digest)
-	            ::memcpy(digest, m_digest, digestSize);
+            if (digest)
+                ::memcpy(digest, m_digest, digestSize);
 
-	        m_idx = 0;
-	    }
+            m_idx = 0;
+        }
 
-	private:
-	    CryptoPP::SecByteBlock m_digest;
-	    size_t m_idx;
-	};
-	
+    private:
+        CryptoPP::SecByteBlock m_digest;
+        size_t m_idx;
+    };
+
     /**
      *  Constructor
      *
@@ -81,23 +81,23 @@ namespace pgp {
         auto public_data = ecdsa_key.Q().data().subspan<1>();
         auto secret_data = ecdsa_key.k().data();
 
-		//ECDSA needs randomness for signatures
-		CryptoPP::AutoSeededRandomPool prng;
-		
-		CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::PrivateKey k1;
-		CryptoPP::Integer k1_exponent;
-			
-		k1_exponent.Decode(secret_data.data(), secret_data.size());
-		k1.Initialize(CryptoPP::ASN1::secp256r1(), k1_exponent);
+        //ECDSA needs randomness for signatures
+        CryptoPP::AutoSeededRandomPool prng;
 
-		CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::Signer signer(k1);
+        CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::PrivateKey k1;
+        CryptoPP::Integer k1_exponent;
+
+        k1_exponent.Decode(secret_data.data(), secret_data.size());
+        k1.Initialize(CryptoPP::ASN1::secp256r1(), k1_exponent);
+
+        CryptoPP::ECDSA<CryptoPP::ECP, IdentityHash<32>>::Signer signer(k1);
         // now sign the message
-		signer.SignMessage( prng, digest.data(), digest.size(), signed_message.data() );
-	
+        signer.SignMessage( prng, digest.data(), digest.size(), signed_message.data() );
+
         // split up the data and assign it
         _r = gsl::span{ signed_message.data(),      32 };
         _s = gsl::span{ signed_message.data() + 32, 32 };
-	}
+    }
 
     /**
      *  Constructor
