@@ -15,7 +15,7 @@ namespace pgp {
     public:
         constexpr const static auto DIGESTSIZE = HASH_SIZE;
 
-        static const char* StaticAlgorithmName()
+        static constexpr const char *StaticAlgorithmName()
         {
             return "IdentityHash";
         }
@@ -28,7 +28,7 @@ namespace pgp {
         void Update(const CryptoPP::byte *input, size_t length) override
         {
             size_t s = std::min({length, DIGESTSIZE, static_cast<size_t>(std::distance(_iter, _digest.end()))});
-			_iter = std::copy(input, input + s, _iter);
+            _iter = std::copy(input, input + s, _iter);
         }
 
         void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize) override
@@ -37,18 +37,18 @@ namespace pgp {
 
             if (_iter != _digest.end()) {
                 throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + std::to_string(DIGESTSIZE));
-			}
+            }
 
             if (digest != nullptr) {
-				std::copy(_digest.begin(), std::next(_digest.begin(), digestSize), digest);
-			}
+                std::copy(_digest.begin(), std::next(_digest.begin(), digestSize), digest);
+            }
 
-			_iter = _digest.begin();
+            _iter = _digest.begin();
         }
 
     private:
-		std::array<uint8_t, DIGESTSIZE> _digest;
-		typename std::array<uint8_t, DIGESTSIZE>::iterator _iter{_digest.begin()};
+        std::array<uint8_t, DIGESTSIZE> _digest;
+        typename std::array<uint8_t, DIGESTSIZE>::iterator _iter{_digest.begin()};
     };
 
     /**
