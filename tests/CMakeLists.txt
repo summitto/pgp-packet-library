@@ -16,6 +16,8 @@ list(APPEND test-sources
     unit_tests/dsa_signature.cpp
     unit_tests/ecdh_public_key.cpp
     unit_tests/ecdh_secret_key.cpp
+    unit_tests/ecdsa_public_key.cpp
+    unit_tests/ecdsa_secret_key.cpp
     unit_tests/eddsa_public_key.cpp
     unit_tests/eddsa_secret_key.cpp
     unit_tests/eddsa_signature.cpp
