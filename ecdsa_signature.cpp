@@ -1,56 +1,54 @@
 #include "ecdsa_signature.h"
 #include <sodium/crypto_sign.h>
 #include <cryptopp/eccrypto.h>
-#include <cryptopp/osrng.h>
 #include <cryptopp/oids.h>
 #include <cryptopp/hex.h>
 #include <cryptopp/osrng.h>
+#include <string>
+#include <algorithm>
 
 namespace pgp {
 
-    template <unsigned int HASH_SIZE = 32>
+    template <size_t HASH_SIZE = 32>
     class IdentityHash : public CryptoPP::HashTransformation
     {
     public:
         constexpr const static auto DIGESTSIZE = HASH_SIZE;
 
-        static const char * StaticAlgorithmName()
+        static const char* StaticAlgorithmName()
         {
             return "IdentityHash";
         }
 
-        IdentityHash() : m_digest(HASH_SIZE), m_idx(0) {}
-
-        virtual unsigned int DigestSize() const
+        unsigned int DigestSize() const override
         {
             return DIGESTSIZE;
         }
 
-        virtual void Update(const CryptoPP::byte *input, size_t length)
+        void Update(const CryptoPP::byte *input, size_t length) override
         {
-            size_t s = CryptoPP::STDMIN(CryptoPP::STDMIN<size_t>(DIGESTSIZE, length),
-                                             DIGESTSIZE - m_idx);
-            if (s)
-                ::memcpy(&m_digest[m_idx], input, s);
-            m_idx += s;
+            size_t s = std::min({length, DIGESTSIZE, static_cast<size_t>(std::distance(_iter, _digest.end()))});
+			_iter = std::copy(input, input + s, _iter);
         }
 
-        virtual void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize)
+        void TruncatedFinal(CryptoPP::byte *digest, size_t digestSize) override
         {
             ThrowIfInvalidTruncatedSize(digestSize);
 
-            if (m_idx != DIGESTSIZE)
-                throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + CryptoPP::IntToString(DIGESTSIZE));
+            if (_iter != _digest.end()) {
+                throw CryptoPP::Exception(CryptoPP::Exception::OTHER_ERROR, "Input size must be " + std::to_string(DIGESTSIZE));
+			}
 
-            if (digest)
-                ::memcpy(digest, m_digest, digestSize);
+            if (digest != nullptr) {
+				std::copy(_digest.begin(), std::next(_digest.begin(), digestSize), digest);
+			}
 
-            m_idx = 0;
+			_iter = _digest.begin();
         }
 
     private:
-        CryptoPP::SecByteBlock m_digest;
-        size_t m_idx;
+		std::array<uint8_t, DIGESTSIZE> _digest;
+		typename std::array<uint8_t, DIGESTSIZE>::iterator _iter{_digest.begin()};
     };
 
     /**
