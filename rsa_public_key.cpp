@@ -40,7 +40,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool rsa_public_key::operator!=(const rsa_public_key &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

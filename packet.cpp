@@ -89,7 +89,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool packet::operator!=(const packet &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Retrieve the packet tag

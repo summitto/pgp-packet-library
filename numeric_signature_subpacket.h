@@ -54,7 +54,9 @@ namespace pgp {
              *  @param  other   The object to compare with
              */
             bool operator!=(const numeric_signature_subpacket<T, subpacket_type> &other) const noexcept
-            { return !(*this == other); }
+            {
+                return !operator==(other);
+            }
 
             /**
              *  Determine the size used in encoded format

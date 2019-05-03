@@ -72,7 +72,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool eddsa_signature::operator!=(const eddsa_signature &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

@@ -92,7 +92,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool multiprecision_integer::operator!=(const multiprecision_integer &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

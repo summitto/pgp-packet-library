@@ -33,7 +33,9 @@ namespace pgp {
              *  Comparison operators
              */
             bool operator!=(const unknown_packet &other) const noexcept
-            { return !(*this == other); }
+            {
+                return !operator==(other);
+            }
 
             /**
              *  Retrieve the packet tag used for this

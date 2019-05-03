@@ -91,7 +91,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool signature_subpacket_set::operator!=(const pgp::signature_subpacket_set &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

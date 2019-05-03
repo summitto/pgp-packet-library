@@ -41,7 +41,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool ecdh_secret_key::operator!=(const ecdh_secret_key &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

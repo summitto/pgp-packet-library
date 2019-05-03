@@ -30,7 +30,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool string_to_key::operator!=(const string_to_key &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

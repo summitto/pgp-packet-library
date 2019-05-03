@@ -58,7 +58,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool curve_oid::operator!=(const curve_oid &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format
