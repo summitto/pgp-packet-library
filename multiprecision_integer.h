@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cryptopp/integer.h>
 #include "fixed_number.h"
 #include <vector>
 
@@ -41,6 +42,20 @@ namespace pgp {
             multiprecision_integer(gsl::span<const uint8_t> data) noexcept;
 
             /**
+             *  Constructor
+             *
+             *  @param  data    The range of numbers
+             */
+            multiprecision_integer(std::vector<uint8_t> data) noexcept;
+
+            /**
+             *  Constructor
+             *
+             *  @param  integer The Crypto++ integer to convert
+             */
+            multiprecision_integer(const CryptoPP::Integer &integer) noexcept;
+
+            /**
              *  Assignment
              *
              *  @param  that    The integer to assign
@@ -49,6 +64,7 @@ namespace pgp {
             multiprecision_integer &operator=(const multiprecision_integer &that) = default;
             multiprecision_integer &operator=(multiprecision_integer &&that) = default;
             multiprecision_integer &operator=(gsl::span<const uint8_t> data) noexcept;
+            multiprecision_integer &operator=(const CryptoPP::Integer &integer) noexcept;
 
             /**
              *  Comparison operators
@@ -69,6 +85,12 @@ namespace pgp {
              *  @return A span containing all the integer numbers
              */
             gsl::span<const uint8_t> data() const noexcept;
+
+            /**
+             *  Convert to a Crypto++ Integer
+             *  @return The Crypto++ Integer that corresponds to the stored value
+             */
+            explicit operator CryptoPP::Integer() const noexcept;
 
             /**
              *  Write the data to an encoder

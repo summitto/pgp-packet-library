@@ -4,23 +4,12 @@
 
 namespace pgp {
 
-    /**
-     *  Constructor
-     *
-     *  @param  parser  The decoder to parse the data
-     */
-    eddsa_signature::eddsa_signature(decoder &parser) :
-        _r{ parser },
-        _s{ parser }
+    eddsa_signature::encoder_t::encoder_t(secret_key key) noexcept :
+        key{key}
     {}
 
-    /**
-     *  Constructor
-     *
-     *  @param  key     The key to use for signing
-     *  @param  digest  The hash that needs to be signed
-     */
-    eddsa_signature::eddsa_signature(const secret_key &key, std::array<uint8_t, 32> digest)
+    std::tuple<multiprecision_integer, multiprecision_integer>
+    eddsa_signature::encoder_t::finalize() noexcept
     {
         // retrieve the key implementation
         auto &eddsa_key = mpark::get<basic_secret_key<eddsa_public_key, eddsa_secret_key>>(key.key());
@@ -37,13 +26,28 @@ namespace pgp {
         auto iter = std::copy(secret_data.begin(), secret_data.end(), key_data.begin());
         std::copy(public_data.begin(), public_data.end(), iter);
 
-        // now sign the message
-        crypto_sign_detached(signed_message.data(), nullptr, digest.data(), digest.size(), key_data.data());
+        // get the digest to sign
+        auto digest_data = digest();
 
-        // split up the data and assign it
-        _r = gsl::span{ signed_message.data(),      32 };
-        _s = gsl::span{ signed_message.data() + 32, 32 };
+        // now sign the message
+        crypto_sign_detached(signed_message.data(), nullptr, digest_data.data(), digest_data.size(), key_data.data());
+
+        // split up the data and return it
+        return std::make_tuple(
+            multiprecision_integer{gsl::span{ signed_message.data(),      32 }},
+            multiprecision_integer{gsl::span{ signed_message.data() + 32, 32 }}
+        );
     }
+
+    /**
+     *  Constructor
+     *
+     *  @param  parser  The decoder to parse the data
+     */
+    eddsa_signature::eddsa_signature(decoder &parser) :
+        _r{ parser },
+        _s{ parser }
+    {}
 
     /**
      *  Constructor

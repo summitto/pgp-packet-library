@@ -1,7 +1,19 @@
+#include <cryptopp/osrng.h>
 #include "rsa_signature.h"
+#include <cryptopp/rsa.h>
+#include <stdexcept>
 
 
 namespace pgp {
+
+    rsa_signature::encoder_t::encoder_t(secret_key key) noexcept :
+        key{key}
+    {}
+
+    std::tuple<multiprecision_integer> rsa_signature::encoder_t::finalize() noexcept
+    {
+        return {signature(key)};
+    }
 
     /**
      *  Constructor
@@ -11,18 +23,6 @@ namespace pgp {
     rsa_signature::rsa_signature(decoder &parser) :
         _s{ parser }
     {}
-
-    /**
-     *  Constructor
-     *
-     *  @param  key     The key to use for signing
-     *  @param  digest  The hash that needs to be signed
-     */
-    rsa_signature::rsa_signature(const secret_key &key, std::array<uint8_t, 32> &digest)
-    {
-        // TODO
-        throw std::runtime_error{ "Generating RSA signatures is not yet implemeted" };
-    }
 
     /**
      *  Constructor

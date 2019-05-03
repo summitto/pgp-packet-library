@@ -1,6 +1,7 @@
 #pragma once
 
 #include "multiprecision_integer.h"
+#include "rsa_signature_encoder.h"
 #include "secret_key.h"
 
 
@@ -12,20 +13,22 @@ namespace pgp {
     class rsa_signature
     {
         public:
+            struct encoder_t : public rsa_signature_encoder
+            {
+                encoder_t(secret_key key) noexcept;
+
+                std::tuple<multiprecision_integer> finalize() noexcept;
+
+            private:
+                secret_key key;
+            };
+
             /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
              */
             rsa_signature(decoder &parser);
-
-            /**
-             *  Constructor
-             *
-             *  @param  key     The key to use for signing
-             *  @param  digest  The hash that needs to be signed
-             */
-            rsa_signature(const secret_key &key, std::array<uint8_t, 32> &digest);
 
             /**
              *  Constructor

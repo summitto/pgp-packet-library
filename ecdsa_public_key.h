@@ -7,6 +7,9 @@
 
 namespace pgp {
 
+    // Forward declaration to prevent header dependency cycles
+    class ecdsa_signature;
+
     /**
      *  Class for holding an ECDSA public key
      */
@@ -17,6 +20,11 @@ namespace pgp {
              *  The public key type we belong to
              */
             using public_key_t = ecdsa_public_key;
+
+            /**
+             *  The signature type corresponding to this key type
+             */
+            using signature_t = ecdsa_signature;
 
             /**
              *  Constructor

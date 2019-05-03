@@ -3,6 +3,19 @@
 
 namespace pgp {
 
+    dsa_signature::encoder_t::encoder_t(secret_key)
+    {
+        // TODO
+        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
+    }
+
+    std::tuple<multiprecision_integer, multiprecision_integer>
+    dsa_signature::encoder_t::finalize()
+    {
+        // TODO
+        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
+    }
+
     /**
      *  Constructor
      *
@@ -12,18 +25,6 @@ namespace pgp {
         _r{ parser },
         _s{ parser }
     {}
-
-    /**
-     *  Constructor
-     *
-     *  @param  key     The key to use for signing
-     *  @param  digest  The hash that needs to be signed
-     */
-    dsa_signature::dsa_signature(const secret_key &key, std::array<uint8_t, 32> &digest)
-    {
-        // TODO
-        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
-    }
 
     /**
      *  Constructor

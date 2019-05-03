@@ -76,51 +76,7 @@ namespace pgp {
              *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
-            signature(const secret_key &bound_key, const user_id &user, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
-                _type{ signature_type::positive_user_id_and_public_key_certification },
-                _key_algorithm{ bound_key.algorithm() },
-                _hash_algorithm{ hash_algorithm::sha256 },
-                _hashed_subpackets{ std::move(hashed_subpackets) },
-                _unhashed_subpackets{ std::move(unhashed_subpackets) }
-            {
-                // encoder to calculate the fingerprint
-                pgp::gcrypt_encoder<pgp::gcrypt_sha256_encoding> hash_encoder;
-
-                // hash the key
-                bound_key.hash(hash_encoder);
-
-                // hash the user id
-                hash_encoder.push<uint8_t>(0xB4);
-                hash_encoder.push(gsl::narrow_cast<uint32_t>(user.size()));
-                user.encode(hash_encoder);
-
-                // now hash the signature data itself
-                hash_signature(hash_encoder);
-
-                // now create a digest of the data and read the prefix
-                auto digest  = hash_encoder.digest();
-                _hash_prefix = util::to_lvalue(decoder{ digest });
-
-                // what kind of signature should we construct?
-                switch (_key_algorithm) {
-                    case key_algorithm::rsa_encrypt_or_sign:
-                    case key_algorithm::rsa_sign_only:
-                        _signature.emplace<rsa_signature>(bound_key, digest);
-                        break;
-                    case key_algorithm::dsa:
-                        _signature.emplace<dsa_signature>(bound_key, digest);
-                        break;
-                    case key_algorithm::eddsa:
-                        _signature.emplace<eddsa_signature>(bound_key, digest);
-                        break;
-                    case key_algorithm::ecdsa:
-                        _signature.emplace<ecdsa_signature>(bound_key, digest);
-                        break;
-                    default:
-                        // do nothing, use the unknown_key
-                        break;
-                }
-            }
+            signature(const secret_key &bound_key, const user_id &user, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets);
 
             /**
              *  Constructor
@@ -130,47 +86,7 @@ namespace pgp {
              *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
-            signature(const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
-                _type{ signature_type::subkey_binding },
-                _key_algorithm{ owner.algorithm() },
-                _hash_algorithm{ hash_algorithm::sha256 },
-                _hashed_subpackets{ std::move(hashed_subpackets) },
-                _unhashed_subpackets{ std::move(unhashed_subpackets) }
-            {
-                // encoder to calculate the fingerprint
-                pgp::gcrypt_encoder<pgp::gcrypt_sha256_encoding> hash_encoder;
-
-                // hash the keys
-                owner.hash(hash_encoder);
-                subkey.hash(hash_encoder);
-
-                // now hash the signature data itself
-                hash_signature(hash_encoder);
-
-                // now create a digest of the data and read the prefix
-                auto digest  = hash_encoder.digest();
-                _hash_prefix = util::to_lvalue(decoder{ digest });
-
-                // what kind of signature should we construct?
-                switch (_key_algorithm) {
-                    case key_algorithm::rsa_encrypt_or_sign:
-                    case key_algorithm::rsa_sign_only:
-                        _signature.emplace<rsa_signature>(owner, digest);
-                        break;
-                    case key_algorithm::dsa:
-                        _signature.emplace<dsa_signature>(owner, digest);
-                        break;
-                    case key_algorithm::eddsa:
-                        _signature.emplace<eddsa_signature>(owner, digest);
-                        break;
-                    case key_algorithm::ecdsa:
-                        _signature.emplace<ecdsa_signature>(owner, digest);
-                        break;
-                    default:
-                        // do nothing, use the unknown_key
-                        break;
-                }
-            }
+            signature(const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets);
 
             /**
              *  Comparison operators

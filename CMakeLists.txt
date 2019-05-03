@@ -63,6 +63,7 @@ set(pgp-packet-headers
     symmetric_key_algorithm.h
     unknown_key.h
     null_hash.h
+    rsa_signature_encoder.h
 )
 
 set(pgp-packet-sources
@@ -93,6 +94,7 @@ set(pgp-packet-sources
     multiprecision_integer.cpp
     signature_subpacket_set.cpp
     unknown_signature_subpacket.cpp
+    rsa_signature_encoder.cpp
 )
 
 add_library(pgp-packet ${pgp-packet-sources})
@@ -123,7 +125,7 @@ target_include_directories(pgp-packet PUBLIC
 
 set_property(TARGET pgp-packet PROPERTY CXX_STANDARD 17)
 
-target_compile_options(pgp-packet PRIVATE -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare)
+target_compile_options(pgp-packet PRIVATE -Wall -Wextra -g -Wdeprecated -Wdocumentation -Wno-sign-compare)
 
 add_subdirectory(tests)
 

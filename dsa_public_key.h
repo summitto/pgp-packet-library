@@ -6,6 +6,9 @@
 
 namespace pgp {
 
+    // Forward declaration to prevent header dependency cycles
+    class dsa_signature;
+
     /**
      *  Class for holding DSA public key data
      */
@@ -16,6 +19,11 @@ namespace pgp {
              *  The public key type we belong to
              */
             using public_key_t = dsa_public_key;
+
+            /**
+             *  The signature type corresponding to this key type
+             */
+            using signature_t = dsa_signature;
 
             /**
              *  Constructor

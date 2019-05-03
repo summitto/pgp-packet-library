@@ -9,23 +9,12 @@
 
 namespace pgp {
 
-    /**
-     *  Constructor
-     *
-     *  @param  parser  The decoder to parse the data
-     */
-    ecdsa_signature::ecdsa_signature(decoder &parser) :
-        _r{ parser },
-        _s{ parser }
+    ecdsa_signature::encoder_t::encoder_t(secret_key key) noexcept :
+        key{key}
     {}
 
-    /**
-     *  Constructor
-     *
-     *  @param  key     The key to use for signing
-     *  @param  digest  The hash that needs to be signed
-     */
-    ecdsa_signature::ecdsa_signature(const secret_key &key, std::array<uint8_t, 32> digest)
+    std::tuple<multiprecision_integer, multiprecision_integer>
+    ecdsa_signature::encoder_t::finalize()
     {
         // retrieve the key implementation
         auto &ecdsa_key = mpark::get<basic_secret_key<ecdsa_public_key, ecdsa_secret_key>>(key.key());
@@ -33,8 +22,7 @@ namespace pgp {
         // Crypto++ does not export this information as constexpr
         constexpr size_t signature_length = 64;
 
-        // retrieve the key data - ignore the silly leading byte from the public key
-        auto public_data = ecdsa_key.Q().data().subspan<1>();
+        // retrieve the key data
         auto secret_data = ecdsa_key.k().data();
 
         // ECDSA needs randomness for signatures
@@ -56,17 +44,33 @@ namespace pgp {
             throw std::logic_error("Unexpected Crypto++ ECDSA maximum signature length");
         }
 
+        // get the digest to sign
+        auto digest_data = digest();
+
         // now sign the message
-        size_t actual_length = signer.SignMessage( prng, digest.data(), digest.size(), signed_message.data() );
+        size_t actual_length = signer.SignMessage(prng, digest_data.data(), digest_data.size(), signed_message.data());
 
         if (actual_length != signature_length) {
             throw std::logic_error("Unexpected Crypto++ ECDSA actual signature length");
         }
 
-        // split up the data and assign it
-        _r = gsl::span{ signed_message.data(),      32 };
-        _s = gsl::span{ signed_message.data() + 32, 32 };
+        // split up the data and return it
+        return std::make_tuple(
+            multiprecision_integer{gsl::span{ signed_message.data(),      32 }},
+            multiprecision_integer{gsl::span{ signed_message.data() + 32, 32 }}
+        );
     }
+
+    /**
+     *  Constructor
+     *
+     *  @param  parser  The decoder to parse the data
+     */
+    ecdsa_signature::ecdsa_signature(decoder &parser) :
+        _r{ parser },
+        _s{ parser }
+    {}
+
 
     /**
      *  Constructor

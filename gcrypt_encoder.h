@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <optional>
 #include <boost/endian/conversion.hpp>
 #include <gsl/span>
 #include "gcrypt_encoder_type.h"
@@ -126,21 +128,49 @@ namespace pgp {
              */
             std::array<uint8_t, encoder_type_t::digest_size> digest() noexcept
             {
-                // create the array for the digest
-                std::array<uint8_t, encoder_type_t::digest_size> result;
+                // if we already computed the digest, return it immediately
+                if (_digest) {
+                    return *_digest;
+                }
 
                 // retrieve the result
-                auto digest = gcry_md_read(_context, encoder_type_t::algorithm);
+                auto result = gcry_md_read(_context, encoder_type_t::algorithm);
 
-                // read the digest into the result
-                // std::memcpy(result.data(), digest, result.size());
-                std::copy(digest, digest + result.size(), result.begin());
+                _digest.emplace();
 
-                // return the result
-                return result;
+                // read the digest into the digest cache
+                std::copy(result, result + _digest->size(), std::begin(*_digest));
+
+                // return the digest
+                return *_digest;
             }
+
+            /**
+             *  Retrieve the hash prefix: the first two bytes of the digest
+             *
+             *  @return The hash prefix
+             */
+            std::array<uint8_t, 2> hash_prefix() noexcept
+            {
+                // make sure the digest has been computed
+                if (!_digest) {
+                    digest();
+                }
+
+                // obtain the hash prefix
+                std::array<uint8_t, 2> prefix;
+                std::copy(std::begin(*_digest), std::next(std::begin(*_digest), 2), std::begin(prefix));
+
+                // return the hash prefix
+                return prefix;
+            }
+
         private:
-            gcry_md_hd_t    _context    = nullptr;  // the hash context to use
+            // the hash context to use
+            gcry_md_hd_t    _context    = nullptr;
+
+            // the computed digest, once digest() has been called
+            std::optional<std::array<uint8_t, encoder_type_t::digest_size>> _digest;
     };
 
 }
