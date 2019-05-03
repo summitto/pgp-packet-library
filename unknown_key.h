@@ -38,7 +38,9 @@ namespace pgp {
              *  Comparison operators
              */
             bool operator!=(const unknown_key &other) const noexcept
-            { return !(*this == other); }
+            {
+                return !operator==(other);
+            }
 
             /**
              *  Determine the size used in encoded format

@@ -58,10 +58,14 @@ namespace tests {
             {}
 
             bool operator==(const type_proxy<ProxyT, ContainedT> &other) const noexcept
-            { return value == other.value; }
+            {
+                return value == other.value;
+            }
 
             bool operator!=(const type_proxy<ProxyT, ContainedT> &other) const noexcept
-            { return !(*this == other); }
+            {
+                return !operator==(other);
+            }
         };
 
         template <typename Class>

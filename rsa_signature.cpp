@@ -49,7 +49,9 @@ namespace pgp {
      *  @param  other   The object to compare with
      */
     bool rsa_signature::operator!=(const rsa_signature &other) const noexcept
-    { return !(*this == other); }
+    {
+        return !operator==(other);
+    }
 
     /**
      *  Determine the size used in encoded format

@@ -113,7 +113,9 @@ namespace pgp {
              *  @param  other   The object to compare with
              */
             bool operator!=(const basic_key<key_traits> &other) const noexcept
-            { return !(*this == other); }
+            {
+                return !operator==(other);
+            }
 
             /**
              *  Retrieve the packet tag used for this

@@ -22,6 +22,26 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdsa_secret_key::operator==(const ecdsa_secret_key &other) const noexcept
+    {
+        return k() == other.k();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdsa_secret_key::operator!=(const ecdsa_secret_key &other) const noexcept
+    {
+        return !operator==(other);
+    }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */

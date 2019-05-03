@@ -26,6 +26,14 @@ namespace pgp {
             ecdsa_secret_key(multiprecision_integer k) noexcept;
 
             /**
+             *  Comparison operators
+             *
+             *  @param  other   The object to compare with
+             */
+            bool operator==(const ecdsa_secret_key &other) const noexcept;
+            bool operator!=(const ecdsa_secret_key &other) const noexcept;
+
+            /**
              *  Determine the size used in encoded format
              *  @return The number of bytes used for encoded storage
              */

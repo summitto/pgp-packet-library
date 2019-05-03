@@ -68,6 +68,26 @@ namespace pgp {
     {}
 
     /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdsa_signature::operator==(const ecdsa_signature &other) const noexcept
+    {
+        return r() == other.r() && s() == other.s();
+    }
+
+    /**
+     *  Comparison operators
+     *
+     *  @param  other   The object to compare with
+     */
+    bool ecdsa_signature::operator!=(const ecdsa_signature &other) const noexcept
+    {
+        return !operator==(other);
+    }
+
+    /**
      *  Determine the size used in encoded format
      *  @return The number of bytes used for encoded storage
      */
