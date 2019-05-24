@@ -6,8 +6,9 @@ namespace pgp {
     /**
      *  Constructor
      */
-    rsa_signature_encoder::rsa_signature_encoder() :
-        _signature_context{signer_t{}.NewSignatureAccumulator(_prng)}
+    rsa_signature_encoder::rsa_signature_encoder(secret_key key) :
+        _signature_context{signer_t{}.NewSignatureAccumulator(_prng)},
+        key{std::move(key)}
     {}
 
     /**
@@ -21,11 +22,13 @@ namespace pgp {
     }
 
     /**
-     *  Retrieve the final signature
+     *  Retrieve the RSA s parameter of the final sigature
+     *
+     *  This method should be called *at most once*.
      *
      *  @return The signature of the data
      */
-    pgp::multiprecision_integer rsa_signature_encoder::signature(const secret_key &key) noexcept
+    std::tuple<pgp::multiprecision_integer> rsa_signature_encoder::finalize() noexcept
     {
         // retrieve the key implementation
         auto &rsa_key = mpark::get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key());
@@ -55,7 +58,7 @@ namespace pgp {
         _signature_context = nullptr;
 
         // return the signature parameter
-        return signed_message;
+        return std::make_tuple(signed_message);
     }
 
     /**

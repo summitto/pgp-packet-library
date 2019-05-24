@@ -1,6 +1,7 @@
 #pragma once
 
 #include "multiprecision_integer.h"
+#include "dsa_signature_encoder.h"
 #include "gcrypt_encoder.h"
 #include "secret_key.h"
 #include <tuple>
@@ -14,15 +15,7 @@ namespace pgp {
     class dsa_signature
     {
         public:
-            /**
-             *  The encoder to produce the signature parameters
-             */
-            struct encoder_t : public gcrypt_encoder<gcrypt_sha256_encoding>
-            {
-                encoder_t(secret_key key);
-
-                std::tuple<multiprecision_integer, multiprecision_integer> finalize();
-            };
+            using encoder_t = dsa_signature_encoder;
 
             /**
              *  Constructor

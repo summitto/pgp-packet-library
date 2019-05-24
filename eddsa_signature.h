@@ -1,5 +1,6 @@
 #pragma once
 
+#include "eddsa_signature_encoder.h"
 #include "multiprecision_integer.h"
 #include "gcrypt_encoder.h"
 #include "secret_key.h"
@@ -13,18 +14,7 @@ namespace pgp {
     class eddsa_signature
     {
         public:
-            /**
-             *  The encoder to produce the signature parameters
-             */
-            struct encoder_t : public gcrypt_encoder<gcrypt_sha256_encoding>
-            {
-                encoder_t(secret_key key) noexcept;
-
-                std::tuple<multiprecision_integer, multiprecision_integer> finalize() noexcept;
-
-            private:
-                secret_key key;
-            };
+            using encoder_t = eddsa_signature_encoder;
 
             /**
              *  Constructor

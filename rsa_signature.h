@@ -13,15 +13,7 @@ namespace pgp {
     class rsa_signature
     {
         public:
-            struct encoder_t : public rsa_signature_encoder
-            {
-                encoder_t(secret_key key) noexcept;
-
-                std::tuple<multiprecision_integer> finalize() noexcept;
-
-            private:
-                secret_key key;
-            };
+            using encoder_t = rsa_signature_encoder;
 
             /**
              *  Constructor

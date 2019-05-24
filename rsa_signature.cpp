@@ -6,15 +6,6 @@
 
 namespace pgp {
 
-    rsa_signature::encoder_t::encoder_t(secret_key key) noexcept :
-        key{key}
-    {}
-
-    std::tuple<multiprecision_integer> rsa_signature::encoder_t::finalize() noexcept
-    {
-        return {signature(key)};
-    }
-
     /**
      *  Constructor
      *

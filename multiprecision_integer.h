@@ -64,6 +64,7 @@ namespace pgp {
             multiprecision_integer &operator=(const multiprecision_integer &that) = default;
             multiprecision_integer &operator=(multiprecision_integer &&that) = default;
             multiprecision_integer &operator=(gsl::span<const uint8_t> data) noexcept;
+            multiprecision_integer &operator=(std::vector<uint8_t> data) noexcept;
             multiprecision_integer &operator=(const CryptoPP::Integer &integer) noexcept;
 
             /**

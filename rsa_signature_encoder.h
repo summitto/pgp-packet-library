@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <boost/endian/conversion.hpp>
 #include <gsl/span>
 #include <cryptopp/osrng.h>
@@ -23,7 +22,7 @@ namespace pgp {
             /**
              *  Constructor
              */
-            rsa_signature_encoder();
+            rsa_signature_encoder(secret_key key);
 
             /**
              *  Destructor
@@ -112,13 +111,13 @@ namespace pgp {
             }
 
             /**
-             *  Retrieve the final signature
+             *  Retrieve the RSA s parameter of the final sigature
              *
              *  This method should be called *at most once*.
              *
              *  @return The signature of the data
              */
-            pgp::multiprecision_integer signature(const secret_key &key) noexcept;
+            std::tuple<pgp::multiprecision_integer> finalize() noexcept;
 
             /**
              *  Retrieve the hash prefix: the first two bytes of the hash
@@ -138,6 +137,9 @@ namespace pgp {
 
             // accumulator context for the bare hash
             CryptoPP::SHA256 _hash_context;
+
+            // key with which to make the signature
+            secret_key key;
     };
 
 }

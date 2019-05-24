@@ -3,19 +3,6 @@
 
 namespace pgp {
 
-    dsa_signature::encoder_t::encoder_t(secret_key)
-    {
-        // TODO
-        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
-    }
-
-    std::tuple<multiprecision_integer, multiprecision_integer>
-    dsa_signature::encoder_t::finalize()
-    {
-        // TODO
-        throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
-    }
-
     /**
      *  Constructor
      *

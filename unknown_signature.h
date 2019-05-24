@@ -1,5 +1,6 @@
 #pragma once
 
+#include "unknown_signature_encoder.h"
 #include "secret_key.h"
 #include <stdexcept>
 #include "decoder.h"
@@ -13,35 +14,7 @@ namespace pgp {
     class unknown_signature
     {
         public:
-            struct encoder_t
-            {
-                encoder_t(secret_key)
-                {
-                    throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-                }
-
-                template <typename T>
-                void push(T)
-                {
-                    throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-                }
-
-                template <typename T>
-                encoder_t &insert_blob(gsl::span<const T>)
-                {
-                    throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-                }
-
-                std::array<uint8_t, 2> hash_prefix()
-                {
-                    throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-                }
-
-                std::tuple<> finalize()
-                {
-                    throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-                }
-            };
+            using encoder_t = unknown_signature_encoder;
 
             /**
              *  Constructor

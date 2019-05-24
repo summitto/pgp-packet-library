@@ -73,28 +73,8 @@ namespace pgp {
      */
     multiprecision_integer::multiprecision_integer(std::vector<uint8_t> data) noexcept
     {
-        // if the given range is empty, just clear out
-        if (data.empty()) {
-            _bits = 0;
-            _data.clear();
-            return;
-        }
-
-        // if we have leading zeros, we need to move the bytes around anyway,
-        // so we can just as well copy
-        if (data[0] == 0) {
-            operator=(gsl::span<const uint8_t>{data});
-            return;
-        }
-
-        // otherwise, move in the data buffer
-        _data = std::move(data);
-
-        // calculate number of leading zeroes
-        auto leading_zeroes = count_leading_zeros(_data[0]);
-
-        // assign bit count
-        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
+        // assign the data
+        operator=(data);
     }
 
     /**
@@ -135,6 +115,35 @@ namespace pgp {
         // assign bit count and the data
         _bits = gsl::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
         _data.assign(data.begin(), data.end());
+
+        // allow chaining
+        return *this;
+    }
+
+    multiprecision_integer &multiprecision_integer::operator=(std::vector<uint8_t> data) noexcept
+    {
+        // erase any leading zero bytes
+        data.erase(
+            std::begin(data),
+            std::find_if(std::begin(data), std::end(data), [](uint8_t b) { return b != 0; })
+        );
+
+        // if the given range is empty, just clear out
+        if (data.empty()) {
+            // store the empty integer (zero)
+            _data.clear();
+            _bits = 0;
+            return *this;
+        }
+
+        // otherwise, move in the data buffer
+        _data = std::move(data);
+
+        // calculate number of leading zeroes
+        auto leading_zeroes = count_leading_zeros(_data[0]);
+
+        // assign bit count
+        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
 
         // allow chaining
         return *this;
