@@ -5,6 +5,9 @@
 
 namespace pgp {
 
+    // Forward declaration to prevent header dependency cycles
+    class unknown_signature;
+
     /**
      *  Class representing a key using an unknown algorithm
      */
@@ -15,6 +18,11 @@ namespace pgp {
              *  The public key type we belong to
              */
             using public_key_t = unknown_key;
+
+            /**
+             *  The signature type corresponding to this key type
+             */
+            using signature_t = unknown_signature;
 
             /**
              *  Constructor
@@ -51,6 +59,16 @@ namespace pgp {
             {
                 // we do not know the size
                 throw std::runtime_error{ "Unknown keys have an unknown size" };
+            }
+
+            /**
+             *  Hash the key into a given hash context
+             */
+            template <class encoder_t>
+            void hash(encoder_t &) const noexcept
+            {
+                // unknown key cannot be hashed
+                throw std::runtime_error{ "Unknown keys cannot be hashed" };
             }
 
             /**

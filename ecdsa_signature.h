@@ -1,6 +1,8 @@
 #pragma once
 
+#include "ecdsa_signature_encoder.h"
 #include "multiprecision_integer.h"
+#include "gcrypt_encoder.h"
 #include "secret_key.h"
 
 
@@ -12,20 +14,14 @@ namespace pgp {
     class ecdsa_signature
     {
         public:
+            using encoder_t = ecdsa_signature_encoder;
+
             /**
              *  Constructor
              *
              *  @param  parser  The decoder to parse the data
              */
             ecdsa_signature(decoder &parser);
-
-            /**
-             *  Constructor
-             *
-             *  @param  key     The key to use for signing
-             *  @param  digest  The hash that needs to be signed
-             */
-            ecdsa_signature(const secret_key &key, std::array<uint8_t, 32> digest);
 
             /**
              *  Constructor

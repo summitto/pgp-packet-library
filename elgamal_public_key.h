@@ -6,6 +6,9 @@
 
 namespace pgp {
 
+    // Forward declaration to prevent header dependency cycles
+    class unknown_signature;
+
     /**
      *  Class for holding an elgamal key
      */
@@ -16,6 +19,13 @@ namespace pgp {
              *  The public key type we belong to
              */
             using public_key_t = elgamal_public_key;
+
+            /**
+             *  The signature type corresponding to this key type
+             *
+             *  TODO: no elgamal signature class yet
+             */
+            using signature_t = unknown_signature;
 
             /**
              *  Constructor

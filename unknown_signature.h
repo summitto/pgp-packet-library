@@ -1,5 +1,7 @@
 #pragma once
 
+#include "unknown_signature_encoder.h"
+#include "secret_key.h"
 #include <stdexcept>
 #include "decoder.h"
 
@@ -12,6 +14,8 @@ namespace pgp {
     class unknown_signature
     {
         public:
+            using encoder_t = unknown_signature_encoder;
+
             /**
              *  Constructor
              */

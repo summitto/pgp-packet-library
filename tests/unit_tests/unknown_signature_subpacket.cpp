@@ -12,12 +12,43 @@ TEST(unknown_signature_subpacket, properties)
 
     std::array<uint8_t, 10> data{1, 5, 3, 3, 7, 5, 3, 4, 3, 4};
 
+    // Check that decoding and initializing with data is the same thing
     pgp::decoder decoder{data};
     pgp::unknown_signature_subpacket p1{type_1, decoder};
     pgp::unknown_signature_subpacket p2{type_1, data};
+
     ASSERT_EQ(p1.data(), p2.data());
+    ASSERT_EQ(p1, p1);
 
     // Two extra bytes: one for the variable_number, one for the type tag
     ASSERT_EQ(p1.size(), 2 + data.size());
     ASSERT_EQ(p1.type(), type_1);
+
+    // Check that encoding does something useful
+    std::vector<uint8_t> encoded(20);
+    pgp::range_encoder encoder{encoded};
+    p1.encode(encoder);
+    encoded.resize(encoder.size());
+
+    ASSERT_EQ(encoded.size(), 2 + data.size());
+    // The size tag is a variable_number, but for these small inputs it's just
+    // 1 byte; note that the size reports the byte for the type as well
+    ASSERT_EQ(encoded[0], 1 + data.size());
+    ASSERT_EQ(encoded[1], static_cast<uint8_t>(type_1));
+    ASSERT_EQ(
+        (gsl::span<const uint8_t>{data.data(), gsl::narrow_cast<ptrdiff_t>(data.size())}),
+        (gsl::span<const uint8_t>{encoded.data() + 2, gsl::narrow_cast<ptrdiff_t>(encoded.size() - 2)})
+    );
+}
+
+TEST(unknown_signature_subpacket, equality)
+{
+    auto type_1 = pgp::signature_subpacket_type::features;
+
+    pgp::unknown_signature_subpacket p1{type_1, std::array<uint8_t, 3>{10, 11, 12}};
+    pgp::unknown_signature_subpacket p2{type_1, std::array<uint8_t, 3>{11, 11, 12}};
+    pgp::unknown_signature_subpacket p3{type_1, std::array<uint8_t, 5>{10, 11, 12, 13, 14}};
+    ASSERT_EQ(p1, p1);
+    ASSERT_NE(p1, p2);
+    ASSERT_NE(p1, p3);
 }

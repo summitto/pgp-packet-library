@@ -41,6 +41,38 @@ TEST(multiprecision_integer, equality)
     ASSERT_NE(mi1, mi4);
 }
 
+TEST(multiprecision_integer, assignment)
+{
+    pgp::multiprecision_integer mi;
+
+    auto test_for_data = [&mi](const gsl::span<const uint8_t> &data) {
+        mi = data;
+        ASSERT_EQ(mi.data(), data);
+        ASSERT_EQ(mi.size(), data.size() + 2);
+    };
+
+    test_for_data(std::vector<uint8_t>{1, 2, 3});
+    test_for_data({});
+}
+
+TEST(multiprecision_integer, vector_constructor)
+{
+    auto test_for_vector = [](const std::vector<uint8_t> &data) {
+        auto nonzero_it = std::find_if(data.begin(), data.end(), [](uint8_t x) { return x != 0; });
+        size_t zero_bytes = std::distance(data.begin(), nonzero_it);
+
+        pgp::multiprecision_integer mi{data};
+        ASSERT_EQ(mi, pgp::multiprecision_integer{gsl::span<const uint8_t>{data}});
+        // 2 for size prefix; zero bytes should be stripped
+        ASSERT_EQ(mi.size(), 2 + data.size() - zero_bytes);
+    };
+
+    test_for_vector(std::vector<uint8_t>{});
+    test_for_vector(std::vector<uint8_t>{1, 2, 3, 4});
+    test_for_vector(std::vector<uint8_t>{0, 2, 3, 4});
+    test_for_vector(std::vector<uint8_t>{0, 0, 0xff, 4, 5 ,6, 7});
+}
+
 TEST(multiprecision_integer, computed_bits)
 {
     std::array<uint8_t, 3> data;

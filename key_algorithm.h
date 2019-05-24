@@ -10,9 +10,9 @@ namespace pgp {
      */
     enum class key_algorithm : uint8_t
     {
-        rsa_encrypt_or_sign     =  0,
-        rsa_encrypt_only        =  1,
-        rsa_sign_only           =  2,
+        rsa_encrypt_or_sign     =  1,
+        rsa_encrypt_only        =  2,
+        rsa_sign_only           =  3,
         elgamal_encrypt_only    = 16,
         dsa                     = 17,
         ecdh                    = 18,

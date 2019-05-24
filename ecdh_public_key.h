@@ -9,6 +9,9 @@
 
 namespace pgp {
 
+    // Forward declaration to prevent header dependency cycles
+    class unknown_signature;
+
     /**
      *  Class holding public-key information for ecdh keys
      */
@@ -19,6 +22,13 @@ namespace pgp {
              *  The public key type we belong to
              */
             using public_key_t = ecdh_public_key;
+
+            /**
+             *  The signature type corresponding to this key type
+             *
+             *  TODO: no ecdh signature class yet
+             */
+            using signature_t = unknown_signature;
 
             /**
              *  Constructor

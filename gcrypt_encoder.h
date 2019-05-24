@@ -35,12 +35,16 @@ namespace pgp {
              */
             ~gcrypt_encoder()
             {
-                // close the hashing context
-                gcry_md_close(_context);
+                // close the hashing contex, if it wasn't already closed
+                if (_context != nullptr) {
+                    gcry_md_close(_context);
+                }
             }
 
             /**
              *  Push a number to the encoder
+             *
+             *  Cannot be called after digest() has been invoked.
              *
              *  @param  value   The number to push
              *  @return self, for chaining
@@ -62,6 +66,8 @@ namespace pgp {
             /**
              *  Insert an enum
              *
+             *  Cannot be called after digest() has been invoked.
+             *
              *  @param  value   The enum to insert
              *  @return self, for chaining
              */
@@ -75,6 +81,8 @@ namespace pgp {
 
             /**
              *  Push a range of data
+             *
+             *  Cannot be called after digest() has been invoked.
              *
              *  @param  begin   The iterator to the beginning of the data
              *  @param  end     The iterator to the end of the data
@@ -106,6 +114,8 @@ namespace pgp {
             /**
              *  Insert a blob of data
              *
+             *  Cannot be called after digest() has been invoked.
+             *
              *  @param  value   The data to insert
              *  @return self, for chaining
              */
@@ -126,21 +136,52 @@ namespace pgp {
              */
             std::array<uint8_t, encoder_type_t::digest_size> digest() noexcept
             {
-                // create the array for the digest
-                std::array<uint8_t, encoder_type_t::digest_size> result;
+                // if we already computed the digest, return it immediately
+                if (_context == nullptr) {
+                    return _digest;
+                }
 
                 // retrieve the result
-                auto digest = gcry_md_read(_context, encoder_type_t::algorithm);
+                auto result = gcry_md_read(_context, encoder_type_t::algorithm);
 
-                // read the digest into the result
-                // std::memcpy(result.data(), digest, result.size());
-                std::copy(digest, digest + result.size(), result.begin());
+                // read the digest into the digest cache
+                std::copy(result, result + _digest.size(), std::begin(_digest));
 
-                // return the result
-                return result;
+                // close and clean up the context
+                gcry_md_close(_context);
+                _context = nullptr;
+
+                // return the digest
+                return _digest;
             }
+
+            /**
+             *  Retrieve the hash prefix: the first two bytes of the digest
+             *
+             *  @return The hash prefix
+             */
+            std::array<uint8_t, 2> hash_prefix() noexcept
+            {
+                // make sure the digest has been computed
+                if (_context != nullptr) {
+                    digest();
+                }
+
+                // obtain the hash prefix
+                std::array<uint8_t, 2> prefix;
+                std::copy(std::begin(_digest), std::next(std::begin(_digest), 2), std::begin(prefix));
+
+                // return the hash prefix
+                return prefix;
+            }
+
         private:
-            gcry_md_hd_t    _context    = nullptr;  // the hash context to use
+            // the hash context to use
+            gcry_md_hd_t    _context    = nullptr;
+
+            // the computed digest, once the context is closed (i.e. once
+            // digest() has been called)
+            std::array<uint8_t, encoder_type_t::digest_size> _digest;
     };
 
 }

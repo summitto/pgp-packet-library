@@ -63,6 +63,11 @@ set(pgp-packet-headers
     symmetric_key_algorithm.h
     unknown_key.h
     null_hash.h
+    rsa_signature_encoder.h
+    dsa_signature_encoder.h
+    ecdsa_signature_encoder.h
+    eddsa_signature_encoder.h
+    unknown_signature_encoder.h
 )
 
 set(pgp-packet-sources
@@ -93,6 +98,11 @@ set(pgp-packet-sources
     multiprecision_integer.cpp
     signature_subpacket_set.cpp
     unknown_signature_subpacket.cpp
+    rsa_signature_encoder.cpp
+    dsa_signature_encoder.cpp
+    ecdsa_signature_encoder.cpp
+    eddsa_signature_encoder.cpp
+    unknown_signature_encoder.cpp
 )
 
 add_library(pgp-packet ${pgp-packet-sources})

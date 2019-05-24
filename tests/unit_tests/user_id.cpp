@@ -15,7 +15,7 @@ TEST(user_id, tag)
 TEST(user_id, encode_decode)
 {
     using namespace std::literals;
-    pgp::user_id id1("yellow submarine"s);
+    pgp::user_id id1{"yellow submarine"s};
     ASSERT_EQ(id1.size(), 16);
 
     ASSERT_EQ(id1.id(), "yellow submarine");
@@ -35,4 +35,9 @@ TEST(user_id, encode_decode)
     pgp::user_id id2{decoder};
     ASSERT_EQ(decoder.size(), 0);
     ASSERT_EQ(id2.id(), id1.id());
+
+    ASSERT_EQ(id2, id1);
+
+    pgp::user_id id3{"something else"s};
+    ASSERT_NE(id1, id3);
 }

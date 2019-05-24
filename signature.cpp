@@ -39,6 +39,90 @@ namespace pgp {
     }
 
     /**
+     *  Constructor
+     *
+     *  @param  bound_key               The key we are binding in the signature
+     *  @param  user                    The user id we are binding in the signature
+     *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
+     *  @param  unhashed_subpackets     The subpackets that will not be hashed
+     */
+    signature::signature(const secret_key &bound_key, const user_id &user, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
+        _type{ signature_type::positive_user_id_and_public_key_certification },
+        _key_algorithm{ bound_key.algorithm() },
+        _hash_algorithm{ hash_algorithm::sha256 },
+        _hashed_subpackets{ std::move(hashed_subpackets) },
+        _unhashed_subpackets{ std::move(unhashed_subpackets) }
+    {
+        mpark::visit([&bound_key, &user, this](auto &&key_instance) {
+            // obtain the appropriate types
+            using signature_t = typename std::decay_t<decltype(key_instance)>::signature_t;
+            using encoder_t = typename signature_t::encoder_t;
+
+            // construct the appropriate signature encoder
+            encoder_t encoder{bound_key};
+
+            // hash the key
+            bound_key.hash(encoder);
+
+            // hash the user id
+            encoder.template push<uint8_t>(0xB4);
+            encoder.push(gsl::narrow_cast<uint32_t>(user.size()));
+            user.encode(encoder);
+
+            // now hash the signature data itself
+            hash_signature(encoder);
+
+            // store the hash prefix
+            _hash_prefix = util::to_lvalue(decoder{encoder.hash_prefix()});
+
+            // Directly using emplace would be nice here, but since
+            // _signature.emplace is an overloaded member function, this turns
+            // out to be surprisingly hard; so hard that an extra move seems
+            // worth the increased code clarity.
+            _signature.emplace<signature_t>(util::make_from_tuple<signature_t>(encoder.finalize()));
+        }, bound_key.key());
+    }
+
+    /**
+     *  Constructor
+     *
+     *  @param  owner                   The key that will certify it owns another key
+     *  @param  subkey                  The subkey that belongs to the owner
+     *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
+     *  @param  unhashed_subpackets     The subpackets that will not be hashed
+     */
+    signature::signature(const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets) :
+        _type{ signature_type::subkey_binding },
+        _key_algorithm{ owner.algorithm() },
+        _hash_algorithm{ hash_algorithm::sha256 },
+        _hashed_subpackets{ std::move(hashed_subpackets) },
+        _unhashed_subpackets{ std::move(unhashed_subpackets) }
+    {
+        mpark::visit([&owner, &subkey, this](auto &&key_instance) {
+            // obtain the appropriate types
+            using signature_t = typename std::decay_t<decltype(key_instance)>::signature_t;
+            using encoder_t = typename signature_t::encoder_t;
+
+            // construct the appropriate signature encoder
+            encoder_t encoder{owner};
+
+            // hash the keys
+            owner.hash(encoder);
+            subkey.hash(encoder);
+
+            // now hash the signature data itself
+            hash_signature(encoder);
+
+            // store the hash prefix
+            _hash_prefix = util::to_lvalue(decoder{encoder.hash_prefix()});
+
+            // Extra move was deemed worth it versus the monstrosity that would
+            // be required to use std::apply here.
+            _signature.emplace<signature_t>(util::make_from_tuple<signature_t>(encoder.finalize()));
+        }, owner.key());
+    }
+
+    /**
      *  Comparison operators
      *
      *  @param  other   The object to compare with
