@@ -17,3 +17,9 @@ TEST(unknown_signature, test)
     pgp::decoder decoder{v};
     pgp::unknown_signature sig2{decoder};
 }
+
+TEST(unknown_signature, equality)
+{
+    ASSERT_EQ(pgp::unknown_signature{}, pgp::unknown_signature{});
+    ASSERT_FALSE(pgp::unknown_signature{} != pgp::unknown_signature{});
+}

@@ -43,9 +43,13 @@ TEST(signature_subpacket_set, constructor)
         // 2 for the size prefix
         ASSERT_EQ(sss.size(), 2 + p1.size() + p2.size() + p3.size());
 
-        ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(sss[0]).data(), p1.data());
-        ASSERT_EQ(mpark::get<pgp::primary_user_id_subpacket>(sss[1]).data(), p2.data());
-        ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(sss[2]) == p3, true);
+        ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(sss[0]), p1);
+        ASSERT_EQ(mpark::get<pgp::primary_user_id_subpacket>(sss[1]), p2);
+        ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(sss[2]), p3);
+
+        // Test the equality operators
+        pgp::signature_subpacket_set sss2({p2, p1, p3});
+        ASSERT_NE(sss, sss2);
     }
 }
 
@@ -56,10 +60,10 @@ TEST(signature_subpacket_set, iterators)
     pgp::key_flags_subpacket p3 = make_key_flags_subpacket();
     pgp::signature_subpacket_set sss({p1, p2, p3});
 
-    ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(*sss.begin()).data(), p1.data());
-    ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(*sss.cbegin()).data(), p1.data());
-    ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(*sss.rbegin()) == p3, true);
-    ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(*sss.crbegin()) == p3, true);
+    ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(*sss.begin()), p1);
+    ASSERT_EQ(mpark::get<pgp::issuer_subpacket>(*sss.cbegin()), p1);
+    ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(*sss.rbegin()), p3);
+    ASSERT_EQ(mpark::get<pgp::key_flags_subpacket>(*sss.crbegin()), p3);
 
     ASSERT_EQ(sss.begin() + 3, sss.end());
     ASSERT_EQ(sss.cbegin() + 3, sss.cend());
