@@ -38,9 +38,9 @@ namespace pgp {
      *
      *  @param  other   The object to compare with
      */
-    bool unknown_signature_subpacket::operator==(const unknown_signature_subpacket&) const noexcept
+    bool unknown_signature_subpacket::operator==(const unknown_signature_subpacket &other) const noexcept
     {
-        return true;
+        return _data.size() == other._data.size() && std::equal(_data.begin(), _data.end(), other._data.begin());
     }
 
     /**
