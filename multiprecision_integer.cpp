@@ -103,9 +103,11 @@ namespace pgp {
             data = data.subspan<1>();
         }
 
-        // if there is no data we have nothing to do
+        // if there is no data, just clear out
         if (data.empty()) {
-            // no need to calculate anything
+            // store the empty integer (zero)
+            _data.clear();
+            _bits = 0;
             return *this;
         }
 

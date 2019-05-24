@@ -41,6 +41,20 @@ TEST(multiprecision_integer, equality)
     ASSERT_NE(mi1, mi4);
 }
 
+TEST(multiprecision_integer, assignment)
+{
+    pgp::multiprecision_integer mi;
+
+    auto test_for_data = [&mi](const gsl::span<const uint8_t> &data) {
+        mi = data;
+        ASSERT_EQ(mi.data(), data);
+        ASSERT_EQ(mi.size(), data.size() + 2);
+    };
+
+    test_for_data(std::vector<uint8_t>{1, 2, 3});
+    test_for_data({});
+}
+
 TEST(multiprecision_integer, vector_constructor)
 {
     auto test_for_vector = [](const std::vector<uint8_t> &data) {
