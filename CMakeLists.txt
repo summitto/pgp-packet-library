@@ -127,7 +127,14 @@ target_include_directories(pgp-packet PUBLIC
 
 set_property(TARGET pgp-packet PROPERTY CXX_STANDARD 17)
 
-target_compile_options(pgp-packet PRIVATE -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare)
+# TODO: Figure out correct flags for other compilers
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(pgp-packet PRIVATE -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare)
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    target_compile_options(pgp-packet PRIVATE -Wall -Wextra -Wdeprecated -Wno-sign-compare)
+else()
+    message(WARNING "Unsupported compiler: don't know what compiler flags to add for this compiler!")
+endif()
 
 add_subdirectory(tests)
 

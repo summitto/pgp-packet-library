@@ -51,11 +51,20 @@ list(APPEND test-sources
 add_executable(tests ${test-sources})
 set_property(TARGET tests PROPERTY CXX_STANDARD 17)
 
-target_compile_options(tests PRIVATE
-    -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare
-    -g -O0 -fprofile-instr-generate -fcoverage-mapping -fsanitize=address)
-# target_compile_options(tests PRIVATE "-g" "-O0" "-fprofile-instr-generate" "-fcoverage-mapping" "-Weverything" "-Wno-c++98-compat" "-Wno-c++98-compat-pedantic" "-Wno-padded" "-Wno-shadow-uncaptured-local" "-Wno-global-constructors")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping -fsanitize=address")
+# TODO: Figure out correct flags for other compilers
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(tests PRIVATE
+        -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare
+        -g -O0 -fprofile-instr-generate -fcoverage-mapping -fsanitize=address)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping -fsanitize=address")
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    message(WARNING "Don't know how to generate coverage information with GCC! The tests will run, but no coverage data can or will be generated.")
+    target_compile_options(tests PRIVATE
+        -Wall -Wextra -Wdeprecated -Wno-sign-compare
+        -g -O0 -fsanitize=address)
+else()
+    message(WARNING "Unsupported compiler: don't know what compiler flags to add for this compiler! In particular, no coverage data can or will be generated.")
+endif()
 
 target_include_directories(tests PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
 target_link_libraries(tests ${LIBGCRYPT_LIBRARIES})
