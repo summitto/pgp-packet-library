@@ -11,10 +11,14 @@
 
 
 namespace {
+    constexpr const std::array<uint8_t, 1> public_key_tag{0x40};
+    constexpr const size_t public_key_size = public_key_tag.size() + crypto_sign_PUBLICKEYBYTES;
+    constexpr const size_t secret_key_size = crypto_sign_SECRETKEYBYTES - crypto_sign_PUBLICKEYBYTES;
+
     struct inputs {
-        std::array<uint8_t, crypto_sign_PUBLICKEYBYTES> pubkey;
-        std::array<uint8_t, crypto_sign_SECRETKEYBYTES> seckey;
-        std::array<uint8_t, 32> digest;
+        std::array<uint8_t, public_key_size> pubkey;
+        std::array<uint8_t, secret_key_size> seckey;
+        std::array<uint8_t, 32> message;
         std::unique_ptr<pgp::eddsa_signature> sig;
     };
 
@@ -28,13 +32,15 @@ namespace {
     inputs generate_inputs()
     {
         inputs inps;
-        randombytes_buf(inps.pubkey.data(), inps.pubkey.size());
+        std::copy(public_key_tag.begin(), public_key_tag.end(), inps.pubkey.begin());
+        randombytes_buf(inps.pubkey.data() + public_key_tag.size(), inps.pubkey.size() - public_key_tag.size());
         randombytes_buf(inps.seckey.data(), inps.seckey.size());
-        crypto_sign_keypair(inps.pubkey.data(), inps.seckey.data());
+        randombytes_buf(inps.message.data(), inps.message.size());
+        crypto_sign_keypair(inps.pubkey.data() + public_key_tag.size(), inps.seckey.data());
 
         std::array<uint8_t, 32> message;
         randombytes_buf(message.data(), message.size());
-        inps.digest = sha256_hash(gsl::span<const uint8_t>{message});
+        inps.message = sha256_hash(gsl::span<const uint8_t>{message});
 
         pgp::secret_key sk{
             1554106568,
@@ -74,8 +80,8 @@ TEST(eddsa_signature, test)
     ASSERT_EQ(
         crypto_sign_verify_detached(
             sigdata.data(),
-            inps.digest.data(), inps.digest.size(),
-            inps.pubkey.data()),
+            inps.message.data(), inps.message.size(),
+            inps.pubkey.data() + public_key_tag.size()),
         0);
 }
 
@@ -130,7 +136,7 @@ TEST(eddsa_signature, equality)
 
     while (true) {
         inputs inps2{generate_inputs()};
-        if (inps.digest != inps2.digest) {
+        if (inps.message != inps2.message) {
             ASSERT_NE(*inps.sig, *inps2.sig);
             break;
         }
