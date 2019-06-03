@@ -1,5 +1,16 @@
 #include <cryptopp/cryptlib.h>
 
+#if (CRYPTOPP_VERSION <= 600)
+    // cryptopp made the unfathomable decision to add
+    // their byte type to the standard namespace, which
+    // is only fixed later on (from version 6.0)
+    namespace CryptoPP {
+        // use the byte that was erroneously defined
+        // in the global namespace
+        using byte = ::byte;
+    }
+#endif
+
 
 namespace pgp {
 
