@@ -115,22 +115,45 @@ namespace pgp {
              */
             std::array<uint8_t, hasher_t::DIGESTSIZE> digest() noexcept
             {
-                // create the array for the digest
-                std::array<uint8_t, hasher_t::DIGESTSIZE> result;
+                // do we still have to finalize the result
+                if (!_finalized) {
+                    // fill the data array
+                    _hasher.Final(_data.data());
 
-                // fill it with the data
-                _hasher.Final(result.data());
+                    // we have now been finalized
+                    _finalized = true;
+                }
 
                 // return the result
-                return result;
+                return _data;
+            }
+
+            /**
+             *  Retrieve the hash prefix: the first two bytes of the digest
+             *
+             *  @return The hash prefix
+             */
+            std::array<uint8_t, 2> hash_prefix() noexcept
+            {
+                // the resulting prefix
+                std::array<uint8_t, 2> prefix;
+
+                // fill it with the data
+                std::copy_n(digest().begin(), prefix.size(), prefix.begin());
+
+                // return the hash prefix
+                return prefix;
             }
         private:
-            hasher_t    _hasher;    // the hash context to push to
+            hasher_t                                    _hasher;                // the hash context to push to
+            bool                                        _finalized  { false };  // did we already finalize the result
+            std::array<uint8_t, hasher_t::DIGESTSIZE>   _data;                  // the finalized hash data
     };
 
     /**
      *  Concrete hasher types
      */
-    using sha1_encoder = hash_encoder<CryptoPP::SHA>;
+    using sha1_encoder      = hash_encoder<CryptoPP::SHA>;
+    using sha256_encoder    = hash_encoder<CryptoPP::SHA256>;
 
 }
