@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cryptopp/sha.h>
+
 
 namespace pgp {
 
@@ -12,12 +14,8 @@ namespace pgp {
         public:
             /**
              *  Constructor
-             *
-             *  @param  hasher  The hash context to push to
              */
-            hash_encoder(hasher_t &hasher) :
-                _hasher{ hasher }
-            {}
+            hash_encoder() = default;
 
             /**
              *  Retrieve the underlying hash context
@@ -127,7 +125,12 @@ namespace pgp {
                 return result;
             }
         private:
-            hasher_t    &_hasher;   // the hash context to push to
+            hasher_t    _hasher;    // the hash context to push to
     };
+
+    /**
+     *  Concrete hasher types
+     */
+    using sha1_encoder = hash_encoder<CryptoPP::SHA>;
 
 }
