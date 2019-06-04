@@ -4,8 +4,8 @@
 #include "packet_tag.h"
 #include "unknown_key.h"
 #include "fixed_number.h"
+#include "hash_encoder.h"
 #include "key_algorithm.h"
-#include "gcrypt_encoder.h"
 #include "expected_number.h"
 #include <mpark/variant.hpp>
 #include "multiprecision_integer.h"
@@ -196,7 +196,7 @@ namespace pgp {
             std::array<uint8_t, 8> fingerprint() const noexcept
             {
                 // the hashing context to create the fingerprint
-                gcrypt_encoder<gcrypt_sha1_encoding>    encoder;
+                sha1_encoder    encoder;
 
                 // hash the key into the context
                 hash(encoder);
