@@ -8,7 +8,6 @@ project(pgp-packet-library
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Boost              REQUIRED)
-find_package(LibGcrypt          REQUIRED)
 find_package(sodium     1.0.16  REQUIRED)
 find_package(CryptoPP           REQUIRED)
 
@@ -25,8 +24,6 @@ set(pgp-packet-headers
     basic_secret_key.h
     ecdh_public_key.h
     elgamal_secret_key.h
-    gcrypt_encoder.h
-    gcrypt_encoder_type.h
     key_algorithm.h
     key_flags_subpacket.h
     range_encoder.h
@@ -106,9 +103,6 @@ set(pgp-packet-sources
 )
 
 add_library(pgp-packet ${pgp-packet-sources})
-
-target_include_directories(pgp-packet PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
-target_link_libraries(pgp-packet ${LIBGCRYPT_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
 
