@@ -1,7 +1,7 @@
 #include <vector>
 #include <cstdint>
 #include <gtest/gtest.h>
-#include "../../gcrypt_encoder.h"
+#include "../../hash_encoder.h"
 #include "../device_random_engine.h"
 
 
@@ -31,11 +31,11 @@ namespace {
         for (int i = 0; i < 10; i++) {
             std::vector<uint8_t> v{random_vector(length_distr(random_engine))};
 
-            pgp::gcrypt_encoder<T> enc1;
+            pgp::hash_encoder<T> enc1;
             enc1.insert_blob(gsl::span<const uint8_t>(v));
             auto res1 = enc1.digest();
 
-            pgp::gcrypt_encoder<T> enc2;
+            pgp::hash_encoder<T> enc2;
             enc2.insert_blob(gsl::span<const uint8_t>(v));
             auto res2 = enc2.digest();
 
@@ -49,12 +49,12 @@ namespace {
         std::vector<uint8_t> v(1234);
         std::uniform_int_distribution<int> push_distr(0, 2);
 
-        pgp::gcrypt_encoder<T> enc1;
+        pgp::hash_encoder<T> enc1;
         enc1.push(v.begin(), v.end());
         auto res1 = enc1.digest();
 
         for (int i = 0; i < 100; i++) {
-            pgp::gcrypt_encoder<T> enc;
+            pgp::hash_encoder<T> enc;
 
             size_t cursor = 0;
             while (cursor < v.size()) {
@@ -88,19 +88,19 @@ namespace {
     }
 }
 
-TEST(gcrypt_encoder, deterministic)
+TEST(hash_encoder, deterministic)
 {
-    deterministic_type<pgp::gcrypt_sha1_encoding>();
-    deterministic_type<pgp::gcrypt_sha256_encoding>();
+    deterministic_type<CryptoPP::SHA>();
+    deterministic_type<CryptoPP::SHA256>();
 }
 
-TEST(gcrypt_encoder, push_equivalent)
+TEST(hash_encoder, push_equivalent)
 {
-    push_equivalent<pgp::gcrypt_sha1_encoding>();
-    push_equivalent<pgp::gcrypt_sha256_encoding>();
+    push_equivalent<CryptoPP::SHA>();
+    push_equivalent<CryptoPP::SHA256>();
 }
 
-TEST(gcrypt_encoder, push_enum)
+TEST(hash_encoder, push_enum)
 {
     enum class enum_t {
         ITEM1,
@@ -108,7 +108,7 @@ TEST(gcrypt_encoder, push_enum)
         ITEM3,
     };
 
-    pgp::gcrypt_encoder<pgp::gcrypt_sha1_encoding> enc1;
+    pgp::hash_encoder<CryptoPP::SHA> enc1;
     enc1.push(enum_t::ITEM1);
     enc1.push(enum_t::ITEM2);
     enc1.push(enum_t::ITEM3);
@@ -116,7 +116,7 @@ TEST(gcrypt_encoder, push_enum)
 
     using underlying = std::underlying_type_t<enum_t>;
 
-    pgp::gcrypt_encoder<pgp::gcrypt_sha1_encoding> enc2;
+    pgp::hash_encoder<CryptoPP::SHA> enc2;
     enc2.push(static_cast<underlying>(enum_t::ITEM1));
     enc2.push(static_cast<underlying>(enum_t::ITEM2));
     enc2.push(static_cast<underlying>(enum_t::ITEM3));
@@ -125,18 +125,18 @@ TEST(gcrypt_encoder, push_enum)
     ASSERT_EQ(res1, res2);
 }
 
-TEST(gcrypt_encoder, different)
+TEST(hash_encoder, different)
 {
     auto v1 = random_vector(123);
     auto v2 = random_vector(123);
 
     ASSERT_NE(v1, v2);
 
-    pgp::gcrypt_encoder<pgp::gcrypt_sha1_encoding> enc1;
+    pgp::hash_encoder<CryptoPP::SHA> enc1;
     enc1.push(v1.begin(), v1.end());
     auto res1 = enc1.digest();
 
-    pgp::gcrypt_encoder<pgp::gcrypt_sha1_encoding> enc2;
+    pgp::hash_encoder<CryptoPP::SHA> enc2;
     enc2.push(v2.begin(), v2.end());
     auto res2 = enc2.digest();
 

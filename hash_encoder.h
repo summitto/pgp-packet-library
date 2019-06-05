@@ -1,6 +1,8 @@
 #pragma once
 
+#include <boost/endian/conversion.hpp>
 #include <cryptopp/sha.h>
+#include <gsl/span>
 
 
 namespace pgp {

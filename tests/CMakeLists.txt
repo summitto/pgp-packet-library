@@ -26,7 +26,7 @@ list(APPEND test-sources
     unit_tests/elgamal_secret_key.cpp
     unit_tests/expected_number.cpp
     unit_tests/fixed_number.cpp
-    unit_tests/gcrypt_encoder.cpp
+    unit_tests/hash_encoder.cpp
     unit_tests/key_flags_subpacket.cpp
     unit_tests/multiprecision_integer.cpp
     unit_tests/numeric_signature_subpacket.cpp
