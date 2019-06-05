@@ -5,8 +5,8 @@
 #include <sodium/crypto_sign.h>
 #include <sodium/randombytes.h>
 #include "../../eddsa_signature.h"
-#include "../../gcrypt_encoder.h"
 #include "../../range_encoder.h"
+#include "../../hash_encoder.h"
 #include "../../decoder.h"
 
 
@@ -24,7 +24,7 @@ namespace {
 
     std::array<uint8_t, 32> sha256_hash(gsl::span<const uint8_t> data)
     {
-        pgp::gcrypt_encoder<pgp::gcrypt_sha256_encoding> encoder;
+        pgp::sha256_encoder encoder;
         encoder.insert_blob(data);
         return encoder.digest();
     }
