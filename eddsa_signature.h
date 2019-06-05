@@ -2,7 +2,6 @@
 
 #include "eddsa_signature_encoder.h"
 #include "multiprecision_integer.h"
-#include "gcrypt_encoder.h"
 #include "secret_key.h"
 
 

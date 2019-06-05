@@ -1,7 +1,7 @@
 #pragma once
 
 #include "multiprecision_integer.h"
-#include "gcrypt_encoder.h"
+#include "hash_encoder.h"
 #include "secret_key.h"
 #include <tuple>
 
@@ -11,7 +11,7 @@ namespace pgp {
     /**
      *  An encoder to produce EDDSA signatures
      */
-    class eddsa_signature_encoder : public gcrypt_encoder<gcrypt_sha256_encoding>
+    class eddsa_signature_encoder : public sha256_encoder
     {
         public:
             /**

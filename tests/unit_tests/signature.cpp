@@ -97,7 +97,7 @@ namespace {
             const pgp::signature_subpacket_set &hashedsubs,
             std::tuple<Args...> extra_args)
     {
-        pgp::gcrypt_encoder<pgp::gcrypt_sha256_encoding> hash_encoder;
+        pgp::sha256_encoder hash_encoder;
 
         if constexpr (Type == signature_hash_type::user_id) {
             const auto &key = std::get<0>(extra_args);
