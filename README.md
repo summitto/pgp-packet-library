@@ -5,6 +5,7 @@
 - [Using the library](#using-the-library)
   - [Creating a simple packet](#creating-a-simple-packet)
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
+  - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
 
 
 ## Introduction
@@ -143,6 +144,94 @@ int main()
 
     // the packets should be identical
     assert(packet == copied_packet);
+
+    return 0;
+}
+```
+
+### Creating a PGP key from raw point data
+
+Sometimes it can be useful to use existing keys - e.g. an elliptic curve point - and import them in PGP. PGP does not have an easy way to do this, unless the keys are already wrapped inside the PGP packet headers, come with an associated user id packet, and a signature attesting the ownership of the user for the given key.
+
+In this - somewhat more complex - example, we'll create an ed25519 private- and public key pair using libsodium and then use this to create a set of packets that can be imported into a PGP-compatible client.
+
+This example should provide a bit more in-depth knowledge of the structure of PGP keys. We will create three packets. The first is the secret-key packet. It contains the actual key data, the key type as well as the time the key was created. The second packet contains the user id. This one is pretty self-explanatory. The third and final packet contains a signature. It attests that the key belongs to the user id mentioned before. Let's dive into the code:
+
+
+```c++
+#include <pgp-packet/packet.h>
+#include <iostream>
+#include <sodium.h>
+#include <vector>
+
+int main()
+{
+    // create vectors holding the secret and public key points, note
+    // that we take an extra byte for the public key, since pgp will
+    // need an extra byte in front of it, it is always the same byte
+    // for this key type, so it doesn't add any real information but
+    // pgp still requires it and throws a fit if it is missing.
+    std::vector<uint8_t> public_key_data(crypto_sign_PUBLICKEYBYTES + 1);
+    std::vector<uint8_t> secret_key_data(crypto_sign_SECRETKEYBYTES);
+
+    // now create a new keypair to be imported into pgp, as noted in
+    // the declaration above, we have to ignore the first byte as we
+    // need to set a special tag byte here for pgp to recognize it
+    // note: error checks are skipped here for brevity
+    crypto_box_keypair(public_key_data.data() + 1, secret_key_data.data());
+
+    // libsodium puts both the secret key and the public key data in
+    // the secret key buffer, which pgp does not need, therefore the
+    // extra data must be truncated before creating the key
+    secret_key_data.resize(32);
+
+    // now set the tag byte required for pgp
+    public_key_data[0] = 0x04;
+
+    // define the creation time of this key (as a unix timestamp)
+    // and the expiration time (another unix timestamp), we define
+    // the key as being valid for 3600 seconds (an hour);
+    uint32_t creation = 1559737787;
+    uint32_t expiration = creation + 3600;
+
+    // now create a packet containing this secret key
+    pgp::packet secret_key_packet{
+        mpark::in_place_type_t<pgp::secret_key>{},                      // we are building a secret key
+        creation,                                                       // created at this unix timestamp
+        pgp::key_algorithm::eddsa,                                      // using the eddsa key algorithm
+        mpark::in_place_type_t<pgp::secret_key::eddsa_key_t>{},         // create a key of the eddsa type
+        std::forward_as_tuple(                                          // arguments for the public key
+            pgp::curve_oid::ed25519(),                                  // which curve to use
+            pgp::multiprecision_integer{ std::move(public_key_data) }   // move in the public key point
+        ),
+        std::forward_as_tuple(                                          // secret arguments
+            pgp::multiprecision_integer{ std::move(secret_key_data) }   // copy in the secret key point
+        )
+    };
+
+    // create a packet describing the user owning this key
+    pgp::packet user_id_packet{
+        mpark::in_place_type_t<pgp::user_id>{},
+        std::string{ "Anne Onymous <anonymous@example.org>" }
+    };
+
+    // to complete the set, we need to create a signature packet,
+    // which certifies that we are the owners of this key.
+    pgp::packet signature_packet{
+        mpark::in_place_type_t<pgp::signature>{},                       // we are making a signature
+        mpark::get<pgp::secret_key>(secret_key_packet.body()),          // we sign it with the secret key
+        mpark::get<pgp::user_id>(user_id_packet.body()),                // for the given user
+        pgp::signature_subpacket_set{{                                  // hashed subpackets
+            pgp::signature_creation_time_subpacket  { creation      },  // signature creation time
+            pgp::key_expiration_time_subpacket      { expiration    },  // signature expiration time
+            pgp::key_flags_subpacket                { 0x01, 0x02    },  // the privileges for the main key (signing and certification)
+        }},
+        pgp::signature_subpacket_set{{                                  // unhashed subpackets
+            pgp::issuer_subpacket {                                     // fingerprint of the key we are signing with
+                mpark::get<pgp::secret_key>(secret_key_packet.body()).fingerprint()
+            }
+        }}
+    };
 
     return 0;
 }
