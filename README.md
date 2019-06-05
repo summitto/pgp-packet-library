@@ -11,5 +11,5 @@ DEPENDENCIES
 
 This project depends on
 - libboost
-- libgcrypt
 - libsodium
+- crypto++
