@@ -1,20 +1,43 @@
-PGP packet decoder and encoder
-==============================
+# PGP packet decoder and encoder
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Building the library](#building-the-library)
+- [Using the library](#using-the-library)
+
+
+## Introduction
 
 This library implements part of [RFC 4880](https://tools.ietf.org/html/rfc4880) and [RFC 6637](https://tools.ietf.org/html/rfc6637), allowing the decoding and encoding of binary PGP packets.
 
 The library is centered around the pgp::packet class. This class can be constructed with packet-specific data to be encoded, or it can be constructed from encoded data - to easily access the fields. Reading or writing packets requires a pgp::decoder or a pgp::encoder, specifically. Since these deal with binary data, they require a range of bytes (in our case, it's uint8_t). The decoder will consume bytes from this range, while the encoder will write bytes to it.
 
-DEPENDENCIES
-============
+## Building the library
 
-This project depends on
+To build the library, the following dependencies need to be installed first:
 - libboost
 - libsodium
 - crypto++
 
-USING THE LIBRARY
-=================
+Since this library uses submodules, it will not build unless they are also checked out. To check out all the submodules used in the project, execute the following command:
+
+`git submodule update --init`
+
+The recommended way to then build the library is to do a so-called out-of-source build. This ensures that any build-related files do not clutter the repository itself and makes it easy to get rid of any build-artifacts. Assuming you'd want to build in a directory called `build`, the following set of commands should be enough:
+
+```bash
+mkdir -p build && cd build && cmake .. && cd -
+make -C build
+```
+
+If you wish to install the library - so that it can be automatically found by projects using it, you could then execute the following command:
+
+`make -C build install`
+
+This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrative user before executing the command.
+
+## Using the library
 
 Since PGP packets can contain very different types of data, the body of the pgp::packet is an std::variant, which gives easy access to the packet-specific fields. When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
 
