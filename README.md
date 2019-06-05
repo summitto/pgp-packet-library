@@ -1,7 +1,5 @@
 # PGP packet decoder and encoder
 
-## Table of Contents
-
 - [Introduction](#introduction)
 - [Building the library](#building-the-library)
 - [Using the library](#using-the-library)
