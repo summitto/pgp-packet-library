@@ -14,9 +14,9 @@ The library is centered around the pgp::packet class. This class can be construc
 ## Building the library
 
 To build the library, the following dependencies need to be installed first:
-- libboost
-- libsodium
-- crypto++
+- [Boost C++ libraries](https://www.boost.org/)
+- [Libsodium](https://download.libsodium.org/doc/)
+- [Crypto++ Library](https://cryptopp.com/)
 
 Since this library uses submodules, it will not build unless they are also checked out. To check out all the submodules used in the project, execute the following command:
 
