@@ -69,3 +69,54 @@ int main()
     return 0;
 }
 ```
+
+Of course, creating packets by directly constructing them with data
+is interesting, but this wouldn't be much use if we could not share
+the data between compatible PGP implementations.
+
+In order to provide this interoperability, the packet class is also
+constructible from a decoder class - translating binary packet data
+to be parsed - and also provides an encode function, exporting data
+to an encoder, producing binary output.
+
+Let's look at an example, once again using the user_id type (due to
+its simplicity), writing it out to binary and then reading this raw
+data again to verify that we got the exact same packet again.
+
+```c++
+#include <pgp-packet/packet.h>
+#include <iostream>
+#include <cassert>
+#include <vector>
+
+int main()
+{
+    // create our simple user id packet
+    pgp::packet packet{
+        mpark::in_place_type_t<pgp::user_id>{},
+        std::string{ "Anne Onymous <anonymous@example.org>" }
+    };
+
+    // create a buffer for storing the binary data - we allocate the
+    // exact number of bytes the packet requests, and then we create
+    // a range_encoder around it. the range_encoder works by writing
+    // the raw data to a provided range of bytes, which must stay in
+    // scope during the encoder operation.
+    std::vector<uint8_t> data(packet.size());
+    pgp::range_encoder   encoder{ data };
+
+    // write out the packet data to the given buffer
+    packet.encode(encoder);
+
+    // now create a decoder to decode the freshly filled data buffer
+    // and use this decoder to create a second packet containing the
+    // same user id body with the exact same data
+    pgp::decoder decoder{ data };
+    pgp::packet  copied_packet{ decoder };
+
+    // the packets should be identical
+    assert(packet == copied_packet);
+
+    return 0;
+}
+```
