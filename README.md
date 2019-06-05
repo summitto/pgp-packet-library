@@ -3,6 +3,8 @@
 - [Introduction](#introduction)
 - [Building the library](#building-the-library)
 - [Using the library](#using-the-library)
+  - [Creating a simple packet](#creating-a-simple-packet)
+  - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
 
 
 ## Introduction
@@ -36,6 +38,8 @@ If you wish to install the library - so that it can be automatically found by pr
 This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrative user before executing the command.
 
 ## Using the library
+
+### Creating a simple packet
 
 Since PGP packets can contain very different types of data, the body of the pgp::packet is an std::variant, which gives easy access to the packet-specific fields. When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
 
@@ -90,6 +94,8 @@ int main()
     return 0;
 }
 ```
+
+### Encoding and decoding of packet data
 
 Of course, creating packets by directly constructing them with data
 is interesting, but this wouldn't be much use if we could not share
