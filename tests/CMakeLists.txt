@@ -40,6 +40,7 @@ list(APPEND test-sources
     unit_tests/user_id.cpp
     unit_tests/variable_number.cpp
     unit_tests/signature_subpacket/fixed_array.cpp
+    unit_tests/signature_subpacket/issuer_fingerprint.cpp
     unit_tests/signature_subpacket/key_flags.cpp
     unit_tests/signature_subpacket/numeric.cpp
     unit_tests/signature_subpacket/unknown.cpp

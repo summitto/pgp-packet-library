@@ -33,7 +33,7 @@ namespace pgp {
         features                            = 30,
         signature_target                    = 31,
         embedded_signature                  = 32,
-        fingerprint                         = 33
+        issuer_fingerprint                  = 33
     };
 
     /**
@@ -69,7 +69,7 @@ namespace pgp {
             case signature_subpacket_type::features:                            return "features";
             case signature_subpacket_type::signature_target:                    return "signature target";
             case signature_subpacket_type::embedded_signature:                  return "embedded signature";
-            case signature_subpacket_type::fingerprint:                         return "fingerprint";
+            case signature_subpacket_type::issuer_fingerprint:                  return "issuer fingerprint";
         }
 
         // other subpackets are unknown

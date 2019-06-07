@@ -63,6 +63,7 @@ set(pgp-packet-headers
     eddsa_signature_encoder.h
     unknown_signature_encoder.h
     signature_subpacket/fixed_array.h
+    signature_subpacket/issuer_fingerprint.h
     signature_subpacket/numeric.h
     signature_subpacket/unknown.h
 )

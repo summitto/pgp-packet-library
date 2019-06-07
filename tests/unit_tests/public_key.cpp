@@ -112,5 +112,5 @@ TEST(public_key, fingerprint)
     };
 
     std::array<uint8_t, 8> expected = {0x3e, 0xb9, 0x45, 0xeb, 0x87, 0x7e, 0xbe, 0x0d};
-    ASSERT_EQ(k.fingerprint(), expected);
+    ASSERT_EQ(k.key_id(), expected);
 }

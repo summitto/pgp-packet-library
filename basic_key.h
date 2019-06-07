@@ -191,9 +191,9 @@ namespace pgp {
             /**
              *  Retrieve the fingerprint for this key
              *
-             *  @return The 8-byte fingerprint
+             *  @return The 20-byte fingerprint
              */
-            std::array<uint8_t, 8> fingerprint() const noexcept
+            std::array<uint8_t, 20> fingerprint() const noexcept
             {
                 // the hashing context to create the fingerprint
                 sha1_encoder    encoder;
@@ -201,14 +201,25 @@ namespace pgp {
                 // hash the key into the context
                 hash(encoder);
 
-                // the digest and the result container
-                std::array<uint8_t, 20> data    { encoder.digest() };
+                // return the resulting digest
+                return encoder.digest();
+            }
+
+            /**
+             *  Retrieve the key ID for this key
+             *
+             *  @return The 8-byte key ID
+             */
+            std::array<uint8_t, 8> key_id() const noexcept
+            {
+                // obtain the fingerprint
+                std::array<uint8_t, 20> print{fingerprint()};
+
+                // copy the last 8 bytes into the result container
                 std::array<uint8_t, 8>  result;
+                std::copy(print.begin() + 12, print.end(), result.begin());
 
-                // copy the last 8 bytes over
-                std::copy(data.begin() + 12, data.end(), result.begin());
-
-                // and return the now-filled result
+                // return the result
                 return result;
             }
 

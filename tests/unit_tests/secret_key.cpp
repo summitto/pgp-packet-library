@@ -127,5 +127,5 @@ TEST(secret_key, fingerprint)
     };
 
     std::array<uint8_t, 8> expected = {0x1b, 0x98, 0x5c, 0x78, 0x29, 0xa5, 0xcc, 0x81};
-    ASSERT_EQ(k.fingerprint(), expected);
+    ASSERT_EQ(k.key_id(), expected);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "signature_subpacket/issuer_fingerprint.h"
 #include "signature_subpacket/fixed_array.h"
 #include "signature_subpacket/key_flags.h"
 #include "signature_subpacket/unknown.h"
@@ -27,7 +28,8 @@ namespace pgp {
                 signature_subpacket::exportable_certification,
                 signature_subpacket::primary_user_id,
                 signature_subpacket::key_expiration_time,
-                signature_subpacket::key_flags
+                signature_subpacket::key_flags,
+                signature_subpacket::issuer_fingerprint
             >;
 
             /**
