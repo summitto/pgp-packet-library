@@ -155,7 +155,7 @@ namespace pgp {
     /**
      *  Concrete hasher types
      */
-    using sha1_encoder      = hash_encoder<CryptoPP::SHA>;
+    using sha1_encoder      = hash_encoder<CryptoPP::SHA1>;
     using sha256_encoder    = hash_encoder<CryptoPP::SHA256>;
 
 }

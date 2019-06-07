@@ -90,13 +90,13 @@ namespace {
 
 TEST(hash_encoder, deterministic)
 {
-    deterministic_type<CryptoPP::SHA>();
+    deterministic_type<CryptoPP::SHA1>();
     deterministic_type<CryptoPP::SHA256>();
 }
 
 TEST(hash_encoder, push_equivalent)
 {
-    push_equivalent<CryptoPP::SHA>();
+    push_equivalent<CryptoPP::SHA1>();
     push_equivalent<CryptoPP::SHA256>();
 }
 
@@ -108,7 +108,7 @@ TEST(hash_encoder, push_enum)
         ITEM3,
     };
 
-    pgp::hash_encoder<CryptoPP::SHA> enc1;
+    pgp::hash_encoder<CryptoPP::SHA1> enc1;
     enc1.push(enum_t::ITEM1);
     enc1.push(enum_t::ITEM2);
     enc1.push(enum_t::ITEM3);
@@ -116,7 +116,7 @@ TEST(hash_encoder, push_enum)
 
     using underlying = std::underlying_type_t<enum_t>;
 
-    pgp::hash_encoder<CryptoPP::SHA> enc2;
+    pgp::hash_encoder<CryptoPP::SHA1> enc2;
     enc2.push(static_cast<underlying>(enum_t::ITEM1));
     enc2.push(static_cast<underlying>(enum_t::ITEM2));
     enc2.push(static_cast<underlying>(enum_t::ITEM3));
@@ -132,11 +132,11 @@ TEST(hash_encoder, different)
 
     ASSERT_NE(v1, v2);
 
-    pgp::hash_encoder<CryptoPP::SHA> enc1;
+    pgp::hash_encoder<CryptoPP::SHA1> enc1;
     enc1.push(v1.begin(), v1.end());
     auto res1 = enc1.digest();
 
-    pgp::hash_encoder<CryptoPP::SHA> enc2;
+    pgp::hash_encoder<CryptoPP::SHA1> enc2;
     enc2.push(v2.begin(), v2.end());
     auto res2 = enc2.digest();
 
