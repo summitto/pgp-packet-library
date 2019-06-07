@@ -11,8 +11,8 @@ namespace {
     Key secret_key_1()
     {
         auto curve = pgp::curve_oid::ed25519();
-        auto Q = pgp::multiprecision_integer{gsl::span<const uint8_t>({97, 34, 135, 227, 159, 215, 93, 229})};
-        auto k = pgp::multiprecision_integer{gsl::span<const uint8_t>({228, 159, 246, 23, 20, 155, 206, 156})};
+        auto Q = pgp::multiprecision_integer{std::array<uint8_t, 8>{97, 34, 135, 227, 159, 215, 93, 229}};
+        auto k = pgp::multiprecision_integer{std::array<uint8_t, 8>{228, 159, 246, 23, 20, 155, 206, 156}};
 
         return Key{
             12345678,
@@ -26,8 +26,8 @@ namespace {
     Key secret_key_2()
     {
         auto curve = pgp::curve_oid::curve_25519();
-        auto Q = pgp::multiprecision_integer{gsl::span<const uint8_t>({205, 117, 106, 55, 92, 162, 221, 6})};
-        auto k = pgp::multiprecision_integer{gsl::span<const uint8_t>({225, 138, 163, 90, 177, 224, 61, 100})};
+        auto Q = pgp::multiprecision_integer{std::array<uint8_t, 8>{205, 117, 106, 55, 92, 162, 221, 6}};
+        auto k = pgp::multiprecision_integer{std::array<uint8_t, 8>{225, 138, 163, 90, 177, 224, 61, 100}};
 
         return Key{
             987654321,
@@ -153,7 +153,7 @@ TEST(signature, constructor_encode_decode)
     }};
     pgp::uint16 hash_prefix{0x1337};
 
-    pgp::multiprecision_integer rsasig_arg{gsl::span<const uint8_t>({52, 3, 235, 53, 52, 35, 32, 35})};
+    pgp::multiprecision_integer rsasig_arg{std::array<uint8_t, 8>{52, 3, 235, 53, 52, 35, 32, 35}};
     pgp::rsa_signature rsasig{rsasig_arg};
 
     pgp::signature sig{

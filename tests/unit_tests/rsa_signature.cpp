@@ -101,8 +101,8 @@ TEST(rsa_signature, encode_decode)
 
 TEST(rsa_signature, equality)
 {
-    pgp::rsa_signature sig{pgp::multiprecision_integer{gsl::span<const uint8_t>{{1, 2, 3}}}};
-    pgp::rsa_signature sig2{pgp::multiprecision_integer{gsl::span<const uint8_t>{{4, 5, 6}}}};
+    pgp::rsa_signature sig{pgp::multiprecision_integer{std::array<uint8_t, 3>{1, 2, 3}}};
+    pgp::rsa_signature sig2{pgp::multiprecision_integer{std::array<uint8_t, 3>{4, 5, 6}}};
 
     ASSERT_EQ(sig, sig);
     ASSERT_NE(sig, sig2);

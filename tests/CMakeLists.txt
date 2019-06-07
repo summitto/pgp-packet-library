@@ -51,11 +51,25 @@ list(APPEND test-sources
 add_executable(tests ${test-sources})
 set_property(TARGET tests PROPERTY CXX_STANDARD 17)
 
-target_compile_options(tests PRIVATE
-    -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare
-    -g -O0 -fprofile-instr-generate -fcoverage-mapping -fsanitize=address)
-# target_compile_options(tests PRIVATE "-g" "-O0" "-fprofile-instr-generate" "-fcoverage-mapping" "-Weverything" "-Wno-c++98-compat" "-Wno-c++98-compat-pedantic" "-Wno-padded" "-Wno-shadow-uncaptured-local" "-Wno-global-constructors")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping -fsanitize=address")
+# Check which compiler we're using, and set compiler flags and the USE_COVERAGE variable
+# TODO: Figure out correct flags for other compilers
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    target_compile_options(tests PRIVATE
+        -Wall -Wextra -Wdeprecated -Wdocumentation -Wno-sign-compare
+        -g -O0 -fprofile-instr-generate -fcoverage-mapping -fsanitize=address)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fprofile-instr-generate -fcoverage-mapping -fsanitize=address")
+    set(USE_COVERAGE 1)
+elseif(CMAKE_COMPILER_IS_GNUCXX)
+    message(WARNING "Don't know how to generate coverage information with GCC! The tests will run, but no coverage data can or will be generated.")
+    target_compile_options(tests PRIVATE
+        -Wall -Wextra -Wdeprecated -Wno-sign-compare
+        -g -O0 -fsanitize=address)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+    set(USE_COVERAGE 0)
+else()
+    message(WARNING "Unsupported compiler: don't know what compiler flags to add for this compiler! In particular, no coverage data can or will be generated.")
+    set(USE_COVERAGE 0)
+endif()
 
 target_include_directories(tests PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
 target_link_libraries(tests ${LIBGCRYPT_LIBRARIES})
@@ -77,9 +91,14 @@ add_custom_target(test
     COMMAND tests
     DEPENDS tests)
 
-add_custom_target(profdata
-    COMMAND llvm-profdata merge -o ${CMAKE_CURRENT_BINARY_DIR}/default.profdata ${CMAKE_CURRENT_BINARY_DIR}/default.profraw
-    DEPENDS test)
+if(USE_COVERAGE)
+    add_custom_target(profdata
+        COMMAND llvm-profdata merge -o ${CMAKE_CURRENT_BINARY_DIR}/default.profdata ${CMAKE_CURRENT_BINARY_DIR}/default.profraw
+        DEPENDS test)
+else()
+    add_custom_target(profdata
+        COMMAND echo 'Coverage generation is not supported on your compiler; please use Clang' && false)
+endif()
 
 add_custom_target(coverage
     COMMAND llvm-cov report ${CMAKE_CURRENT_BINARY_DIR}/tests -instr-profile=${CMAKE_CURRENT_BINARY_DIR}/default.profdata -ignore-filename-regex='/\(GSL|variant|tests\)/'
