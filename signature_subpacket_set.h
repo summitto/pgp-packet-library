@@ -1,10 +1,10 @@
 #pragma once
 
-#include "unknown_signature_subpacket.h"
-#include "numeric_signature_subpacket.h"
-#include "array_signature_subpacket.h"
+#include "signature_subpacket/fixed_array.h"
+#include "signature_subpacket/key_flags.h"
+#include "signature_subpacket/unknown.h"
+#include "signature_subpacket/numeric.h"
 #include "signature_subpacket_type.h"
-#include "key_flags_subpacket.h"
 #include <mpark/variant.hpp>
 
 
@@ -20,14 +20,14 @@ namespace pgp {
              *  The recognized subpacket types
              */
             using subpacket_variant = mpark::variant<
-                unknown_signature_subpacket,
-                issuer_subpacket,
-                signature_creation_time_subpacket,
-                signature_expiration_time_subpacket,
-                exportable_certification_subpacket,
-                primary_user_id_subpacket,
-                key_expiration_time_subpacket,
-                key_flags_subpacket
+                signature_subpacket::unknown,
+                signature_subpacket::issuer,
+                signature_subpacket::signature_creation_time,
+                signature_subpacket::signature_expiration_time,
+                signature_subpacket::exportable_certification,
+                signature_subpacket::primary_user_id,
+                signature_subpacket::key_expiration_time,
+                signature_subpacket::key_flags
             >;
 
             /**

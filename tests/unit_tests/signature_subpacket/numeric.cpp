@@ -1,9 +1,9 @@
 #include <vector>
 #include <gtest/gtest.h>
-#include "../../numeric_signature_subpacket.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
-#include "../device_random_engine.h"
+#include "../../../signature_subpacket/numeric.h"
+#include "../../../range_encoder.h"
+#include "../../../decoder.h"
+#include "../../device_random_engine.h"
 
 
 namespace {
@@ -67,21 +67,21 @@ namespace {
     };
 }
 
-TEST(numeric_signature_subpacket, constructors)
+TEST(signature_subpacket_numeric, constructors)
 {
-    TestFunctions<pgp::key_expiration_time_subpacket, uint32_t>().test_constructors();
-    TestFunctions<pgp::revocable_subpacket, uint8_t>().test_constructors();
+    TestFunctions<pgp::signature_subpacket::key_expiration_time, uint32_t>().test_constructors();
+    TestFunctions<pgp::signature_subpacket::revocable, uint8_t>().test_constructors();
 }
 
-TEST(numeric_signature_subpacket, encode_decode)
+TEST(signature_subpacket_numeric, encode_decode)
 {
-    TestFunctions<pgp::key_expiration_time_subpacket, uint32_t>().test_encode_decode();
-    TestFunctions<pgp::revocable_subpacket, uint8_t>().test_encode_decode();
+    TestFunctions<pgp::signature_subpacket::key_expiration_time, uint32_t>().test_encode_decode();
+    TestFunctions<pgp::signature_subpacket::revocable, uint8_t>().test_encode_decode();
 }
 
-TEST(numeric_signature_subpacket, decode_throw)
+TEST(signature_subpacket_numeric, decode_throw)
 {
-    pgp::key_expiration_time_subpacket p1{42};
+    pgp::signature_subpacket::key_expiration_time p1{42};
 
     std::vector<uint8_t> data(16);
     pgp::range_encoder encoder{data};
@@ -94,5 +94,5 @@ TEST(numeric_signature_subpacket, decode_throw)
     decoder.extract_number<uint8_t>();  // Ignore the type
 
     // Decode with shorter type throws error because parser is not exhausted
-    ASSERT_THROW((pgp::revocable_subpacket(decoder)), std::runtime_error);
+    ASSERT_THROW((pgp::signature_subpacket::revocable(decoder)), std::runtime_error);
 }

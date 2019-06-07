@@ -70,13 +70,13 @@ namespace {
 
         for (size_t i = 0; i < num_packets; i++) {
             switch (std::uniform_int_distribution(0, 6)(random_engine)) {
-                case 0: packets.emplace_back(pgp::issuer_subpacket{{1, 2, 3, 4}}); break;
-                case 1: packets.emplace_back(pgp::signature_creation_time_subpacket{1234}); break;
-                case 2: packets.emplace_back(pgp::signature_expiration_time_subpacket{8451632}); break;
-                case 3: packets.emplace_back(pgp::exportable_certification_subpacket{0xff}); break;
-                case 4: packets.emplace_back(pgp::primary_user_id_subpacket{0x12}); break;
-                case 5: packets.emplace_back(pgp::key_expiration_time_subpacket{99999}); break;
-                case 6: packets.emplace_back(pgp::key_flags_subpacket{0x37}); break;
+                case 0: packets.emplace_back(pgp::signature_subpacket::issuer{{1, 2, 3, 4}}); break;
+                case 1: packets.emplace_back(pgp::signature_subpacket::signature_creation_time{1234}); break;
+                case 2: packets.emplace_back(pgp::signature_subpacket::signature_expiration_time{8451632}); break;
+                case 3: packets.emplace_back(pgp::signature_subpacket::exportable_certification{0xff}); break;
+                case 4: packets.emplace_back(pgp::signature_subpacket::primary_user_id{0x12}); break;
+                case 5: packets.emplace_back(pgp::signature_subpacket::key_expiration_time{99999}); break;
+                case 6: packets.emplace_back(pgp::signature_subpacket::key_flags{0x37}); break;
             }
         }
 
@@ -145,11 +145,11 @@ TEST(signature, constructor_encode_decode)
     pgp::key_algorithm keyalgo{pgp::key_algorithm::rsa_sign_only};
     pgp::hash_algorithm hashalgo{pgp::hash_algorithm::sha256};
     pgp::signature_subpacket_set hashedsubs{{
-        pgp::signature_creation_time_subpacket{1234},
-        pgp::signature_expiration_time_subpacket{5678}
+        pgp::signature_subpacket::signature_creation_time{1234},
+        pgp::signature_subpacket::signature_expiration_time{5678}
     }};
     pgp::signature_subpacket_set unhashedsubs{{
-        pgp::issuer_subpacket{{9, 8, 7, 6, 5, 4, 3, 2}}
+        pgp::signature_subpacket::issuer{{9, 8, 7, 6, 5, 4, 3, 2}}
     }};
     pgp::uint16 hash_prefix{0x1337};
 

@@ -1,18 +1,18 @@
 #pragma once
 
-#include "signature_subpacket_type.h"
-#include "variable_number.h"
-#include "fixed_number.h"
+#include "../signature_subpacket_type.h"
+#include "../variable_number.h"
+#include "../fixed_number.h"
 
 
-namespace pgp {
+namespace pgp::signature_subpacket {
 
     /**
      *  Generic class for a simple signature subpacket
      *  with a fixed-size array of bytes
      */
     template <size_t data_size, signature_subpacket_type subpacket_type>
-    class array_signature_subpacket
+    class fixed_array
     {
         public:
             /**
@@ -20,7 +20,7 @@ namespace pgp {
              *
              *  @param  parser  The parser to decode the data
              */
-            array_signature_subpacket(decoder &parser)
+            fixed_array(decoder &parser)
             {
                 // retrieve data from the decoder
                 auto data = parser.extract_blob<uint8_t>(data_size);
@@ -34,7 +34,7 @@ namespace pgp {
              *
              *  @param  data    The array of data
              */
-            array_signature_subpacket(std::array<uint8_t, data_size> data) noexcept :
+            fixed_array(std::array<uint8_t, data_size> data) noexcept :
                 _data{ data }
             {}
 
@@ -43,7 +43,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const array_signature_subpacket<data_size, subpacket_type> &other) const noexcept
+            bool operator==(const fixed_array<data_size, subpacket_type> &other) const noexcept
             {
                 return data() == other.data();
             }
@@ -53,7 +53,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const array_signature_subpacket<data_size, subpacket_type> &other) const noexcept
+            bool operator!=(const fixed_array<data_size, subpacket_type> &other) const noexcept
             {
                 return !operator==(other);
             }
@@ -116,6 +116,6 @@ namespace pgp {
     /**
      *  Specialize the different subpacket types available
      */
-    using issuer_subpacket  = array_signature_subpacket<8, signature_subpacket_type::issuer>;
+    using issuer  = fixed_array<8, signature_subpacket_type::issuer>;
 
 }

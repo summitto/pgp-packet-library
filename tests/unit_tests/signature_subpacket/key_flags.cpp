@@ -1,27 +1,27 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../../key_flags_subpacket.h"
-#include "../../range_encoder.h"
+#include "../../../signature_subpacket/key_flags.h"
+#include "../../../range_encoder.h"
 
 
-TEST(key_flags_subpacket, variadic_constructor)
+TEST(signature_subpacket_key_flags, variadic_constructor)
 {
     uint8_t a = 0x1, b = 0x4, c = 0x80;
-    pgp::key_flags_subpacket packet(a, b, c);
+    pgp::signature_subpacket::key_flags packet(a, b, c);
     ASSERT_TRUE(packet.is_set(0x1));
     ASSERT_TRUE(packet.is_set(0x4));
     ASSERT_TRUE(packet.is_set(0x80));
 }
 
-TEST(key_flags_subpacket, type)
+TEST(signature_subpacket_key_flags, type)
 {
-    ASSERT_EQ(pgp::key_flags_subpacket::type(), pgp::signature_subpacket_type::key_flags);
+    ASSERT_EQ(pgp::signature_subpacket::key_flags::type(), pgp::signature_subpacket_type::key_flags);
 }
 
-TEST(key_flags_subpacket, faithful_encoding)
+TEST(signature_subpacket_key_flags, faithful_encoding)
 {
     for (int i = 0; i < 256; i++) {
-        pgp::key_flags_subpacket packet{static_cast<uint8_t>(i)};
+        pgp::signature_subpacket::key_flags packet{static_cast<uint8_t>(i)};
 
         // For flags fields of at most 191 bytes, the packet length will be 3;
         // this is true for the forseeable future.
@@ -41,18 +41,18 @@ TEST(key_flags_subpacket, faithful_encoding)
         ASSERT_EQ(decoded_length, 2);  // type + flags
 
         pgp::signature_subpacket_type decoded_type{decoder.extract_number<uint8_t>()};
-        ASSERT_EQ(decoded_type, pgp::key_flags_subpacket::type());
+        ASSERT_EQ(decoded_type, pgp::signature_subpacket::key_flags::type());
 
-        pgp::key_flags_subpacket result{decoder};
+        pgp::signature_subpacket::key_flags result{decoder};
 
         ASSERT_EQ(packet, result);
     }
 }
 
-TEST(key_flags_subpacket, equality)
+TEST(signature_subpacket_key_flags, equality)
 {
-    pgp::key_flags_subpacket p1{0x42};
-    pgp::key_flags_subpacket p2{0x43};
+    pgp::signature_subpacket::key_flags p1{0x42};
+    pgp::signature_subpacket::key_flags p2{0x43};
 
     ASSERT_EQ(p1, p1);
     ASSERT_NE(p1, p2);

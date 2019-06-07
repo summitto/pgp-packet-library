@@ -12,14 +12,12 @@ find_package(sodium     1.0.16  REQUIRED)
 find_package(CryptoPP           REQUIRED)
 
 set(pgp-packet-headers
-    array_signature_subpacket.h
     basic_key.h
     dsa_signature.h
     elgamal_public_key.h
     hash_algorithm.h
     hash_encoder.h
     unknown_packet.h
-    unknown_signature_subpacket.h
     unknown_signature.h
     basic_secret_key.h
     ecdh_public_key.h
@@ -33,7 +31,6 @@ set(pgp-packet-headers
     curve_oid.h
     ecdh_secret_key.h
     multiprecision_integer.h
-    numeric_signature_subpacket.h
     rsa_secret_key.h
     signature_subpacket_type.h
     variable_number.h
@@ -65,6 +62,9 @@ set(pgp-packet-headers
     ecdsa_signature_encoder.h
     eddsa_signature_encoder.h
     unknown_signature_encoder.h
+    signature_subpacket/fixed_array.h
+    signature_subpacket/numeric.h
+    signature_subpacket/unknown.h
 )
 
 set(pgp-packet-sources
@@ -94,12 +94,12 @@ set(pgp-packet-sources
     elgamal_secret_key.cpp
     multiprecision_integer.cpp
     signature_subpacket_set.cpp
-    unknown_signature_subpacket.cpp
     rsa_signature_encoder.cpp
     dsa_signature_encoder.cpp
     ecdsa_signature_encoder.cpp
     eddsa_signature_encoder.cpp
     unknown_signature_encoder.cpp
+    signature_subpacket/unknown.cpp
 )
 
 add_library(pgp-packet ${pgp-packet-sources})

@@ -1,17 +1,17 @@
 #pragma once
 
-#include "signature_subpacket_type.h"
-#include "decoder.h"
-#include "fixed_number.h"
-#include "variable_number.h"
+#include "../signature_subpacket_type.h"
+#include "../decoder.h"
+#include "../fixed_number.h"
+#include "../variable_number.h"
 
 
-namespace pgp {
+namespace pgp::signature_subpacket {
 
     /**
      *  Class for holding key flags in a signature subpacket
      */
-    class key_flags_subpacket
+    class key_flags
     {
         public:
             /**
@@ -19,7 +19,7 @@ namespace pgp {
              *
              *  @param  parser  The decoder to parse the data
              */
-            key_flags_subpacket(decoder &parser) :
+            key_flags(decoder &parser) :
                 _flags{ parser }
             {
                 // all data should be consumed
@@ -35,7 +35,7 @@ namespace pgp {
              *  @param  flag    One or more flags to set
              */
             template <typename ...flags>
-            explicit key_flags_subpacket(flags... flag) :
+            explicit key_flags(flags... flag) :
                 _flags{ static_cast<uint8_t>((flag | ...)) }
             {}
 
@@ -44,7 +44,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const key_flags_subpacket &other) const noexcept
+            bool operator==(const key_flags &other) const noexcept
             {
                 return _flags == other._flags;
             }
@@ -54,7 +54,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const key_flags_subpacket &other) const noexcept
+            bool operator!=(const key_flags &other) const noexcept
             {
                 return !operator==(other);
             }

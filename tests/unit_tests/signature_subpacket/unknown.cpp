@@ -1,12 +1,12 @@
 #include <array>
 #include <vector>
 #include <gtest/gtest.h>
-#include "../../unknown_signature_subpacket.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "../../../signature_subpacket/unknown.h"
+#include "../../../range_encoder.h"
+#include "../../../decoder.h"
 
 
-TEST(unknown_signature_subpacket, properties)
+TEST(signature_subpacket_unknown, properties)
 {
     auto type_1 = pgp::signature_subpacket_type::features;
 
@@ -14,8 +14,8 @@ TEST(unknown_signature_subpacket, properties)
 
     // Check that decoding and initializing with data is the same thing
     pgp::decoder decoder{data};
-    pgp::unknown_signature_subpacket p1{type_1, decoder};
-    pgp::unknown_signature_subpacket p2{type_1, data};
+    pgp::signature_subpacket::unknown p1{type_1, decoder};
+    pgp::signature_subpacket::unknown p2{type_1, data};
 
     ASSERT_EQ(p1.data(), p2.data());
     ASSERT_EQ(p1, p1);
@@ -41,13 +41,13 @@ TEST(unknown_signature_subpacket, properties)
     );
 }
 
-TEST(unknown_signature_subpacket, equality)
+TEST(signature_subpacket_unknown, equality)
 {
     auto type_1 = pgp::signature_subpacket_type::features;
 
-    pgp::unknown_signature_subpacket p1{type_1, std::array<uint8_t, 3>{10, 11, 12}};
-    pgp::unknown_signature_subpacket p2{type_1, std::array<uint8_t, 3>{11, 11, 12}};
-    pgp::unknown_signature_subpacket p3{type_1, std::array<uint8_t, 5>{10, 11, 12, 13, 14}};
+    pgp::signature_subpacket::unknown p1{type_1, std::array<uint8_t, 3>{10, 11, 12}};
+    pgp::signature_subpacket::unknown p2{type_1, std::array<uint8_t, 3>{11, 11, 12}};
+    pgp::signature_subpacket::unknown p3{type_1, std::array<uint8_t, 5>{10, 11, 12, 13, 14}};
     ASSERT_EQ(p1, p1);
     ASSERT_NE(p1, p2);
     ASSERT_NE(p1, p3);

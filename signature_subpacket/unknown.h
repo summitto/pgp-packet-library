@@ -1,16 +1,16 @@
 #pragma once
 
-#include "signature_subpacket_type.h"
-#include "variable_number.h"
+#include "../signature_subpacket_type.h"
+#include "../variable_number.h"
 #include <vector>
 
 
-namespace pgp {
+namespace pgp::signature_subpacket {
 
     /**
      *  Class holding a single subpacket of unknown type
      */
-    class unknown_signature_subpacket
+    class unknown
     {
         public:
             /**
@@ -19,7 +19,7 @@ namespace pgp {
              *  @param  type    The subpacket type
              *  @param  parser  The decoder to parse the data
              */
-            unknown_signature_subpacket(signature_subpacket_type type, decoder &parser);
+            unknown(signature_subpacket_type type, decoder &parser);
 
             /**
              *  Constructor
@@ -27,15 +27,15 @@ namespace pgp {
              *  @param  type    The signature subpacket type
              *  @param  data    The data contained in the subpacket
              */
-            unknown_signature_subpacket(signature_subpacket_type type, gsl::span<const uint8_t> data);
+            unknown(signature_subpacket_type type, gsl::span<const uint8_t> data);
 
             /**
              *  Comparison operators
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const unknown_signature_subpacket &other) const noexcept;
-            bool operator!=(const unknown_signature_subpacket &other) const noexcept;
+            bool operator==(const unknown &other) const noexcept;
+            bool operator!=(const unknown &other) const noexcept;
 
             /**
              *  Determine the size used in encoded format

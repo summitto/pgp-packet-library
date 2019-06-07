@@ -1,17 +1,17 @@
 #pragma once
 
-#include "signature_subpacket_type.h"
-#include "variable_number.h"
-#include "fixed_number.h"
+#include "../signature_subpacket_type.h"
+#include "../variable_number.h"
+#include "../fixed_number.h"
 
 
-namespace pgp {
+namespace pgp::signature_subpacket {
 
     /**
      *  Generic class for a simple, numeric signature subpacket
      */
     template <typename T, signature_subpacket_type subpacket_type>
-    class numeric_signature_subpacket
+    class numeric
     {
         public:
             /**
@@ -19,7 +19,7 @@ namespace pgp {
              *
              *  @param  parser  The parser to decode the data
              */
-            numeric_signature_subpacket(decoder &parser) :
+            numeric(decoder &parser) :
                 _data{ parser }
             {
                 // all data should be consumed
@@ -34,7 +34,7 @@ namespace pgp {
              *
              *  @param  number  The number to store
              */
-            numeric_signature_subpacket(T number) :
+            numeric(T number) :
                 _data{ number }
             {}
 
@@ -43,7 +43,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const numeric_signature_subpacket<T, subpacket_type> &other) const noexcept
+            bool operator==(const numeric<T, subpacket_type> &other) const noexcept
             {
                 return data() == other.data();
             }
@@ -53,7 +53,7 @@ namespace pgp {
              *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const numeric_signature_subpacket<T, subpacket_type> &other) const noexcept
+            bool operator!=(const numeric<T, subpacket_type> &other) const noexcept
             {
                 return !operator==(other);
             }
@@ -116,11 +116,11 @@ namespace pgp {
     /**
      *  Specialize the different subpacket types available
      */
-    using signature_creation_time_subpacket     = numeric_signature_subpacket<uint32_t, signature_subpacket_type::signature_creation_time>;
-    using signature_expiration_time_subpacket   = numeric_signature_subpacket<uint32_t, signature_subpacket_type::signature_expiration_time>;
-    using exportable_certification_subpacket    = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::exportable_certification>;
-    using revocable_subpacket                   = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::revocable>;
-    using primary_user_id_subpacket             = numeric_signature_subpacket<uint8_t,  signature_subpacket_type::primary_user_id>;
-    using key_expiration_time_subpacket         = numeric_signature_subpacket<uint32_t, signature_subpacket_type::key_expiration_time>;
+    using signature_creation_time     = numeric<uint32_t, signature_subpacket_type::signature_creation_time>;
+    using signature_expiration_time   = numeric<uint32_t, signature_subpacket_type::signature_expiration_time>;
+    using exportable_certification    = numeric<uint8_t,  signature_subpacket_type::exportable_certification>;
+    using revocable                   = numeric<uint8_t,  signature_subpacket_type::revocable>;
+    using primary_user_id             = numeric<uint8_t,  signature_subpacket_type::primary_user_id>;
+    using key_expiration_time         = numeric<uint32_t, signature_subpacket_type::key_expiration_time>;
 
 }
