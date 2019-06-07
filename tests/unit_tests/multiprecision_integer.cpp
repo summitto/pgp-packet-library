@@ -30,10 +30,10 @@ TEST(multiprecision_integer, decode)
 
 TEST(multiprecision_integer, equality)
 {
-    pgp::multiprecision_integer mi1{gsl::span<const uint8_t>{{1, 2, 3}}};
-    pgp::multiprecision_integer mi2{gsl::span<const uint8_t>{{4, 5, 6}}};
-    pgp::multiprecision_integer mi3{gsl::span<const uint8_t>{{1, 2}}};
-    pgp::multiprecision_integer mi4{gsl::span<const uint8_t>{{1, 2, 3, 4}}};
+    pgp::multiprecision_integer mi1{std::array<uint8_t, 3>{1, 2, 3}};
+    pgp::multiprecision_integer mi2{std::array<uint8_t, 3>{4, 5, 6}};
+    pgp::multiprecision_integer mi3{std::array<uint8_t, 2>{1, 2}};
+    pgp::multiprecision_integer mi4{std::array<uint8_t, 4>{1, 2, 3, 4}};
 
     ASSERT_EQ(mi1, mi1);
     ASSERT_NE(mi1, mi2);

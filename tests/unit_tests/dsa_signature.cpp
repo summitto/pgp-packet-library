@@ -33,9 +33,9 @@ TEST(dsa_signature, encode_decode)
 
 TEST(dsa_signature, equality)
 {
-    pgp::multiprecision_integer rval{gsl::span<const uint8_t>{{1, 2, 3}}};
-    pgp::multiprecision_integer sval{gsl::span<const uint8_t>{{4, 5, 6}}};
-    pgp::multiprecision_integer diff{gsl::span<const uint8_t>{{7, 8, 9}}};
+    pgp::multiprecision_integer rval{std::array<uint8_t, 3>{1, 2, 3}};
+    pgp::multiprecision_integer sval{std::array<uint8_t, 3>{4, 5, 6}};
+    pgp::multiprecision_integer diff{std::array<uint8_t, 3>{7, 8, 9}};
 
     pgp::dsa_signature sig{rval, sval};
     ASSERT_EQ(sig, sig);
