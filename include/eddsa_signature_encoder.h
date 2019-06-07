@@ -19,7 +19,10 @@ namespace pgp {
              *
              *  @param key        The secret key with which to make the signature
              */
-            eddsa_signature_encoder(secret_key key) noexcept;
+            template <packet_tag key_tag>
+            eddsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) noexcept :
+                eddsa_key{mpark::get<basic_secret_key<eddsa_public_key, eddsa_secret_key>>(key.key())}
+            {}
 
             /**
              *  Make the signature
@@ -32,7 +35,7 @@ namespace pgp {
             /**
              *  The key with which to make the signature
              */
-            secret_key key;
+            basic_secret_key<eddsa_public_key, eddsa_secret_key> eddsa_key;
     };
 
 }

@@ -1,6 +1,7 @@
 #include "signature_subpacket_set.h"
 #include "variable_number.h"
 #include "fixed_number.h"
+#include "signature.h"
 #include <numeric>
 
 
@@ -104,7 +105,7 @@ namespace pgp {
         // allocate size for the header and add size for all the packets
         return std::accumulate(_subpackets.begin(), _subpackets.end(), uint16::size(), [](uint16_t a, const subpacket_variant &b) {
             // retrieve the correct subpacket type
-            mpark::visit([&a](auto &&subpacket) {
+            visit([&a](auto &&subpacket) {
                 // add the size of the subpacket
                 a += subpacket.size();
             }, b);

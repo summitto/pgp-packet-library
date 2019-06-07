@@ -1,3 +1,5 @@
+#pragma once
+
 #include "packet_tag.h"
 #include "decoder.h"
 

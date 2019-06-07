@@ -22,7 +22,11 @@ namespace pgp {
             /**
              *  Constructor
              */
-            rsa_signature_encoder(secret_key key);
+            template <packet_tag key_tag>
+            rsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) :
+                _signature_context{signer_t{}.NewSignatureAccumulator(_prng)},
+                rsa_key{std::move(mpark::get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key()))}
+            {}
 
             /**
              *  Destructor
@@ -139,7 +143,7 @@ namespace pgp {
             CryptoPP::SHA256 _hash_context;
 
             // key with which to make the signature
-            secret_key key;
+            basic_secret_key<rsa_public_key, rsa_secret_key> rsa_key;
     };
 
 }

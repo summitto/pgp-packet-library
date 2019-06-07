@@ -11,8 +11,8 @@
 
 TEST(dsa_signature, encode_decode)
 {
-    auto rval = tests::parameters::generate::mpi();
-    auto sval = tests::parameters::generate::mpi();
+    auto rval = tests::generate::mpi();
+    auto sval = tests::generate::mpi();
     pgp::dsa_signature sig{rval, sval};
 
     ASSERT_EQ(sig.size(), rval.size() + sval.size());

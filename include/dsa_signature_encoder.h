@@ -16,10 +16,13 @@ namespace pgp {
         public:
             /**
              *  Create the encoder
-             *
-             *  @param key        The secret key with which to make the signature
              */
-            dsa_signature_encoder(secret_key key);
+            template <packet_tag key_tag>
+            dsa_signature_encoder(basic_key<secret_key_traits<key_tag>>)
+            {
+                // TODO
+                throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };
+            }
 
             /**
              *  Make the signature

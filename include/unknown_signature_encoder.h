@@ -16,7 +16,11 @@ namespace pgp {
             /**
              *  Create a nonexistent encoder; throws.
              */
-            unknown_signature_encoder(secret_key);
+            template <packet_tag key_tag>
+            unknown_signature_encoder(basic_key<secret_key_traits<key_tag>>)
+            {
+                throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
+            }
 
             /**
              *  Push a value to a nonexistent encoder; throws.

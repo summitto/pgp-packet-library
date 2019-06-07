@@ -103,7 +103,7 @@ namespace pgp {
         packet_tag result;
 
         // retrieve the body
-        mpark::visit([&result](auto &body) {
+        visit([&result](auto &body) {
             // retrieve the tag from the body
             result = body.tag();
         }, _body);
@@ -124,7 +124,7 @@ namespace pgp {
         uint32_t result;
 
         // retrieve the body
-        mpark::visit([&result](auto &body) {
+        visit([&result](auto &body) {
             // retrieve the size from the body
             result = gsl::narrow_cast<uint32_t>(body.size());
         }, _body);

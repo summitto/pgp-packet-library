@@ -10,15 +10,6 @@
 namespace pgp {
 
     /**
-     *  Create the encoder
-     *
-     *  @param key        The secret key with which to make the ECDSA signature
-     */
-    ecdsa_signature_encoder::ecdsa_signature_encoder(secret_key key) noexcept :
-        key{std::move(key)}
-    {}
-
-    /**
      *  Make the signature
      *
      *  @return Tuple of the r and s parameters for the ECDSA signature
@@ -26,9 +17,6 @@ namespace pgp {
     std::tuple<multiprecision_integer, multiprecision_integer>
     ecdsa_signature_encoder::finalize()
     {
-        // retrieve the key implementation
-        auto &ecdsa_key = mpark::get<basic_secret_key<ecdsa_public_key, ecdsa_secret_key>>(key.key());
-
         // Crypto++ does not export this information as constexpr
         constexpr size_t signature_length = 64;
 

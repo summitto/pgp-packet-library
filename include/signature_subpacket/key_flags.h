@@ -4,6 +4,7 @@
 #include "../decoder.h"
 #include "../fixed_number.h"
 #include "../variable_number.h"
+#include "../key_flag.h"
 
 
 namespace pgp::signature_subpacket {
@@ -36,7 +37,7 @@ namespace pgp::signature_subpacket {
              */
             template <typename ...flags>
             explicit key_flags(flags... flag) :
-                _flags{ static_cast<uint8_t>((flag | ...)) }
+                _flags{ static_cast<uint8_t>((static_cast<uint8_t>(flag) | ...)) }
             {}
 
             /**
@@ -92,6 +93,11 @@ namespace pgp::signature_subpacket {
             {
                 // check whether the flag is set
                 return flag & _flags;
+            }
+
+            bool is_set(key_flag flag) const noexcept
+            {
+                return is_set(static_cast<uint8_t>(flag));
             }
 
             /**

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "dsa_public_key.h"
 
 

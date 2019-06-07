@@ -39,6 +39,7 @@ list(APPEND test-sources
     unit_tests/unknown_signature.cpp
     unit_tests/user_id.cpp
     unit_tests/variable_number.cpp
+    unit_tests/signature_subpacket/embedded.cpp
     unit_tests/signature_subpacket/fixed_array.cpp
     unit_tests/signature_subpacket/issuer_fingerprint.cpp
     unit_tests/signature_subpacket/key_flags.cpp
@@ -48,7 +49,9 @@ list(APPEND test-sources
 
 list(APPEND test-sources
     device_random_engine.cpp
-    key_template.cpp)
+    generate.cpp
+    key_template.cpp
+)
 
 add_executable(tests ${test-sources})
 set_property(TARGET tests PROPERTY CXX_STANDARD 17)

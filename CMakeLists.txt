@@ -44,6 +44,8 @@ set(pgp-packet-sources
     source/eddsa_signature_encoder.cpp
     source/unknown_signature_encoder.cpp
     source/signature_subpacket/unknown.cpp
+    source/signature_subpacket/issuer_fingerprint.cpp
+    source/signature_subpacket/embedded.cpp
 )
 
 add_library(pgp-packet ${pgp-packet-sources})

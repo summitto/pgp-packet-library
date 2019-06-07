@@ -7,6 +7,7 @@
 #include "eddsa_signature.h"
 #include "range_encoder.h"
 #include "hash_encoder.h"
+#include "generate.h"
 #include "decoder.h"
 
 
@@ -32,23 +33,15 @@ namespace {
     inputs generate_inputs()
     {
         inputs inps;
-        std::copy(public_key_tag.begin(), public_key_tag.end(), inps.pubkey.begin());
-        randombytes_buf(inps.pubkey.data() + public_key_tag.size(), inps.pubkey.size() - public_key_tag.size());
-        randombytes_buf(inps.seckey.data(), inps.seckey.size());
-        randombytes_buf(inps.message.data(), inps.message.size());
-        crypto_sign_keypair(inps.pubkey.data() + public_key_tag.size(), inps.seckey.data());
+
+        auto key_res = tests::generate::eddsa::key();
+        const pgp::secret_key &sk = std::get<0>(key_res);
+        inps.pubkey = std::get<1>(key_res);
+        inps.seckey = std::get<2>(key_res);
 
         std::array<uint8_t, 32> message;
         randombytes_buf(message.data(), message.size());
         inps.message = sha256_hash(gsl::span<const uint8_t>{message});
-
-        pgp::secret_key sk{
-            1554106568,
-            pgp::key_algorithm::eddsa,
-            mpark::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
-            std::make_tuple(pgp::curve_oid::ed25519(), pgp::multiprecision_integer(inps.pubkey)),
-            std::make_tuple(pgp::multiprecision_integer(inps.seckey))
-        };
 
         pgp::eddsa_signature::encoder_t sig_encoder{sk};
         sig_encoder.insert_blob(gsl::span<const uint8_t>{message});

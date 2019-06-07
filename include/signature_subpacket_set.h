@@ -3,6 +3,7 @@
 #include "signature_subpacket/issuer_fingerprint.h"
 #include "signature_subpacket/fixed_array.h"
 #include "signature_subpacket/key_flags.h"
+#include "signature_subpacket/embedded.h"
 #include "signature_subpacket/unknown.h"
 #include "signature_subpacket/numeric.h"
 #include "signature_subpacket_type.h"
@@ -29,7 +30,8 @@ namespace pgp {
                 signature_subpacket::primary_user_id,
                 signature_subpacket::key_expiration_time,
                 signature_subpacket::key_flags,
-                signature_subpacket::issuer_fingerprint
+                signature_subpacket::issuer_fingerprint,
+                signature_subpacket::embedded_signature
             >;
 
             /**
@@ -108,7 +110,7 @@ namespace pgp {
                 // iterate over the subpackets
                 for (auto &subpacket : _subpackets) {
                     // retrieve the specific type
-                    mpark::visit([&writer](auto &&subpacket) {
+                    visit([&writer](auto &&subpacket) {
                         // encode the subpacket as well
                         subpacket.encode(writer);
                     }, subpacket);

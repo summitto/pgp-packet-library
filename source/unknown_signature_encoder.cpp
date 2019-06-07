@@ -3,13 +3,6 @@
 
 namespace pgp {
 
-    /**
-     *  Create a nonexistent encoder; throws.
-     */
-    unknown_signature_encoder::unknown_signature_encoder(secret_key)
-    {
-        throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
-    }
 
     /**
      *  Get the hash prefix of a nonexistent encoder; throws.

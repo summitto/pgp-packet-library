@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 #include "signature_subpacket_set.h"
 #include "range_encoder.h"
+#include "signature.h"
 #include "decoder.h"
 
 

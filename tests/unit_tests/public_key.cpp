@@ -7,8 +7,8 @@
 
 TEST(public_key, constructor)
 {
-    auto n = tests::parameters::generate::mpi();
-    auto e = tests::parameters::generate::mpi();
+    auto n = tests::generate::mpi();
+    auto e = tests::generate::mpi();
 
     pgp::public_key k{
         1234,
@@ -27,10 +27,10 @@ TEST(public_key, constructor)
 
 TEST(public_key, encode_decode)
 {
-    auto p = tests::parameters::generate::mpi();
-    auto q = tests::parameters::generate::mpi();
-    auto g = tests::parameters::generate::mpi();
-    auto y = tests::parameters::generate::mpi();
+    auto p = tests::generate::mpi();
+    auto q = tests::generate::mpi();
+    auto g = tests::generate::mpi();
+    auto y = tests::generate::mpi();
 
     pgp::public_key k{
         5678,
@@ -54,8 +54,8 @@ TEST(public_key, encode_decode)
 
 TEST(public_key, equality)
 {
-    auto n = tests::parameters::generate::mpi();
-    auto e = tests::parameters::generate::mpi();
+    auto n = tests::generate::mpi();
+    auto e = tests::generate::mpi();
 
     pgp::public_key k{
         1234,
@@ -79,7 +79,7 @@ TEST(public_key, equality)
     };
 
     pgp::multiprecision_integer n2;
-    do n2 = tests::parameters::generate::mpi();
+    do n2 = tests::generate::mpi();
     while (n2 == n);
 
     pgp::public_key k4{

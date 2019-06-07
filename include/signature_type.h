@@ -41,9 +41,9 @@ namespace pgp {
             case signature_type::canonical_text_document:                       return "canonical text document signature";
             case signature_type::standalone:                                    return "standalone signature";
             case signature_type::generic_user_id_and_public_key_certification:  return "generic certification of user id and public-key packet";
-            case signature_type::persona_user_id_and_public_key_certification:  return "persona certification of userid and public-key packet";
-            case signature_type::casual_user_id_and_public_key_certification:   return "casual certification of userid and public-key packet";
-            case signature_type::positive_user_id_and_public_key_certification: return "positive certification of userid and public-key packet";
+            case signature_type::persona_user_id_and_public_key_certification:  return "persona certification of user id and public-key packet";
+            case signature_type::casual_user_id_and_public_key_certification:   return "casual certification of user id and public-key packet";
+            case signature_type::positive_user_id_and_public_key_certification: return "positive certification of user id and public-key packet";
             case signature_type::subkey_binding:                                return "subkey binding signature";
             case signature_type::primary_key_binding:                           return "primary key binding signature";
             case signature_type::key_signature:                                 return "key signature";
@@ -51,7 +51,7 @@ namespace pgp {
             case signature_type::subkey_revocation:                             return "subkey revocation signature";
             case signature_type::certification_revocation:                      return "certification revocation signature";
             case signature_type::timestamp:                                     return "timestamp signature";
-            case signature_type::third_party_confirmation:                      return "thirt-party confirmation signature";
+            case signature_type::third_party_confirmation:                      return "third-party confirmation signature";
         }
     }
 

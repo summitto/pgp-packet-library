@@ -4,14 +4,6 @@
 namespace pgp {
 
     /**
-     *  Constructor
-     */
-    rsa_signature_encoder::rsa_signature_encoder(secret_key key) :
-        _signature_context{signer_t{}.NewSignatureAccumulator(_prng)},
-        key{std::move(key)}
-    {}
-
-    /**
      *  Destructor
      */
     rsa_signature_encoder::~rsa_signature_encoder()
@@ -30,9 +22,6 @@ namespace pgp {
      */
     std::tuple<pgp::multiprecision_integer> rsa_signature_encoder::finalize() noexcept
     {
-        // retrieve the key implementation
-        auto &rsa_key = mpark::get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key());
-
         // construct a Crypto++ private key; we also have p, q, u at our
         // disposal, but Crypto++'s extended constructor needs dp and dq as
         // well, which we don't have

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "rsa_public_key.h"
 
 

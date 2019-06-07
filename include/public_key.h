@@ -31,6 +31,11 @@ namespace pgp {
         {
             return key_tag;
         }
+
+        static constexpr bool is_subkey() noexcept
+        {
+            return key_tag == packet_tag::public_subkey;
+        }
     };
 
     // specialize the public key type

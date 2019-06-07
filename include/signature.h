@@ -81,12 +81,56 @@ namespace pgp {
             /**
              *  Constructor
              *
-             *  @param  owner                   The key that will certify it owns another key
-             *  @param  subkey                  The subkey that belongs to the owner
+             *  @param  signer                  The key that will certify it owns/trusts another key
+             *  @param  signee                  The (usually sub-)key that belongs to the owner
              *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
              *  @param  unhashed_subpackets     The subpackets that will not be hashed
              */
-            signature(const secret_key &owner, const secret_subkey &subkey, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets);
+            template <packet_tag signer_tag, typename signee_traits>
+            signature(
+                const basic_key<secret_key_traits<signer_tag>> &signer,
+                const basic_key<signee_traits> &signee,
+                signature_subpacket_set hashed_subpackets,
+                signature_subpacket_set unhashed_subpackets
+            ) :
+                _type{ secret_key_traits<signer_tag>::is_subkey()
+                            ? signature_type::primary_key_binding
+                            : signature_type::subkey_binding },
+                _key_algorithm{ signer.algorithm() },
+                _hash_algorithm{ hash_algorithm::sha256 },
+                _hashed_subpackets{ std::move(hashed_subpackets) },
+                _unhashed_subpackets{ std::move(unhashed_subpackets) }
+            {
+                visit([&signer, &signee, this](auto &&key_instance) {
+                    // obtain the appropriate types
+                    using signature_t = typename std::decay_t<decltype(key_instance)>::signature_t;
+                    using encoder_t = typename signature_t::encoder_t;
+
+                    // construct the appropriate signature encoder
+                    encoder_t encoder{signer};
+
+                    // hash the keys; the main key always comes first
+                    if (type() == signature_type::subkey_binding) {
+                        // for a subkey binding, the main key is the signer
+                        signer.hash(encoder);
+                        signee.hash(encoder);
+                    } else {
+                        // for a primary key binding, the main key is the signee
+                        signee.hash(encoder);
+                        signer.hash(encoder);
+                    }
+
+                    // now hash the signature data itself
+                    hash_signature(encoder);
+
+                    // store the hash prefix
+                    _hash_prefix = util::to_lvalue(decoder{encoder.hash_prefix()});
+
+                    // Extra move was deemed worth it versus the monstrosity that would
+                    // be required to use std::apply here.
+                    _signature.emplace<signature_t>(util::make_from_tuple<signature_t>(encoder.finalize()));
+                }, signer.key());
+            }
 
             /**
              *  Comparison operators
@@ -191,7 +235,7 @@ namespace pgp {
                 _hash_prefix.encode(writer);
 
                 // retrieve the signature itself
-                mpark::visit([&writer](auto &signature) {
+                visit([&writer](auto &signature) {
                     // encode the signature
                     signature.encode(writer);
                 }, _signature);

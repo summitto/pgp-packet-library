@@ -139,7 +139,7 @@ namespace pgp {
                 auto result = _version.size() + _creation_time.size() + sizeof(_algorithm);
 
                 // retrieve the key
-                mpark::visit([&result](auto &key) {
+                visit([&result](auto &key) {
                     // add the key size to the total
                     result += key.size();
                 }, _key);
@@ -160,7 +160,7 @@ namespace pgp {
                 static constexpr const expected_number<uint8_t, 0x99> fingerprint_magic;
 
                 // retrieve the key
-                mpark::visit([this, &writer](auto &&key) {
+                visit([this, &writer](auto &&key) {
                     // determine key type
                     using key_type_t    = std::decay_t<decltype(key)>;
                     using public_type_t = typename key_type_t::public_key_t;
@@ -279,7 +279,7 @@ namespace pgp {
                 writer.push(_algorithm);
 
                 // retrieve the key
-                mpark::visit([&writer](auto &key) {
+                visit([&writer](auto &key) {
                     // also encode the key itself
                     key.encode(writer);
                 }, _key);

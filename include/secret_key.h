@@ -32,6 +32,11 @@ namespace pgp {
         {
             return key_tag;
         }
+
+        static constexpr bool is_subkey() noexcept
+        {
+            return key_tag == packet_tag::secret_subkey;
+        }
     };
 
     // specialize the secret key types

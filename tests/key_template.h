@@ -42,6 +42,7 @@
 #include "hash_algorithm.h"
 #include "symmetric_key_algorithm.h"
 #include "device_random_engine.h"
+#include "generate.h"
 
 
 namespace tests {
@@ -181,22 +182,6 @@ namespace tests {
     }
 
     namespace parameters {
-        namespace generate {
-            extern thread_local device_random_engine random_engine;
-
-            template <typename T>
-            T random_choice(std::vector<T> options)
-            {
-                std::uniform_int_distribution<size_t> distr(0, options.size() - 1);
-                return options[distr(random_engine)];
-            }
-
-            pgp::multiprecision_integer mpi();
-            pgp::curve_oid oid();
-            pgp::hash_algorithm hashalgo();
-            pgp::symmetric_key_algorithm keyalgo();
-        }
-
         template <auto member_function>
         struct oid {
             using Type = pgp::curve_oid;

@@ -5,15 +5,6 @@
 namespace pgp {
 
     /**
-     *  Create the encoder
-     *
-     *  @param key        The secret key with which to make the signature
-     */
-    eddsa_signature_encoder::eddsa_signature_encoder(secret_key key) noexcept :
-        key{std::move(key)}
-    {}
-
-    /**
      *  Make the signature
      *
      *  @return Tuple of the r and s parameters for the EDDSA signature
@@ -21,9 +12,6 @@ namespace pgp {
     std::tuple<multiprecision_integer, multiprecision_integer>
     eddsa_signature_encoder::finalize() noexcept
     {
-        // retrieve the key implementation
-        auto &eddsa_key = mpark::get<basic_secret_key<eddsa_public_key, eddsa_secret_key>>(key.key());
-
         // the buffer for the signed message and the concatenated key
         std::array<uint8_t, crypto_sign_BYTES>  signed_message;
         std::array<uint8_t, 64>                 key_data;

@@ -99,7 +99,7 @@ namespace pgp {
                 uint32_t size;
 
                 // retrieve the body
-                mpark::visit([&size](auto &body) {
+                visit([&size](auto &body) {
                     // retrieve the size from the body
                     size = gsl::narrow_cast<uint32_t>(body.size());
                 }, _body);
@@ -134,7 +134,7 @@ namespace pgp {
                 }
 
                 // now retrieve the body
-                mpark::visit([&writer](auto &body) {
+                visit([&writer](auto &body) {
                     // and encode it as well
                     body.encode(writer);
                 }, body());
