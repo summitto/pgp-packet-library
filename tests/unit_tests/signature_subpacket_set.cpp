@@ -2,9 +2,9 @@
 #include <array>
 #include <vector>
 #include <gtest/gtest.h>
-#include "../../signature_subpacket_set.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "signature_subpacket_set.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 namespace {

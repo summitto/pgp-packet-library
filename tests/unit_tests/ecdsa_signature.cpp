@@ -7,10 +7,10 @@
 #include <cryptopp/oids.h>
 #include <cryptopp/osrng.h>
 #include <cryptopp/eccrypto.h>
-#include "../../ecdsa_signature.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
-#include "../../null_hash.h"
+#include "ecdsa_signature.h"
+#include "range_encoder.h"
+#include "decoder.h"
+#include "null_hash.h"
 
 
 namespace {

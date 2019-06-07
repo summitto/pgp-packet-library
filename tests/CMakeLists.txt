@@ -84,6 +84,8 @@ target_link_libraries(tests ${SODIUM_LIBRARIES})
 target_include_directories(tests PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
 target_link_libraries(tests ${CRYPTOPP_LIBRARIES})
 
+target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/tests)
+target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/GSL/include)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/variant/include)
 

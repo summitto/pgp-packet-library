@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <cryptopp/rsa.h>
-#include "../../signature.h"
+#include "signature.h"
 #include "../device_random_engine.h"
 
 

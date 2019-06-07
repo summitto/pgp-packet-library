@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../elgamal_secret_key.h"
+#include "elgamal_secret_key.h"
 
 
 TEST(elgamal_secret_key, test)

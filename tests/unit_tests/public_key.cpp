@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../public_key.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "public_key.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 TEST(public_key, constructor)

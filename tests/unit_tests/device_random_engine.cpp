@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <array>
-#include "../../device_random_engine.h"
+#include "device_random_engine.h"
 
 
 TEST(device_random_engine, is_random)

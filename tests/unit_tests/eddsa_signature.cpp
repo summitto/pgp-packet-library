@@ -4,10 +4,10 @@
 #include <memory>
 #include <sodium/crypto_sign.h>
 #include <sodium/randombytes.h>
-#include "../../eddsa_signature.h"
-#include "../../range_encoder.h"
-#include "../../hash_encoder.h"
-#include "../../decoder.h"
+#include "eddsa_signature.h"
+#include "range_encoder.h"
+#include "hash_encoder.h"
+#include "decoder.h"
 
 
 namespace {

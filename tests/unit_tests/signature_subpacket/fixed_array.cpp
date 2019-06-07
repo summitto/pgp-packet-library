@@ -1,8 +1,8 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../../../signature_subpacket/fixed_array.h"
-#include "../../../range_encoder.h"
-#include "../../../decoder.h"
+#include "signature_subpacket/fixed_array.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 TEST(signature_subpacket_array, issuer_constructors)

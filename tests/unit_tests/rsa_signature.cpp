@@ -5,9 +5,9 @@
 #include <sodium/randombytes.h>
 #include <cryptopp/osrng.h>
 #include <cryptopp/rsa.h>
-#include "../../rsa_signature.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "rsa_signature.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 namespace {

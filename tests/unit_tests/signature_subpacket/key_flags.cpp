@@ -1,7 +1,7 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../../../signature_subpacket/key_flags.h"
-#include "../../../range_encoder.h"
+#include "signature_subpacket/key_flags.h"
+#include "range_encoder.h"
 
 
 TEST(signature_subpacket_key_flags, variadic_constructor)

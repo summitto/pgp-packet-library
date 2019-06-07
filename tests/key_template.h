@@ -35,12 +35,12 @@
 #include <vector>
 #include <tuple>
 #include <gtest/gtest.h>
-#include "../range_encoder.h"
-#include "../decoder.h"
-#include "../multiprecision_integer.h"
-#include "../curve_oid.h"
-#include "../hash_algorithm.h"
-#include "../symmetric_key_algorithm.h"
+#include "range_encoder.h"
+#include "decoder.h"
+#include "multiprecision_integer.h"
+#include "curve_oid.h"
+#include "hash_algorithm.h"
+#include "symmetric_key_algorithm.h"
 #include "device_random_engine.h"
 
 

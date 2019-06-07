@@ -2,7 +2,7 @@
 #include <array>
 #include <boost/endian/conversion.hpp>
 #include <gtest/gtest.h>
-#include "../../decoder.h"
+#include "decoder.h"
 
 
 TEST(decoder, extract_bits)

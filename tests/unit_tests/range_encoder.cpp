@@ -2,7 +2,7 @@
 #include <array>
 #include <stdexcept>
 #include <gtest/gtest.h>
-#include "../../range_encoder.h"
+#include "range_encoder.h"
 #include "../device_random_engine.h"
 
 

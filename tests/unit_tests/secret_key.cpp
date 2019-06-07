@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../secret_key.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "secret_key.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 TEST(secret_key, constructor)

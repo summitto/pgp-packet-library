@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <gtest/gtest.h>
-#include "../../multiprecision_integer.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
-#include "../../fixed_number.h"
+#include "multiprecision_integer.h"
+#include "range_encoder.h"
+#include "decoder.h"
+#include "fixed_number.h"
 
 
 TEST(multiprecision_integer, default_empty)

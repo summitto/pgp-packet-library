@@ -1,8 +1,8 @@
 #include <array>
 #include <gtest/gtest.h>
-#include "../../user_id.h"
-#include "../../decoder.h"
-#include "../../range_encoder.h"
+#include "user_id.h"
+#include "decoder.h"
+#include "range_encoder.h"
 
 
 TEST(user_id, tag)

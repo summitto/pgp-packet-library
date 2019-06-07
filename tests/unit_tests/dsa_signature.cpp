@@ -3,9 +3,9 @@
 #include <vector>
 #include <memory>
 #include <sodium/crypto_sign.h>
-#include "../../dsa_signature.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "dsa_signature.h"
+#include "range_encoder.h"
+#include "decoder.h"
 #include "../key_template.h"
 
 

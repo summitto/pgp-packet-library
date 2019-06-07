@@ -1,7 +1,7 @@
 #include <limits>
 #include <gtest/gtest.h>
-#include "../../variable_number.h"
-#include "../../range_encoder.h"
+#include "variable_number.h"
+#include "range_encoder.h"
 
 
 TEST(variable_number, faithful_encoding)

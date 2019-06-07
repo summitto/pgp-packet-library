@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "../../packet.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "packet.h"
+#include "range_encoder.h"
+#include "decoder.h"
 #include "../device_random_engine.h"
 
 
