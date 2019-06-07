@@ -12,7 +12,7 @@
 
 This library implements part of [RFC 4880](https://tools.ietf.org/html/rfc4880) and [RFC 6637](https://tools.ietf.org/html/rfc6637), allowing the decoding and encoding of binary PGP packets.
 
-The library is centered around the pgp::packet class. This class can be constructed with packet-specific data to be encoded, or it can be constructed from encoded data - to easily access the fields. Reading or writing packets requires a pgp::decoder or a pgp::encoder, specifically. Since these deal with binary data, they require a range of bytes (in our case, it's uint8_t). The decoder will consume bytes from this range, while the encoder will write bytes to it.
+The library is centered around the pgp::packet class. This class can be constructed with packet-specific data to be encoded, or it can be constructed from encoded data - to easily access the fields. Reading or writing packets requires a `pgp::decoder` or a `pgp::encoder`, respectively. Since these deal with binary data, they require a range of bytes (in our case, that's `uint8_t`). The decoder will consume bytes from this range, while the encoder will write bytes to it.
 
 ## Building the library
 
@@ -23,26 +23,28 @@ To build the library, the following dependencies need to be installed first:
 
 Since this library uses submodules, it will not build unless they are also checked out. To check out all the submodules used in the project, execute the following command:
 
-`git submodule update --init`
+```bash
+git submodule update --init
+```
 
-The recommended way to then build the library is to do a so-called out-of-source build. This ensures that any build-related files do not clutter the repository itself and makes it easy to get rid of any build-artifacts. Assuming you'd want to build in a directory called `build`, the following set of commands should be enough:
+The recommended way to then build the library is to do a so-called out-of-source build. This ensures that any build-related files do not clutter the repository itself and makes it easy to get rid of any build artifacts. Assuming you want to build in a directory called `build`, the following set of commands should be enough:
 
 ```bash
-mkdir -p build && cd build && cmake .. && cd -
+mkdir -p build && cd build && cmake .. && cd ..
 make -C build
 ```
 
-If you wish to install the library - so that it can be automatically found by projects using it, you could then execute the following command:
+If you wish to install the library (so that it can be automatically found by projects using it), you could then execute the following command:
 
 `make -C build install`
 
-This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrative user before executing the command.
+This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrator account before executing the command.
 
 ## Using the library
 
 ### Creating a simple packet
 
-Since PGP packets can contain very different types of data, the body of the pgp::packet is an std::variant, which gives easy access to the packet-specific fields. When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
+Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
 
 ```c++
 #include <pgp-packet/packet.h>
@@ -51,7 +53,7 @@ Since PGP packets can contain very different types of data, the body of the pgp:
 int main()
 {
     // when constructing a packet we must specify the body type that
-    // is to be contained within the packet, the constructor for the
+    // is to be contained within the packet; the constructor for the
     // packet uses the same pattern a regular std::variant uses when
     // forwarding constructors. the first - unnamed - parameter sets
     // the alternative to construct inside the variant, while others
@@ -91,25 +93,25 @@ int main()
         << "Stored user id: "
         << body.id()
         << std::endl;
-
-    return 0;
 }
 ```
 
 ### Encoding and decoding of packet data
 
 Of course, creating packets by directly constructing them with data
-is interesting, but this wouldn't be much use if we could not share
-the data between compatible PGP implementations.
+is interesting, but this wouldn't be of much use if we couldn't
+share the data between compatible PGP implementations.
 
-In order to provide this interoperability, the packet class is also
-constructible from a decoder class - translating binary packet data
-to be parsed - and also provides an encode function, exporting data
-to an encoder, producing binary output.
+In order to provide this interoperability, the `packet` class
+provides a constructor taking an instance of the `decoder` class,
+which parses the binary data read by the decoder, and has an
+`encode` method, which produces the binary representation and
+passes it to an `encoder` instance.
 
 Let's look at an example, once again using the user_id type (due to
-its simplicity), writing it out to binary and then reading this raw
-data again to verify that we got the exact same packet again.
+its simplicity). The packet is encoded to its binary representation,
+which is then read. We verify that this indeed results in the same
+packet as we started with.
 
 ```c++
 #include <pgp-packet/packet.h>
@@ -144,18 +146,16 @@ int main()
 
     // the packets should be identical
     assert(packet == copied_packet);
-
-    return 0;
 }
 ```
 
 ### Creating a PGP key from raw point data
 
-Sometimes it can be useful to use existing keys - e.g. an elliptic curve point - and import them in PGP. PGP does not have an easy way to do this, unless the keys are already wrapped inside the PGP packet headers, come with an associated user id packet, and a signature attesting the ownership of the user for the given key.
+Sometimes it can be useful to use existing keys - e.g. an elliptic curve point - and import them in PGP. PGP does not have an easy way to do this, unless the keys are already wrapped in the PGP packet headers, come with an associated user id packet, and a signature attesting the ownership of the user for the given key.
 
-In this - somewhat more complex - example, we'll create an ed25519 private- and public key pair using libsodium and then use this to create a set of packets that can be imported into a PGP-compatible client.
+In this - somewhat more complex - example, we'll create an ed25519 private and public key pair using libsodium and then use this to create a set of packets that can be imported into a PGP-compatible client.
 
-This example should provide a bit more in-depth knowledge of the structure of PGP keys. We will create three packets. The first is the secret-key packet. It contains the actual key data, the key type as well as the time the key was created. The second packet contains the user id. This one is pretty self-explanatory. The third and final packet contains a signature. It attests that the key belongs to the user id mentioned before. Let's dive into the code:
+This example should provide a bit more insight into the structure of PGP keys. We will create three packets. The first is the secret-key packet: it contains the actual key data, the key type, and the time the key was created. The second packet contains the user id; this one is pretty self-explanatory. The third and final packet contains a signature, which attests that the key belongs to the user id mentioned before. Let's dive into the code:
 
 
 ```c++
