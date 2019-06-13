@@ -163,7 +163,23 @@ namespace pgp {
                 visit([this, &writer](auto &&key) {
                     // determine key type
                     using key_type_t    = std::decay_t<decltype(key)>;
+
+                    // Clang has a longstanding bug, which is possibly related
+                    // to the following bug reports:
+                    // - https://bugs.llvm.org/show_bug.cgi?id=24883
+                    // - https://bugs.llvm.org/show_bug.cgi?id=33298
+                    // where it raises spurious unused-local-typedef warnings
+                    // for local typedefs in a templated function. To prevent
+                    // the warning from cluttering up the builds, we ignore it
+                    // on clang only below.
+#ifdef __clang__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-local-typedef"
+#endif
                     using public_type_t = typename key_type_t::public_key_t;
+#ifdef __clang__
+#pragma GCC diagnostic pop
+#endif
 
                     // the size of the key data we hash
                     // note that we cast to the public key
