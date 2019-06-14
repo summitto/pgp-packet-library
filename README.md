@@ -233,6 +233,26 @@ int main()
         }}
     };
 
+    // we now have a set of packets, which, when encoded to a file, can
+    // be imported into a compatible pgp implementation (such as gnupg)
+    std::vector<uint8_t> data(
+        secret_key_packet   .size() +
+        user_id_packet      .size() +
+        signature_packet    .size()
+    );
+
+    // create an encoder writing in the vectors range
+    pgp::range_encoder encoder{ data };
+
+    // encode all the packets into the encoder
+    secret_key_packet   .encode(encoder);
+    user_id_packet      .encode(encoder);
+    signature_packet    .encode(encoder);
+
+    // the encoder has now filled the vector with data, which can be written
+    std::ofstream   output{ "keyfile" };
+    output.write(reinterpret_cast<const char*>(data.data()), data.size());
+
     return 0;
 }
 ```
