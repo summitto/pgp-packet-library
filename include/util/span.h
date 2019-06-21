@@ -1,20 +1,20 @@
 #pragma once
 
 
-#if __has_include(<span>)
-
-#include <span>
-
-namespace pgp {
-    using std::span;
-}
-
-#else
+#ifdef USE_GSL_SPAN
 
 #include <gsl/span>
 
 namespace pgp {
     using gsl::span;
+}
+
+#else
+
+#include <span>
+
+namespace pgp {
+    using std::span;
 }
 
 #endif

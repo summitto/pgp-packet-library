@@ -89,8 +89,14 @@ target_link_libraries(tests ${CRYPTOPP_LIBRARIES})
 
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/include)
-target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/GSL/include)
-target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/variant/include)
+if(NEED_MPARK)
+    target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/variant/include)
+    target_compile_definitions(tests PUBLIC USE_MPARK_VARIANT)
+endif()
+if(NEED_GSL)
+    target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/GSL/include)
+    target_compile_definitions(tests PUBLIC USE_GSL_SPAN)
+endif()
 
 target_link_libraries(tests gtest_main)
 
