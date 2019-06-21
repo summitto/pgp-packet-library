@@ -60,7 +60,7 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept
+    multiprecision_integer::multiprecision_integer(span<const uint8_t> data) noexcept
     {
         // assign the data
         operator=(data);
@@ -95,7 +95,7 @@ namespace pgp {
      *  @param  data    The data to assign
      *  @return Same object for chaining
      */
-    multiprecision_integer &multiprecision_integer::operator=(gsl::span<const uint8_t> data) noexcept
+    multiprecision_integer &multiprecision_integer::operator=(span<const uint8_t> data) noexcept
     {
         // eliminate leading zeroes
         while (!data.empty() && data[0] == 0) {
@@ -212,7 +212,7 @@ namespace pgp {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> multiprecision_integer::data() const noexcept
+    span<const uint8_t> multiprecision_integer::data() const noexcept
     {
         // provide access to the underlying vector
         return _data;

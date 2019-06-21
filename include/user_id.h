@@ -26,7 +26,7 @@ namespace pgp {
              *
              *  @param  id      The user id to use
              */
-            user_id(gsl::span<const char> id) noexcept;
+            user_id(span<const char> id) noexcept;
 
             /**
              *  Constructor
@@ -78,7 +78,7 @@ namespace pgp {
             void encode(encoder_t &writer) const
             {
                 // insert the id into the encoder
-                writer.insert_blob(gsl::span<const char>{ _id });
+                writer.insert_blob(span<const char>{ _id });
             }
         private:
             std::string     _id;    // the user id representation

@@ -5,9 +5,9 @@
 #include "unknown_key.h"
 #include "fixed_number.h"
 #include "hash_encoder.h"
+#include "util/variant.h"
 #include "key_algorithm.h"
 #include "expected_number.h"
-#include <mpark/variant.hpp>
 #include "multiprecision_integer.h"
 
 
@@ -33,7 +33,7 @@ namespace pgp {
             /**
              *  A variant with all supported key types
              */
-            using key_variant = mpark::variant<
+            using key_variant = variant<
                 unknown_key,
                 rsa_key_t,
                 dsa_key_t,
@@ -88,11 +88,11 @@ namespace pgp {
              *  @throws std::runtime_error
              */
             template <class T, typename... Arguments>
-            basic_key(uint32_t creation_time, key_algorithm algorithm, mpark::in_place_type_t<T>, Arguments&& ...parameters) :
+            basic_key(uint32_t creation_time, key_algorithm algorithm, in_place_type_t<T>, Arguments&& ...parameters) :
                 _version{},
                 _creation_time{ creation_time },
                 _algorithm{ algorithm },
-                _key{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
+                _key{ in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
 
             /**

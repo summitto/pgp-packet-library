@@ -9,7 +9,7 @@ TEST(user_id, tag)
 {
     using namespace std::literals;
     ASSERT_EQ(pgp::user_id(""s).tag(), pgp::packet_tag::user_id);
-    ASSERT_EQ(pgp::user_id(gsl::span("abc")).tag(), pgp::packet_tag::user_id);
+    ASSERT_EQ(pgp::user_id(pgp::span("abc")).tag(), pgp::packet_tag::user_id);
 }
 
 TEST(user_id, encode_decode)
@@ -28,8 +28,8 @@ TEST(user_id, encode_decode)
     ASSERT_EQ(data[0], 'y');
 
     ASSERT_EQ(
-        gsl::span<const uint8_t>(data),
-        gsl::span<const uint8_t>((const uint8_t*)"yellow submarine", 16));
+        pgp::span<const uint8_t>(data),
+        pgp::span<const uint8_t>((const uint8_t*)"yellow submarine", 16));
 
     pgp::decoder decoder{data};
     pgp::user_id id2{decoder};

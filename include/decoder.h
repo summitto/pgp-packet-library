@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/endian/conversion.hpp>
-#include <gsl/span>
+#include "util/span.h"
 #include <cstring>
 #include <limits>
 
@@ -26,7 +26,7 @@ namespace pgp {
              *
              *  @param  data    The range to decode from
              */
-            decoder(gsl::span<const uint8_t> data) noexcept;
+            decoder(span<const uint8_t> data) noexcept;
 
             /**
              *  The decoder is a move-only class
@@ -144,7 +144,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <typename T>
-            gsl::span<const T> extract_blob(size_t size)
+            span<const T> extract_blob(size_t size)
             {
                 // we must be using a single-octet wide type,
                 // otherwise we might get alignment issues
@@ -153,7 +153,7 @@ namespace pgp {
                 // create the result variable containing the data - we do not
                 // check the bounds here, but the subspan below will fail in
                 // case the read is out-of-bounds
-                gsl::span<const T> result{ reinterpret_cast<const T*>(_data.data()), static_cast<typename gsl::span<uint8_t>::index_type>(size) };
+                span<const T> result{ reinterpret_cast<const T*>(_data.data()), static_cast<typename span<uint8_t>::index_type>(size) };
 
                 // remove the bytes from the local data
                 _data = _data.subspan(size);
@@ -177,7 +177,7 @@ namespace pgp {
                 return number & mask;
             }
 
-            gsl::span<const uint8_t>    _data;              // the raw data to work with
+            span<const uint8_t>   _data;                    // the raw data to work with
             uint8_t                     _skip_bits  { 0 };  // number of bits to skip from data
     };
 

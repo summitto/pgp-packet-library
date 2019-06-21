@@ -30,7 +30,7 @@ namespace pgp {
              *
              *  @param  data    The range of numbers
              */
-            curve_oid(gsl::span<const uint8_t> data) noexcept;
+            curve_oid(span<const uint8_t> data) noexcept;
 
             /**
              *  Constructor
@@ -65,7 +65,7 @@ namespace pgp {
              *  Retrieve the data
              *  @return A span containing all the integer numbers
              */
-            gsl::span<const uint8_t> data() const;
+            span<const uint8_t> data() const;
 
             /**
              *  Write the data to an encoder

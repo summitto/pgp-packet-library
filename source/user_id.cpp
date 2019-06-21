@@ -17,7 +17,7 @@ namespace pgp {
      *
      *  @param  id      The user id to use
      */
-    user_id::user_id(gsl::span<const char> id) noexcept :
+    user_id::user_id(span<const char> id) noexcept :
         _id{ id.data(), static_cast<std::size_t>(id.size()) }
     {}
 

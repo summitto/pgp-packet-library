@@ -27,7 +27,7 @@ namespace pgp::signature_subpacket {
              *  @param  type    The signature subpacket type
              *  @param  data    The data contained in the subpacket
              */
-            unknown(signature_subpacket_type type, gsl::span<const uint8_t> data);
+            unknown(signature_subpacket_type type, span<const uint8_t> data);
 
             /**
              *  Comparison operators
@@ -53,7 +53,7 @@ namespace pgp::signature_subpacket {
              *  Retrieve the data
              *  @return A span containing all the integer numbers
              */
-            gsl::span<const uint8_t> data() const noexcept;
+            span<const uint8_t> data() const noexcept;
 
             /**
              *  Write the data to an encoder

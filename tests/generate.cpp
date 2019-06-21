@@ -95,7 +95,7 @@ namespace tests::generate {
             pgp::secret_key sk{
                 1554106568,
                 pgp::key_algorithm::eddsa,
-                mpark::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
+                pgp::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
                 std::make_tuple(
                     pgp::curve_oid::ed25519(),
                     pgp::multiprecision_integer(pubkey)

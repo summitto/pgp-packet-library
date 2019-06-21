@@ -132,7 +132,7 @@ namespace tests {
     }
 
     namespace detail {
-        std::ostream& operator<<(std::ostream &os, const gsl::span<const uint8_t> &sp);
+        std::ostream& operator<<(std::ostream &os, const pgp::span<const uint8_t> &sp);
     }
 
     template <typename Class, typename... Args>
@@ -189,7 +189,7 @@ namespace tests {
             static Type generate()
             { return generate::oid(); }
 
-            static gsl::span<const uint8_t> eq_project_type(const Type &value)
+            static pgp::span<const uint8_t> eq_project_type(const Type &value)
             { return value.data(); }
 
             template <typename T>
@@ -216,7 +216,7 @@ namespace tests {
             static Type generate()
             { return generate::mpi(); }
 
-            static gsl::span<const uint8_t> eq_project_type(const Type &value)
+            static pgp::span<const uint8_t> eq_project_type(const Type &value)
             { return value.data(); }
 
             template <typename T>

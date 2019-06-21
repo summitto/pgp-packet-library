@@ -50,14 +50,14 @@ namespace {
         pgp::secret_key sk{
             1554106568,
             pgp::key_algorithm::rsa_encrypt_or_sign,
-            mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+            pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
             std::make_tuple(inps.pubkey),
             std::make_tuple(inps.seckey)
         };
 
         // and make the signature
         pgp::rsa_signature::encoder_t sig_encoder{sk};
-        sig_encoder.insert_blob(gsl::span<const uint8_t>{inps.message});
+        sig_encoder.insert_blob(pgp::span<const uint8_t>{inps.message});
         inps.sig = std::make_unique<pgp::rsa_signature>(
             util::make_from_tuple<pgp::rsa_signature>(sig_encoder.finalize())
         );

@@ -3,7 +3,7 @@
 
 namespace tests {
     namespace detail {
-        std::ostream& operator<<(std::ostream &os, const gsl::span<const uint8_t> &sp)
+        std::ostream& operator<<(std::ostream &os, const pgp::span<const uint8_t> &sp)
         {
             os << '{';
             bool first = true;

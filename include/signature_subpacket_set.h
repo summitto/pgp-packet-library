@@ -7,7 +7,7 @@
 #include "signature_subpacket/unknown.h"
 #include "signature_subpacket/numeric.h"
 #include "signature_subpacket_type.h"
-#include <mpark/variant.hpp>
+#include "util/variant.h"
 
 
 namespace pgp {
@@ -21,7 +21,7 @@ namespace pgp {
             /**
              *  The recognized subpacket types
              */
-            using subpacket_variant = mpark::variant<
+            using subpacket_variant = variant<
                 signature_subpacket::unknown,
                 signature_subpacket::issuer,
                 signature_subpacket::signature_creation_time,
@@ -92,7 +92,7 @@ namespace pgp {
              *
              *  @return The subpackets in the set
              */
-            gsl::span<const subpacket_variant> data() const noexcept;
+            span<const subpacket_variant> data() const noexcept;
 
             /**
              *  Write the data to an encoder

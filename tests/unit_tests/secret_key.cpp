@@ -17,14 +17,14 @@ TEST(secret_key, constructor)
     pgp::secret_key k{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
         std::make_tuple(n, e), std::make_tuple(d, p, q, u)
     };
 
     ASSERT_EQ(k.tag(), pgp::packet_tag::secret_key);
     ASSERT_EQ(k.creation_time(), 1234);
     ASSERT_EQ(k.algorithm(), pgp::key_algorithm::rsa_encrypt_or_sign);
-    auto &keyval = mpark::get<pgp::secret_key::rsa_key_t>(k.key());
+    auto &keyval = pgp::get<pgp::secret_key::rsa_key_t>(k.key());
     ASSERT_EQ(keyval.n().data(), n.data());
     ASSERT_EQ(keyval.e().data(), e.data());
     ASSERT_EQ(keyval.d().data(), d.data());
@@ -44,7 +44,7 @@ TEST(secret_key, encode_decode)
     pgp::secret_key k{
         5678,
         pgp::key_algorithm::dsa,
-        mpark::in_place_type_t<pgp::secret_key::dsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::dsa_key_t>(),
         std::make_tuple(p, q, g, y), std::make_tuple(x)
     };
 
@@ -73,21 +73,21 @@ TEST(secret_key, equality)
     pgp::secret_key k{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
         std::make_tuple(n, e), std::make_tuple(d, p, q, u)
     };
 
     pgp::secret_key k2{
         4321,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
         std::make_tuple(n, e), std::make_tuple(d, p, q, u)
     };
 
     pgp::secret_key k3{
         1234,
         pgp::key_algorithm::rsa_sign_only,
-        mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
         std::make_tuple(n, e), std::make_tuple(d, p, q, u)
     };
 
@@ -98,7 +98,7 @@ TEST(secret_key, equality)
     pgp::secret_key k4{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
         std::make_tuple(n2, e), std::make_tuple(d, p, q, u)
     };
 
@@ -122,7 +122,7 @@ TEST(secret_key, fingerprint)
     pgp::secret_key k{
         1554103729,
         pgp::key_algorithm::ecdh,
-        mpark::in_place_type_t<pgp::secret_key::ecdh_key_t>(),
+        pgp::in_place_type_t<pgp::secret_key::ecdh_key_t>(),
         std::make_tuple(oid, Q, hashalgo, keyalgo), std::make_tuple(kparam)
     };
 

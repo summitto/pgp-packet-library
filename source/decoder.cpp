@@ -8,7 +8,7 @@ namespace pgp {
      *
      *  @param  data    The range to (de|en)code from or to
      */
-    decoder::decoder(gsl::span<const uint8_t> data) noexcept :
+    decoder::decoder(span<const uint8_t> data) noexcept :
         _data{ data }
     {}
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <boost/endian/conversion.hpp>
-#include <gsl/span>
+#include "util/span.h"
 #include <cryptopp/osrng.h>
 #include <cryptopp/rsa.h>
 #include <cassert>
@@ -25,7 +25,7 @@ namespace pgp {
             template <packet_tag key_tag>
             rsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) :
                 _signature_context{signer_t{}.NewSignatureAccumulator(_prng)},
-                rsa_key{std::move(mpark::get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key()))}
+                rsa_key{std::move(get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key()))}
             {}
 
             /**
@@ -42,7 +42,7 @@ namespace pgp {
                 auto result = boost::endian::native_to_big(value);
 
                 // add it to the accumulators
-                insert_blob(gsl::span<const T>{&result, 1});
+                insert_blob(span<const T>{&result, 1});
 
                 // allow chaining
                 return *this;
@@ -76,7 +76,7 @@ namespace pgp {
                 // // do we have a contiguous range of memory?
                 // if constexpr(std::is_same_v<std::iterator_traits<iterator_t>::iterator_category, std::contiguous_iterator_tag>) {
                 //     // push the whole range at once
-                //     insert_blob(gsl::span<const decltype(*begin)>{&(*begin), std::distance(begin, end)});
+                //     insert_blob(span<const decltype(*begin)>{&(*begin), std::distance(begin, end)});
                 // }
 
                 // iterate over the range
@@ -99,7 +99,7 @@ namespace pgp {
              *  @return self, for chaining
              */
             template <typename T>
-            rsa_signature_encoder &insert_blob(gsl::span<const T> value)
+            rsa_signature_encoder &insert_blob(span<const T> value)
             {
                 // add the data to the accumulators
                 _signature_context->Update(reinterpret_cast<const uint8_t*>(value.data()), value.size() * sizeof(T));

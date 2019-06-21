@@ -32,11 +32,11 @@ namespace {
             std::vector<uint8_t> v{random_vector(length_distr(random_engine))};
 
             pgp::hash_encoder<T> enc1;
-            enc1.insert_blob(gsl::span<const uint8_t>(v));
+            enc1.insert_blob(pgp::span<const uint8_t>(v));
             auto res1 = enc1.digest();
 
             pgp::hash_encoder<T> enc2;
-            enc2.insert_blob(gsl::span<const uint8_t>(v));
+            enc2.insert_blob(pgp::span<const uint8_t>(v));
             auto res2 = enc2.digest();
 
             ASSERT_EQ(res1, res2);
@@ -75,7 +75,7 @@ namespace {
                     case 2: {
                         std::uniform_int_distribution<size_t> sub_distr(0, v.size() - cursor);
                         size_t len = sub_distr(random_engine);
-                        enc.insert_blob(gsl::span<const uint8_t>(v.data() + cursor, v.data() + cursor + len));
+                        enc.insert_blob(pgp::span<const uint8_t>(v.data() + cursor, v.data() + cursor + len));
                         cursor += len;
                         break;
                     }

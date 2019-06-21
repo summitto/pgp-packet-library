@@ -17,7 +17,7 @@ namespace {
         return Key{
             12345678,
             pgp::key_algorithm::eddsa,
-            mpark::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
+            pgp::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
             std::make_tuple(curve, Q), std::make_tuple(k)
         };
     }
@@ -32,7 +32,7 @@ namespace {
         return Key{
             987654321,
             pgp::key_algorithm::eddsa,
-            mpark::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
+            pgp::in_place_type_t<pgp::secret_key::eddsa_key_t>(),
             std::make_tuple(curve, Q), std::make_tuple(k)
         };
     }
@@ -56,7 +56,7 @@ namespace {
         return Key{
             987654321,
             pgp::key_algorithm::rsa_encrypt_or_sign,
-            mpark::in_place_type_t<pgp::secret_key::rsa_key_t>(),
+            pgp::in_place_type_t<pgp::secret_key::rsa_key_t>(),
             std::make_tuple(n, e), std::make_tuple(d, p, q, u)
         };
     }
@@ -163,7 +163,7 @@ TEST(signature, constructor_encode_decode)
         hashedsubs,
         unhashedsubs,
         hash_prefix,
-        mpark::in_place_type_t<pgp::rsa_signature>(),
+        pgp::in_place_type_t<pgp::rsa_signature>(),
         rsasig_arg
     };
 
@@ -175,7 +175,7 @@ TEST(signature, constructor_encode_decode)
     ASSERT_TRUE(sig.hashed_subpackets() == hashedsubs);
     ASSERT_TRUE(sig.unhashed_subpackets() == unhashedsubs);
     ASSERT_EQ(sig.hash_prefix(), hash_prefix);
-    ASSERT_EQ(mpark::get<pgp::rsa_signature>(sig.data()).s().data(), rsasig.s().data());
+    ASSERT_EQ(pgp::get<pgp::rsa_signature>(sig.data()).s().data(), rsasig.s().data());
 
     std::vector<uint8_t> data(2048);
     pgp::range_encoder encoder{data};
@@ -196,7 +196,7 @@ TEST(signature, constructor_encode_decode)
         {},
         {},
         hash_prefix,
-        mpark::in_place_type_t<pgp::rsa_signature>(),
+        pgp::in_place_type_t<pgp::rsa_signature>(),
         rsasig_arg
     };
     ASSERT_NE(sig, sig_modified);

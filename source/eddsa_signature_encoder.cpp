@@ -32,8 +32,8 @@ namespace pgp {
 
         // split up the data and return it
         return std::make_tuple(
-            multiprecision_integer{gsl::span{ signed_message.data(),      32 }},
-            multiprecision_integer{gsl::span{ signed_message.data() + 32, 32 }}
+            multiprecision_integer{span{ signed_message.data(),      32 }},
+            multiprecision_integer{span{ signed_message.data() + 32, 32 }}
         );
     }
 

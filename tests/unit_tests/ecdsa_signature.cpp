@@ -66,13 +66,13 @@ namespace {
         pgp::secret_key sk{
             1554106568,
             pgp::key_algorithm::ecdsa,
-            mpark::in_place_type_t<pgp::secret_key::ecdsa_key_t>(),
+            pgp::in_place_type_t<pgp::secret_key::ecdsa_key_t>(),
             std::make_tuple(pgp::curve_oid::ed25519(), pgp::multiprecision_integer(inps.pubkey)),
             std::make_tuple(pgp::multiprecision_integer(inps.seckey))
         };
 
         pgp::ecdsa_signature::encoder_t sig_encoder{sk};
-        sig_encoder.insert_blob(gsl::span<const uint8_t>{inps.message});
+        sig_encoder.insert_blob(pgp::span<const uint8_t>{inps.message});
         inps.sig = std::make_unique<pgp::ecdsa_signature>(
             util::make_from_tuple<pgp::ecdsa_signature>(sig_encoder.finalize())
         );

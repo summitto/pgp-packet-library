@@ -33,35 +33,35 @@ namespace pgp {
             switch (type) {
                 case signature_subpacket_type::signature_creation_time:
                     // add the signature creation time
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::signature_creation_time>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::signature_creation_time>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::issuer:
                     // add the issuer key id
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::issuer>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::issuer>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::signature_expiration_time:
                     // add the signature expiration time
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::signature_expiration_time>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::signature_expiration_time>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::exportable_certification:
                     // store whether this signature is exportable
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::exportable_certification>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::exportable_certification>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::key_expiration_time:
                     // add the key expiration time
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::key_expiration_time>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::key_expiration_time>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::primary_user_id:
                     // add whether this signature constitutes the primary user id
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::primary_user_id>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::primary_user_id>{}, subpacket_parser);
                     break;
                 case signature_subpacket_type::key_flags:
                     // add the flags for this subpacket
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::key_flags>{}, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::key_flags>{}, subpacket_parser);
                     break;
                 default:
                     // add another packet with the remaining data
-                    _subpackets.emplace_back(mpark::in_place_type_t<signature_subpacket::unknown>{}, type, subpacket_parser);
+                    _subpackets.emplace_back(in_place_type_t<signature_subpacket::unknown>{}, type, subpacket_parser);
                     break;
             }
         }
@@ -132,7 +132,7 @@ namespace pgp {
      *
      *  @return The subpackets in the set
      */
-    gsl::span<const signature_subpacket_set::subpacket_variant> signature_subpacket_set::data() const noexcept
+    span<const signature_subpacket_set::subpacket_variant> signature_subpacket_set::data() const noexcept
     {
         // return the stored subpackets
         return _subpackets;

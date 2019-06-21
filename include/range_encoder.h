@@ -2,7 +2,7 @@
 
 #include <boost/endian/conversion.hpp>
 #include <type_traits>
-#include <gsl/span>
+#include "util/span.h"
 #include <cstring>
 #include <limits>
 #include "util/transaction.h"
@@ -22,7 +22,7 @@ namespace pgp {
              *
              *  @param  data    The range to encode to
              */
-            range_encoder(gsl::span<uint8_t> data);
+            range_encoder(span<uint8_t> data);
 
             /**
              *  Flush the encoder, so any partial-written bytes
@@ -169,7 +169,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <typename T>
-            range_encoder &insert_blob(gsl::span<const T> value)
+            range_encoder &insert_blob(span<const T> value)
             {
                 if (value.empty()) {
                     // nothing to do if the input is empty
@@ -195,7 +195,7 @@ namespace pgp {
                 return *this;
             }
         private:
-            gsl::span<uint8_t>  _data;              // the range to encode to
+            span<uint8_t> _data;                    // the range to encode to
             size_t              _size       { 0 };  // number of bytes written
             uint8_t             _current    { 0 };  // the current byte we are working on
             uint8_t             _skip_bits  { 0 };  // number of bits to skip from data
