@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../dsa_secret_key.h"
+#include "dsa_secret_key.h"
 
 
 TEST(dsa_secret_key, test)

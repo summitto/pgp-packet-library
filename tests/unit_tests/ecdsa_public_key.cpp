@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../ecdsa_public_key.h"
+#include "ecdsa_public_key.h"
 
 
 TEST(ecdsa_public_key, test)

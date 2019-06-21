@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "../../expected_number.h"
-#include "../../fixed_number.h"
-#include "../../range_encoder.h"
+#include "expected_number.h"
+#include "fixed_number.h"
+#include "range_encoder.h"
 
 
 TEST(expected_number, decode_encode)

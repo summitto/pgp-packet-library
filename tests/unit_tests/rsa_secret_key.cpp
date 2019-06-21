@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../rsa_secret_key.h"
+#include "rsa_secret_key.h"
 
 
 TEST(rsa_secret_key, test)

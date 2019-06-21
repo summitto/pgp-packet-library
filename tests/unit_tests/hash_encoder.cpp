@@ -1,7 +1,7 @@
 #include <vector>
 #include <cstdint>
 #include <gtest/gtest.h>
-#include "../../hash_encoder.h"
+#include "hash_encoder.h"
 #include "../device_random_engine.h"
 
 

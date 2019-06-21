@@ -2,8 +2,8 @@
 #include <array>
 #include <vector>
 #include <gtest/gtest.h>
-#include "../../curve_oid.h"
-#include "../../decoder.h"
+#include "curve_oid.h"
+#include "decoder.h"
 
 
 TEST(curve_oid, size_preset_curves)

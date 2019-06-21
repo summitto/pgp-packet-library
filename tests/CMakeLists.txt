@@ -7,7 +7,6 @@ endforeach(source)
 
 list(APPEND test-sources
     main.cpp
-    unit_tests/array_signature_subpacket.cpp
     unit_tests/curve_oid.cpp
     unit_tests/decoder.cpp
     unit_tests/device_random_engine.cpp
@@ -27,9 +26,7 @@ list(APPEND test-sources
     unit_tests/expected_number.cpp
     unit_tests/fixed_number.cpp
     unit_tests/hash_encoder.cpp
-    unit_tests/key_flags_subpacket.cpp
     unit_tests/multiprecision_integer.cpp
-    unit_tests/numeric_signature_subpacket.cpp
     unit_tests/packet.cpp
     unit_tests/public_key.cpp
     unit_tests/range_encoder.cpp
@@ -40,13 +37,21 @@ list(APPEND test-sources
     unit_tests/signature.cpp
     unit_tests/signature_subpacket_set.cpp
     unit_tests/unknown_signature.cpp
-    unit_tests/unknown_signature_subpacket.cpp
     unit_tests/user_id.cpp
-    unit_tests/variable_number.cpp)
+    unit_tests/variable_number.cpp
+    unit_tests/signature_subpacket/embedded.cpp
+    unit_tests/signature_subpacket/fixed_array.cpp
+    unit_tests/signature_subpacket/issuer_fingerprint.cpp
+    unit_tests/signature_subpacket/key_flags.cpp
+    unit_tests/signature_subpacket/numeric.cpp
+    unit_tests/signature_subpacket/unknown.cpp
+)
 
 list(APPEND test-sources
     device_random_engine.cpp
-    key_template.cpp)
+    generate.cpp
+    key_template.cpp
+)
 
 add_executable(tests ${test-sources})
 set_property(TARGET tests PROPERTY CXX_STANDARD 17)
@@ -82,6 +87,8 @@ target_link_libraries(tests ${SODIUM_LIBRARIES})
 target_include_directories(tests PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
 target_link_libraries(tests ${CRYPTOPP_LIBRARIES})
 
+target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/tests)
+target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/GSL/include)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/variant/include)
 

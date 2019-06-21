@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../ecdsa_secret_key.h"
+#include "ecdsa_secret_key.h"
 
 
 TEST(ecdsa_secret_key, test)

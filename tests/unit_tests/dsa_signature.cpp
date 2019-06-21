@@ -3,16 +3,16 @@
 #include <vector>
 #include <memory>
 #include <sodium/crypto_sign.h>
-#include "../../dsa_signature.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "dsa_signature.h"
+#include "range_encoder.h"
+#include "decoder.h"
 #include "../key_template.h"
 
 
 TEST(dsa_signature, encode_decode)
 {
-    auto rval = tests::parameters::generate::mpi();
-    auto sval = tests::parameters::generate::mpi();
+    auto rval = tests::generate::mpi();
+    auto sval = tests::generate::mpi();
     pgp::dsa_signature sig{rval, sval};
 
     ASSERT_EQ(sig.size(), rval.size() + sval.size());

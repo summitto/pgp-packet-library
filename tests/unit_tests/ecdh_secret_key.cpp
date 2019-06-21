@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../ecdh_secret_key.h"
+#include "ecdh_secret_key.h"
 
 
 TEST(ecdh_secret_key, test)

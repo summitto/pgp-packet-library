@@ -1,18 +1,18 @@
 #include <gtest/gtest.h>
 #include "../key_template.h"
-#include "../../secret_key.h"
-#include "../../range_encoder.h"
-#include "../../decoder.h"
+#include "secret_key.h"
+#include "range_encoder.h"
+#include "decoder.h"
 
 
 TEST(secret_key, constructor)
 {
-    auto n = tests::parameters::generate::mpi();
-    auto e = tests::parameters::generate::mpi();
-    auto d = tests::parameters::generate::mpi();
-    auto p = tests::parameters::generate::mpi();
-    auto q = tests::parameters::generate::mpi();
-    auto u = tests::parameters::generate::mpi();
+    auto n = tests::generate::mpi();
+    auto e = tests::generate::mpi();
+    auto d = tests::generate::mpi();
+    auto p = tests::generate::mpi();
+    auto q = tests::generate::mpi();
+    auto u = tests::generate::mpi();
 
     pgp::secret_key k{
         1234,
@@ -35,11 +35,11 @@ TEST(secret_key, constructor)
 
 TEST(secret_key, encode_decode)
 {
-    auto p = tests::parameters::generate::mpi();
-    auto q = tests::parameters::generate::mpi();
-    auto g = tests::parameters::generate::mpi();
-    auto y = tests::parameters::generate::mpi();
-    auto x = tests::parameters::generate::mpi();
+    auto p = tests::generate::mpi();
+    auto q = tests::generate::mpi();
+    auto g = tests::generate::mpi();
+    auto y = tests::generate::mpi();
+    auto x = tests::generate::mpi();
 
     pgp::secret_key k{
         5678,
@@ -63,12 +63,12 @@ TEST(secret_key, encode_decode)
 
 TEST(secret_key, equality)
 {
-    auto n = tests::parameters::generate::mpi();
-    auto e = tests::parameters::generate::mpi();
-    auto d = tests::parameters::generate::mpi();
-    auto p = tests::parameters::generate::mpi();
-    auto q = tests::parameters::generate::mpi();
-    auto u = tests::parameters::generate::mpi();
+    auto n = tests::generate::mpi();
+    auto e = tests::generate::mpi();
+    auto d = tests::generate::mpi();
+    auto p = tests::generate::mpi();
+    auto q = tests::generate::mpi();
+    auto u = tests::generate::mpi();
 
     pgp::secret_key k{
         1234,
@@ -92,7 +92,7 @@ TEST(secret_key, equality)
     };
 
     pgp::multiprecision_integer n2;
-    do n2 = tests::parameters::generate::mpi();
+    do n2 = tests::generate::mpi();
     while (n2 == n);
 
     pgp::secret_key k4{
@@ -127,5 +127,5 @@ TEST(secret_key, fingerprint)
     };
 
     std::array<uint8_t, 8> expected = {0x1b, 0x98, 0x5c, 0x78, 0x29, 0xa5, 0xcc, 0x81};
-    ASSERT_EQ(k.fingerprint(), expected);
+    ASSERT_EQ(k.key_id(), expected);
 }
