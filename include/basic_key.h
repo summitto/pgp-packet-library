@@ -8,6 +8,7 @@
 #include "util/variant.h"
 #include "key_algorithm.h"
 #include "expected_number.h"
+#include "util/narrow_cast.h"
 #include "multiprecision_integer.h"
 
 
@@ -184,7 +185,7 @@ namespace pgp {
                     // the size of the key data we hash
                     // note that we cast to the public key
                     uint16 size{
-                        gsl::narrow_cast<uint16_t>(
+                        util::narrow_cast<uint16_t>(
                             _version.size() +
                             _creation_time.size() +
                             sizeof(_algorithm) +

@@ -260,7 +260,7 @@ namespace pgp {
                 hash_encoder.push(version());
                 hash_encoder.template push<uint8_t>(0xFF);
                 hash_encoder.push(
-                    gsl::narrow_cast<uint32_t>(
+                    util::narrow_cast<uint32_t>(
                         sizeof(version())               +
                         sizeof(type())                  +
                         sizeof(public_key_algorithm())  +

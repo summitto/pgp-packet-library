@@ -2,6 +2,7 @@
 #include <array>
 #include <vector>
 #include <gtest/gtest.h>
+#include "util/narrow_cast.h"
 #include "curve_oid.h"
 #include "decoder.h"
 
@@ -16,7 +17,7 @@ TEST(curve_oid, size_preset_curves)
     ASSERT_EQ(ed_oid.size(), num_bytes + 1);
 
     std::vector<uint8_t> data(num_bytes + 1);
-    data[0] = gsl::narrow_cast<uint8_t>(num_bytes);
+    data[0] = util::narrow_cast<uint8_t>(num_bytes);
     for (size_t i = 0; i < num_bytes; i++) {
         data[i + 1] = ed_data[i];
     }

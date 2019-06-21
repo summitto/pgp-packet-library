@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <gtest/gtest.h>
 #include "range_encoder.h"
+#include "util/narrow_cast.h"
 #include "../device_random_engine.h"
 
 
@@ -30,7 +31,7 @@ TEST(range_encoder, push_integer)
 
             // Encode in big endian
             for (size_t i = 0; i < size; i++) {
-                dataControl[cursor + i] = gsl::narrow_cast<uint8_t>(value >> (8 * (size - 1 - i)));
+                dataControl[cursor + i] = util::narrow_cast<uint8_t>(value >> (8 * (size - 1 - i)));
             }
 
             encoder.push(value);

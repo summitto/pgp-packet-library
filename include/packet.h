@@ -101,7 +101,7 @@ namespace pgp {
                 // retrieve the body
                 visit([&size](auto &body) {
                     // retrieve the size from the body
-                    size = gsl::narrow_cast<uint32_t>(body.size());
+                    size = util::narrow_cast<uint32_t>(body.size());
                 }, _body);
 
                 // can we encode the packet in the old format?

@@ -1,4 +1,5 @@
 #include "multiprecision_integer.h"
+#include "util/narrow_cast.h"
 #include <type_traits>
 
 
@@ -115,7 +116,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(data[0]);
 
         // assign bit count and the data
-        _bits = gsl::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
         _data.assign(data.begin(), data.end());
 
         // allow chaining
@@ -145,7 +146,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(_data[0]);
 
         // assign bit count
-        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
 
         // allow chaining
         return *this;
@@ -172,7 +173,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(_data[0]);
 
         // assign bit count
-        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
 
         // allow chaining
         return *this;

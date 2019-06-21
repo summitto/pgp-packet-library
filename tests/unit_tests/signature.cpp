@@ -105,7 +105,7 @@ namespace {
 
             key.hash(hash_encoder);
             hash_encoder.push<uint8_t>(0xb4);
-            hash_encoder.push<uint32_t>(gsl::narrow_cast<uint32_t>(userid.size()));
+            hash_encoder.push<uint32_t>(util::narrow_cast<uint32_t>(userid.size()));
             userid.encode(hash_encoder);
         } else if constexpr (Type == signature_hash_type::subkey_binding) {
             const auto &ownerkey = std::get<0>(extra_args);
@@ -124,7 +124,7 @@ namespace {
         hash_encoder.push(sig.version());
         hash_encoder.push<uint8_t>(0xff);
         hash_encoder.push<uint32_t>(
-            gsl::narrow_cast<uint32_t>(
+            util::narrow_cast<uint32_t>(
                 sizeof(sig.version()) +
                 sizeof(sig.type()) +
                 sizeof(sig.public_key_algorithm()) +
