@@ -59,16 +59,16 @@ target_include_directories(pgp-packet PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
 target_link_libraries(pgp-packet ${CRYPTOPP_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
 target_include_directories(pgp-packet PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/GSL/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSL/include>
     $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
 )
 
 target_include_directories(pgp-packet PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/variant/include>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/variant/include>
     $<INSTALL_INTERFACE:include/pgp-packet/variant/include>
 )
 

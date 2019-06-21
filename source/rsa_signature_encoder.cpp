@@ -4,16 +4,6 @@
 namespace pgp {
 
     /**
-     *  Destructor
-     */
-    rsa_signature_encoder::~rsa_signature_encoder()
-    {
-        // close the signature context; if it was already closed, this
-        // is a nullptr, on which the delete operator is a no-op
-        delete _signature_context;
-    }
-
-    /**
      *  Retrieve the RSA s parameter of the final sigature
      *
      *  This method should be called *at most once*.
@@ -40,11 +30,11 @@ namespace pgp {
         std::vector<uint8_t> signed_message(signature_length);
 
         // sign the message, and resize the buffer to the actual size
-        size_t actual_length = signer.Sign(_prng, _signature_context, signed_message.data());
+        size_t actual_length = signer.Sign(_prng, _signature_context.get(), signed_message.data());
         signed_message.resize(actual_length);
 
         // the Sign() method deallocated the accumulator, so forget the reference to it
-        _signature_context = nullptr;
+        _signature_context.release();
 
         // return the signature parameter
         return std::make_tuple(signed_message);

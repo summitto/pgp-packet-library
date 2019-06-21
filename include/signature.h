@@ -110,7 +110,7 @@ namespace pgp {
                     encoder_t encoder{signer};
 
                     // hash the keys; the main key always comes first
-                    if (type() == signature_type::subkey_binding) {
+                    if constexpr (!secret_key_traits<signer_tag>::is_subkey()) {
                         // for a subkey binding, the main key is the signer
                         signer.hash(encoder);
                         signee.hash(encoder);

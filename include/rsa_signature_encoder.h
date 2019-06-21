@@ -29,11 +29,6 @@ namespace pgp {
             {}
 
             /**
-             *  Destructor
-             */
-            ~rsa_signature_encoder();
-
-            /**
              *  Push a number to the encoder
              *
              *  @param  value   The number to push
@@ -137,7 +132,7 @@ namespace pgp {
             CryptoPP::AutoSeededRandomPool _prng;
 
             // accumulator context for the signature
-            CryptoPP::PK_MessageAccumulator *_signature_context = nullptr;
+            std::unique_ptr<CryptoPP::PK_MessageAccumulator> _signature_context;
 
             // accumulator context for the bare hash
             CryptoPP::SHA256 _hash_context;
