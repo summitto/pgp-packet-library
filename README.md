@@ -44,7 +44,9 @@ This command might need administrative privileges. Depending on your operating s
 
 ### Creating a simple packet
 
-Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. If for some reason your standard library is outdated and does not provide `std::variant`, the library falls back to a bundled third-party variant implementation called `mpark::variant`. For the sake of the examples, we will assume an up-to-date standard library. When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
+Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. If for some reason your standard library is outdated and does not provide `std::variant`, the library falls back to a bundled third-party variant implementation called `mpark::variant`. For the sake of the examples, we will assume an up-to-date standard library.
+
+ When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
 
 ```c++
 #include <pgp-packet/packet.h>
