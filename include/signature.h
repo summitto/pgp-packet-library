@@ -2,7 +2,6 @@
 
 #include "signature_subpacket_set.h"
 #include "unknown_signature.h"
-#include <mpark/variant.hpp>
 #include "expected_number.h"
 #include "eddsa_signature.h"
 #include "ecdsa_signature.h"
@@ -12,6 +11,7 @@
 #include "key_algorithm.h"
 #include "dsa_signature.h"
 #include "rsa_signature.h"
+#include "util/variant.h"
 #include "fixed_number.h"
 #include "packet_tag.h"
 #include "secret_key.h"
@@ -31,7 +31,7 @@ namespace pgp {
             /**
              *  The valid signatures we can hold
              */
-            using signature_variant = mpark::variant<
+            using signature_variant = variant<
                 unknown_signature,
                 dsa_signature,
                 rsa_signature,
@@ -58,14 +58,14 @@ namespace pgp {
              *  @param  parameters              The parameters for constructing the signature
              */
             template <class T, typename... Arguments>
-            signature(signature_type type, key_algorithm public_key_algorithm, hash_algorithm hashing_algorithm, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets, uint16_t hash_prefix, mpark::in_place_type_t<T>, Arguments&& ...parameters) :
+            signature(signature_type type, key_algorithm public_key_algorithm, hash_algorithm hashing_algorithm, signature_subpacket_set hashed_subpackets, signature_subpacket_set unhashed_subpackets, uint16_t hash_prefix, in_place_type_t<T>, Arguments&& ...parameters) :
                 _type{ type },
                 _key_algorithm{ public_key_algorithm },
                 _hash_algorithm{ hashing_algorithm },
                 _hashed_subpackets{ std::move(hashed_subpackets) },
                 _unhashed_subpackets{ std::move(unhashed_subpackets) },
                 _hash_prefix{ hash_prefix },
-                _signature{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
+                _signature{ in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
 
             /**
@@ -260,7 +260,7 @@ namespace pgp {
                 hash_encoder.push(version());
                 hash_encoder.template push<uint8_t>(0xFF);
                 hash_encoder.push(
-                    gsl::narrow_cast<uint32_t>(
+                    util::narrow_cast<uint32_t>(
                         sizeof(version())               +
                         sizeof(type())                  +
                         sizeof(public_key_algorithm())  +

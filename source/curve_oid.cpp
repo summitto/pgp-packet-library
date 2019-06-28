@@ -29,7 +29,7 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    curve_oid::curve_oid(gsl::span<const uint8_t> data) noexcept :
+    curve_oid::curve_oid(span<const uint8_t> data) noexcept :
         _data{ data.begin(), data.end() }
     {}
 
@@ -76,7 +76,7 @@ namespace pgp {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> curve_oid::data() const
+    span<const uint8_t> curve_oid::data() const
     {
         // provide access to the underlying data
         return _data;

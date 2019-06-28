@@ -36,8 +36,8 @@ TEST(signature_subpacket_unknown, properties)
     ASSERT_EQ(encoded[0], 1 + data.size());
     ASSERT_EQ(encoded[1], static_cast<uint8_t>(type_1));
     ASSERT_EQ(
-        (gsl::span<const uint8_t>{data.data(), gsl::narrow_cast<ptrdiff_t>(data.size())}),
-        (gsl::span<const uint8_t>{encoded.data() + 2, gsl::narrow_cast<ptrdiff_t>(encoded.size() - 2)})
+        (pgp::span<const uint8_t>{data.data(), util::narrow_cast<ptrdiff_t>(data.size())}),
+        (pgp::span<const uint8_t>{encoded.data() + 2, util::narrow_cast<ptrdiff_t>(encoded.size() - 2)})
     );
 }
 

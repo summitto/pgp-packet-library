@@ -97,7 +97,7 @@ namespace pgp::signature_subpacket {
             void encode(encoder_t &writer) const
             {
                 // first get the size for the data itself
-                uint32_t size = gsl::narrow_cast<uint32_t>(_contained->size() + sizeof(type()));
+                uint32_t size = util::narrow_cast<uint32_t>(_contained->size() + sizeof(type()));
 
                 // encode the size and the signature
                 variable_number{ size }.encode(writer);

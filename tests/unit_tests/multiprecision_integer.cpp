@@ -24,7 +24,7 @@ TEST(multiprecision_integer, decode)
     pgp::decoder decoder{data};
     pgp::multiprecision_integer mi1{decoder};
 
-    pgp::multiprecision_integer mi2{gsl::span(data.data() + 2, 3)};
+    pgp::multiprecision_integer mi2{pgp::span(data.data() + 2, 3)};
     ASSERT_EQ(mi1, mi2);
 }
 
@@ -45,7 +45,7 @@ TEST(multiprecision_integer, assignment)
 {
     pgp::multiprecision_integer mi;
 
-    auto test_for_data = [&mi](const gsl::span<const uint8_t> &data) {
+    auto test_for_data = [&mi](const pgp::span<const uint8_t> &data) {
         mi = data;
         ASSERT_EQ(mi.data(), data);
         ASSERT_EQ(mi.size(), data.size() + 2);
@@ -62,7 +62,7 @@ TEST(multiprecision_integer, vector_constructor)
         size_t zero_bytes = std::distance(data.begin(), nonzero_it);
 
         pgp::multiprecision_integer mi{data};
-        ASSERT_EQ(mi, pgp::multiprecision_integer{gsl::span<const uint8_t>{data}});
+        ASSERT_EQ(mi, pgp::multiprecision_integer{pgp::span<const uint8_t>{data}});
         // 2 for size prefix; zero bytes should be stripped
         ASSERT_EQ(mi.size(), 2 + data.size() - zero_bytes);
     };

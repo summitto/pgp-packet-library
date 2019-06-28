@@ -28,7 +28,7 @@ namespace pgp::signature_subpacket {
      *  @param  type    The signature subpacket type
      *  @param  data    The data contained in the subpacket
      */
-    unknown::unknown(signature_subpacket_type type, gsl::span<const uint8_t> data) :
+    unknown::unknown(signature_subpacket_type type, span<const uint8_t> data) :
         _type{ type },
         _data{ data.begin(), data.end() }
     {}
@@ -61,7 +61,7 @@ namespace pgp::signature_subpacket {
     {
         // we need to encode the type and the data and encode that
         // size again using variable-length packet encoding
-        uint32_t size = gsl::narrow_cast<uint32_t>(sizeof(_type) + _data.size());
+        uint32_t size = util::narrow_cast<uint32_t>(sizeof(_type) + _data.size());
 
         // now add the size necessary to encode the size itself
         return size + variable_number{ size }.size();
@@ -81,7 +81,7 @@ namespace pgp::signature_subpacket {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> unknown::data() const noexcept
+    span<const uint8_t> unknown::data() const noexcept
     {
         // return the stored data
         return _data;

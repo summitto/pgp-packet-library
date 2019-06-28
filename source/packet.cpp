@@ -126,7 +126,7 @@ namespace pgp {
         // retrieve the body
         visit([&result](auto &body) {
             // retrieve the size from the body
-            result = gsl::narrow_cast<uint32_t>(body.size());
+            result = util::narrow_cast<uint32_t>(body.size());
         }, _body);
 
         // is the packet compatible with the old format?

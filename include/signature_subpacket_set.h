@@ -7,7 +7,7 @@
 #include "signature_subpacket/unknown.h"
 #include "signature_subpacket/numeric.h"
 #include "signature_subpacket_type.h"
-#include <mpark/variant.hpp>
+#include "util/variant.h"
 
 
 namespace pgp {
@@ -21,7 +21,7 @@ namespace pgp {
             /**
              *  The recognized subpacket types
              */
-            using subpacket_variant = mpark::variant<
+            using subpacket_variant = variant<
                 signature_subpacket::unknown,
                 signature_subpacket::issuer,
                 signature_subpacket::signature_creation_time,
@@ -92,7 +92,7 @@ namespace pgp {
              *
              *  @return The subpackets in the set
              */
-            gsl::span<const subpacket_variant> data() const noexcept;
+            span<const subpacket_variant> data() const noexcept;
 
             /**
              *  Write the data to an encoder
@@ -105,7 +105,7 @@ namespace pgp {
             {
                 // add the size header; this is the size of the packet minus
                 // the size of the header itself
-                uint16{ gsl::narrow_cast<uint16_t>(size() - uint16::size()) }.encode(writer);
+                uint16{ util::narrow_cast<uint16_t>(size() - uint16::size()) }.encode(writer);
 
                 // iterate over the subpackets
                 for (auto &subpacket : _subpackets) {

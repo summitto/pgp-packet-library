@@ -5,6 +5,8 @@ project(pgp-packet-library
     LANGUAGES   CXX
 )
 
+include(CheckIncludeFileCXX)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Boost              REQUIRED)
@@ -48,7 +50,20 @@ set(pgp-packet-sources
     source/signature_subpacket/embedded.cpp
 )
 
+CHECK_INCLUDE_FILE_CXX(variant HAVE_STD_VARIANT)
+CHECK_INCLUDE_FILE_CXX(span HAVE_STD_SPAN)
+
 add_library(pgp-packet ${pgp-packet-sources})
+
+if(NOT HAVE_STD_VARIANT)
+    set(NEED_MPARK 1)
+    target_compile_definitions(pgp-packet PUBLIC USE_MPARK_VARIANT)
+endif()
+
+if(NOT HAVE_STD_SPAN)
+    set(NEED_GSL 1)
+    target_compile_definitions(pgp-packet PUBLIC USE_GSL_SPAN)
+endif()
 
 target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
 
@@ -62,17 +77,26 @@ target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-target_include_directories(pgp-packet PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSL/include>
-    $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
-)
+if(NEED_GSL)
+    target_include_directories(pgp-packet PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSL/include>
+        $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
+    )
+endif()
 
-target_include_directories(pgp-packet PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/variant/include>
-    $<INSTALL_INTERFACE:include/pgp-packet/variant/include>
-)
+if(NEED_MPARK)
+    target_include_directories(pgp-packet PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/variant/include>
+        $<INSTALL_INTERFACE:include/pgp-packet/variant/include>
+    )
+endif()
 
 set_property(TARGET pgp-packet PROPERTY CXX_STANDARD 17)
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
+    target_compile_features(pgp-packet PUBLIC cxx_std_17)
+else()
+    message(WARNING "Cannot export requirement for C++17 to users of the pgp-packet library (CMake version < 3.8.0); please set the C++ standard yourself")
+endif()
 
 # TODO: Figure out correct flags for other compilers
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -101,13 +125,15 @@ install(
     DESTINATION include/pgp-packet
 )
 
-install(
-    DIRECTORY
-        include/
-        GSL
-        variant
-    DESTINATION include/pgp-packet
-)
+install(DIRECTORY include/ DESTINATION include/pgp-packet)
+
+if(NEED_GSL)
+    install(DIRECTORY GSL DESTINATION include/pgp-packet)
+endif()
+
+if(NEED_MPARK)
+    install(DIRECTORY variant DESTINATION include/pgp-packet)
+endif()
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(

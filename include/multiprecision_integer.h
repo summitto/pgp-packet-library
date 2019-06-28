@@ -39,7 +39,7 @@ namespace pgp {
              *
              *  @param  data    The range of numbers
              */
-            multiprecision_integer(gsl::span<const uint8_t> data) noexcept;
+            multiprecision_integer(span<const uint8_t> data) noexcept;
 
             /**
              *  Constructor
@@ -63,7 +63,7 @@ namespace pgp {
              */
             multiprecision_integer &operator=(const multiprecision_integer &that) = default;
             multiprecision_integer &operator=(multiprecision_integer &&that) = default;
-            multiprecision_integer &operator=(gsl::span<const uint8_t> data) noexcept;
+            multiprecision_integer &operator=(span<const uint8_t> data) noexcept;
             multiprecision_integer &operator=(std::vector<uint8_t> data) noexcept;
             multiprecision_integer &operator=(const CryptoPP::Integer &integer) noexcept;
 
@@ -85,7 +85,7 @@ namespace pgp {
              *  Retrieve the data
              *  @return A span containing all the integer numbers
              */
-            gsl::span<const uint8_t> data() const noexcept;
+            span<const uint8_t> data() const noexcept;
 
             /**
              *  Convert to a Crypto++ Integer

@@ -13,14 +13,14 @@ TEST(public_key, constructor)
     pgp::public_key k{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::public_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::rsa_key_t>(),
         n, e
     };
 
     ASSERT_EQ(k.tag(), pgp::packet_tag::public_key);
     ASSERT_EQ(k.creation_time(), 1234);
     ASSERT_EQ(k.algorithm(), pgp::key_algorithm::rsa_encrypt_or_sign);
-    auto &keyval = mpark::get<pgp::public_key::rsa_key_t>(k.key());
+    auto &keyval = pgp::get<pgp::public_key::rsa_key_t>(k.key());
     ASSERT_EQ(keyval.n().data(), n.data());
     ASSERT_EQ(keyval.e().data(), e.data());
 }
@@ -35,7 +35,7 @@ TEST(public_key, encode_decode)
     pgp::public_key k{
         5678,
         pgp::key_algorithm::dsa,
-        mpark::in_place_type_t<pgp::public_key::dsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::dsa_key_t>(),
         p, q, g, y
     };
 
@@ -60,21 +60,21 @@ TEST(public_key, equality)
     pgp::public_key k{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::public_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::rsa_key_t>(),
         n, e
     };
 
     pgp::public_key k2{
         4321,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::public_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::rsa_key_t>(),
         n, e
     };
 
     pgp::public_key k3{
         1234,
         pgp::key_algorithm::rsa_sign_only,
-        mpark::in_place_type_t<pgp::public_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::rsa_key_t>(),
         n, e
     };
 
@@ -85,7 +85,7 @@ TEST(public_key, equality)
     pgp::public_key k4{
         1234,
         pgp::key_algorithm::rsa_encrypt_or_sign,
-        mpark::in_place_type_t<pgp::public_key::rsa_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::rsa_key_t>(),
         n2, e
     };
 
@@ -107,7 +107,7 @@ TEST(public_key, fingerprint)
     pgp::public_key k{
         1554103728,
         pgp::key_algorithm::ecdh,
-        mpark::in_place_type_t<pgp::public_key::ecdh_key_t>(),
+        pgp::in_place_type_t<pgp::public_key::ecdh_key_t>(),
         oid, Q, hashalgo, keyalgo
     };
 

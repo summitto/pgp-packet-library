@@ -13,10 +13,10 @@ TEST(packet, constructor)
 {
     using namespace std::literals;
 
-    pgp::packet packet(mpark::in_place_type_t<pgp::user_id>(), "another username"s);
+    pgp::packet packet(pgp::in_place_type_t<pgp::user_id>(), "another username"s);
 
     ASSERT_EQ(packet.tag(), pgp::packet_tag::user_id);
-    ASSERT_EQ(mpark::get<pgp::user_id>(packet.body()).id(), "another username");
+    ASSERT_EQ(pgp::get<pgp::user_id>(packet.body()).id(), "another username");
 }
 
 TEST(packet, encode_decode)
@@ -25,7 +25,7 @@ TEST(packet, encode_decode)
 
     auto test_for_size = [](size_t size) {
         std::string iddata(size, 'a');
-        pgp::packet packet{mpark::in_place_type_t<pgp::user_id>(), iddata};
+        pgp::packet packet{pgp::in_place_type_t<pgp::user_id>(), iddata};
 
         std::vector<uint8_t> data(packet.size());
         pgp::range_encoder encoder{data};
@@ -66,9 +66,9 @@ TEST(packet, equality)
 {
     using namespace std::literals;
 
-    pgp::packet p1{mpark::in_place_type_t<pgp::user_id>(), "abc"s};
-    pgp::packet p2{mpark::in_place_type_t<pgp::user_id>(), "def"s};
-    pgp::packet p3{mpark::in_place_type_t<pgp::unknown_packet>()};
+    pgp::packet p1{pgp::in_place_type_t<pgp::user_id>(), "abc"s};
+    pgp::packet p2{pgp::in_place_type_t<pgp::user_id>(), "def"s};
+    pgp::packet p3{pgp::in_place_type_t<pgp::unknown_packet>()};
 
     ASSERT_EQ(p1, p1);
     ASSERT_NE(p1, p2);

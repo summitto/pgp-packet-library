@@ -23,7 +23,7 @@ namespace {
         std::unique_ptr<pgp::eddsa_signature> sig;
     };
 
-    std::array<uint8_t, 32> sha256_hash(gsl::span<const uint8_t> data)
+    std::array<uint8_t, 32> sha256_hash(pgp::span<const uint8_t> data)
     {
         pgp::sha256_encoder encoder;
         encoder.insert_blob(data);
@@ -41,10 +41,10 @@ namespace {
 
         std::array<uint8_t, 32> message;
         randombytes_buf(message.data(), message.size());
-        inps.message = sha256_hash(gsl::span<const uint8_t>{message});
+        inps.message = sha256_hash(pgp::span<const uint8_t>{message});
 
         pgp::eddsa_signature::encoder_t sig_encoder{sk};
-        sig_encoder.insert_blob(gsl::span<const uint8_t>{message});
+        sig_encoder.insert_blob(pgp::span<const uint8_t>{message});
         inps.sig = std::make_unique<pgp::eddsa_signature>(
             util::make_from_tuple<pgp::eddsa_signature>(sig_encoder.finalize())
         );

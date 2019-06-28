@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <gtest/gtest.h>
 #include "range_encoder.h"
+#include "util/narrow_cast.h"
 #include "../device_random_engine.h"
 
 
@@ -30,7 +31,7 @@ TEST(range_encoder, push_integer)
 
             // Encode in big endian
             for (size_t i = 0; i < size; i++) {
-                dataControl[cursor + i] = gsl::narrow_cast<uint8_t>(value >> (8 * (size - 1 - i)));
+                dataControl[cursor + i] = util::narrow_cast<uint8_t>(value >> (8 * (size - 1 - i)));
             }
 
             encoder.push(value);
@@ -79,11 +80,11 @@ TEST(range_encoder, push_iterators)
 
     encoder.push(input.begin(), input.begin() + 3);
     ASSERT_EQ(encoder.size(), 3);
-    ASSERT_EQ(gsl::span(input.data(), input.data() + 3), gsl::span(data.data(), data.data() + 3));
+    ASSERT_EQ(pgp::span(input.data(), input.data() + 3), pgp::span(data.data(), data.data() + 3));
     ASSERT_EQ(data[3], 0);
 
     encoder.push(input.begin() + 3, input.begin() + 4);
-    ASSERT_EQ(gsl::span<const uint8_t>(input), gsl::span<const uint8_t>(data.data(), data.data() + 4));
+    ASSERT_EQ(pgp::span<const uint8_t>(input), pgp::span<const uint8_t>(data.data(), data.data() + 4));
 
     ASSERT_THROW(encoder.push(input.begin(), input.begin() + 2), std::out_of_range);
 
@@ -100,22 +101,22 @@ TEST(range_encoder, insert_blob)
     std::array<uint8_t, 5> data{0, 0, 0, 0, 0};
 
     pgp::range_encoder encoder{data};
-    encoder.insert_blob(gsl::span<const uint8_t>());
+    encoder.insert_blob(pgp::span<const uint8_t>());
     ASSERT_EQ(encoder.size(), 0);
 
-    encoder.insert_blob(gsl::span<const uint8_t>(input.data(), input.data() + 3));
+    encoder.insert_blob(pgp::span<const uint8_t>(input.data(), input.data() + 3));
     ASSERT_EQ(encoder.size(), 3);
-    ASSERT_EQ(gsl::span(input.data(), input.data() + 3), gsl::span(data.data(), data.data() + 3));
+    ASSERT_EQ(pgp::span(input.data(), input.data() + 3), pgp::span(data.data(), data.data() + 3));
     ASSERT_EQ(data[3], 0);
 
-    encoder.insert_blob(gsl::span<const uint8_t>(input.data() + 3, input.data() + 4));
-    ASSERT_EQ(gsl::span<const uint8_t>(input), gsl::span<const uint8_t>(data.data(), data.data() + 4));
+    encoder.insert_blob(pgp::span<const uint8_t>(input.data() + 3, input.data() + 4));
+    ASSERT_EQ(pgp::span<const uint8_t>(input), pgp::span<const uint8_t>(data.data(), data.data() + 4));
 
-    ASSERT_THROW(encoder.insert_blob(gsl::span<const uint8_t>(input.data(), input.data() + 2)), std::out_of_range);
+    ASSERT_THROW(encoder.insert_blob(pgp::span<const uint8_t>(input.data(), input.data() + 2)), std::out_of_range);
 
     encoder.push<uint8_t>(1);
-    ASSERT_THROW(encoder.insert_blob(gsl::span<const uint8_t>(input.data(), input.data() + 1)), std::out_of_range);
-    ASSERT_THROW(encoder.insert_blob(gsl::span<const uint8_t>(input.data(), input.data() + 2)), std::out_of_range);
+    ASSERT_THROW(encoder.insert_blob(pgp::span<const uint8_t>(input.data(), input.data() + 1)), std::out_of_range);
+    ASSERT_THROW(encoder.insert_blob(pgp::span<const uint8_t>(input.data(), input.data() + 2)), std::out_of_range);
 }
 
 TEST(range_encoder, insert_blob_bits)
@@ -126,11 +127,11 @@ TEST(range_encoder, insert_blob_bits)
     pgp::range_encoder encoder{data};
     encoder.insert_bits(2, 0b11);
     // The first byte fits even after the queued bits, so the push should succeed
-    encoder.insert_blob(gsl::span<const uint8_t>(input));
+    encoder.insert_blob(pgp::span<const uint8_t>(input));
 
     encoder.insert_bits(6, 0);
     // Too many bits queued
-    ASSERT_THROW(encoder.insert_blob(gsl::span<const uint8_t>(input)), std::range_error);
+    ASSERT_THROW(encoder.insert_blob(pgp::span<const uint8_t>(input)), std::range_error);
 }
 
 TEST(range_encoder, out_of_range)

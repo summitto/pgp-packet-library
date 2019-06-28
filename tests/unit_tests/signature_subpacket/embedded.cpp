@@ -16,7 +16,7 @@ namespace {
             pgp::signature_subpacket_set{},
             pgp::signature_subpacket_set{},
             hash_prefix,
-            mpark::in_place_type_t<pgp::unknown_signature>{}
+            pgp::in_place_type_t<pgp::unknown_signature>{}
         };
     }
 
@@ -27,7 +27,7 @@ namespace {
         randombytes_buf(message.data(), message.size());
 
         pgp::eddsa_signature::encoder_t sig_encoder{sk};
-        sig_encoder.insert_blob(gsl::span<const uint8_t>{message});
+        sig_encoder.insert_blob(pgp::span<const uint8_t>{message});
         auto eddsa_sig = util::make_from_tuple<pgp::eddsa_signature>(sig_encoder.finalize());
 
         return pgp::signature{
@@ -37,7 +37,7 @@ namespace {
             pgp::signature_subpacket_set{},
             pgp::signature_subpacket_set{},
             0x1234,
-            mpark::in_place_type_t<pgp::eddsa_signature>{},
+            pgp::in_place_type_t<pgp::eddsa_signature>{},
             eddsa_sig
         };
     }

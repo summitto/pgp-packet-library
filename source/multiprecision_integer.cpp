@@ -1,4 +1,5 @@
 #include "multiprecision_integer.h"
+#include "util/narrow_cast.h"
 #include <type_traits>
 
 
@@ -60,7 +61,7 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    multiprecision_integer::multiprecision_integer(gsl::span<const uint8_t> data) noexcept
+    multiprecision_integer::multiprecision_integer(span<const uint8_t> data) noexcept
     {
         // assign the data
         operator=(data);
@@ -95,7 +96,7 @@ namespace pgp {
      *  @param  data    The data to assign
      *  @return Same object for chaining
      */
-    multiprecision_integer &multiprecision_integer::operator=(gsl::span<const uint8_t> data) noexcept
+    multiprecision_integer &multiprecision_integer::operator=(span<const uint8_t> data) noexcept
     {
         // eliminate leading zeroes
         while (!data.empty() && data[0] == 0) {
@@ -115,7 +116,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(data[0]);
 
         // assign bit count and the data
-        _bits = gsl::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(data.size() * 8 - leading_zeroes);
         _data.assign(data.begin(), data.end());
 
         // allow chaining
@@ -145,7 +146,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(_data[0]);
 
         // assign bit count
-        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
 
         // allow chaining
         return *this;
@@ -172,7 +173,7 @@ namespace pgp {
         auto leading_zeroes = count_leading_zeros(_data[0]);
 
         // assign bit count
-        _bits = gsl::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
+        _bits = util::narrow_cast<uint16_t>(_data.size() * 8 - leading_zeroes);
 
         // allow chaining
         return *this;
@@ -212,7 +213,7 @@ namespace pgp {
      *  Retrieve the data
      *  @return A span containing all the integer numbers
      */
-    gsl::span<const uint8_t> multiprecision_integer::data() const noexcept
+    span<const uint8_t> multiprecision_integer::data() const noexcept
     {
         // provide access to the underlying vector
         return _data;

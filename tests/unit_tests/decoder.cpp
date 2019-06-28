@@ -81,12 +81,12 @@ TEST(decoder, extract_blob)
 
     {
         pgp::decoder decoder{data};
-        ASSERT_EQ(decoder.extract_blob<uint8_t>(2), gsl::span(data.data(), 2));
+        ASSERT_EQ(decoder.extract_blob<uint8_t>(2), pgp::span(data.data(), 2));
     }
 
     pgp::decoder decoder{data};
     decoder.extract_number<uint8_t>();
-    ASSERT_EQ(decoder.extract_blob<uint8_t>(2), gsl::span(data.data() + 1, 2));
+    ASSERT_EQ(decoder.extract_blob<uint8_t>(2), pgp::span(data.data() + 1, 2));
 }
 
 TEST(decoder, splice)

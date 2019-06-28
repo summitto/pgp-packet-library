@@ -54,7 +54,7 @@ namespace pgp::signature_subpacket {
     size_t issuer_fingerprint::size() const noexcept
     {
         // we need to store the number, together with the type and the key version
-        uint32_t size = gsl::narrow_cast<uint32_t>(_data.size() + _version.size() + sizeof(type()));
+        uint32_t size = util::narrow_cast<uint32_t>(_data.size() + _version.size() + sizeof(type()));
 
         // and then store this number in a variable number
         return size + variable_number{ size }.size();

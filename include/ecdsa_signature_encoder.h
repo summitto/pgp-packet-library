@@ -21,7 +21,7 @@ namespace pgp {
              */
             template <packet_tag key_tag>
             ecdsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) noexcept :
-                ecdsa_key{mpark::get<basic_secret_key<ecdsa_public_key, ecdsa_secret_key>>(key.key())}
+                ecdsa_key{get<basic_secret_key<ecdsa_public_key, ecdsa_secret_key>>(key.key())}
             {}
 
             /**

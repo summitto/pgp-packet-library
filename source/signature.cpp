@@ -66,7 +66,7 @@ namespace pgp {
 
             // hash the user id
             encoder.template push<uint8_t>(0xB4);
-            encoder.push(gsl::narrow_cast<uint32_t>(user.size()));
+            encoder.push(util::narrow_cast<uint32_t>(user.size()));
             user.encode(encoder);
 
             // now hash the signature data itself

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "secret_key.h"
+#include "util/span.h"
 #include <stdexcept>
-#include <gsl/span>
 
 
 namespace pgp {
@@ -35,7 +35,7 @@ namespace pgp {
              *  Insert a blob to a nonexistent encoder; throws.
              */
             template <typename T>
-            unknown_signature_encoder &insert_blob(gsl::span<const T>)
+            unknown_signature_encoder &insert_blob(span<const T>)
             {
                 throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
             }

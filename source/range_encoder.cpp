@@ -8,7 +8,7 @@ namespace pgp {
      *
      *  @param  data    The range to encode to
      */
-    range_encoder::range_encoder(gsl::span<uint8_t> data) :
+    range_encoder::range_encoder(span<uint8_t> data) :
         _data{ data }
     {}
 

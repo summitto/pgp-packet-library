@@ -1,8 +1,8 @@
 #pragma once
 
-#include <gsl/span>
+#include "util/span.h"
 #include <stdexcept>
-#include <mpark/variant.hpp>
+#include "util/variant.h"
 #include "unknown_packet.h"
 #include "public_key.h"
 #include "secret_key.h"
@@ -25,7 +25,7 @@ namespace pgp {
             /**
              *  The valid packets we can decode
              */
-            using packet_variant = mpark::variant<
+            using packet_variant = variant<
                 unknown_packet,
                 signature,
                 secret_key,
@@ -50,8 +50,8 @@ namespace pgp {
              *  @throws Forwards exception from body constructor
              */
             template <class T, typename... Arguments>
-            packet(mpark::in_place_type_t<T>, Arguments&& ...parameters) :
-                _body{ mpark::in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
+            packet(in_place_type_t<T>, Arguments&& ...parameters) :
+                _body{ in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
 
             /**
@@ -101,7 +101,7 @@ namespace pgp {
                 // retrieve the body
                 visit([&size](auto &body) {
                     // retrieve the size from the body
-                    size = gsl::narrow_cast<uint32_t>(body.size());
+                    size = util::narrow_cast<uint32_t>(body.size());
                 }, _body);
 
                 // can we encode the packet in the old format?

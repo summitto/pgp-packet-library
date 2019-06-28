@@ -2,7 +2,7 @@
 
 #include <boost/endian/conversion.hpp>
 #include <cryptopp/sha.h>
-#include <gsl/span>
+#include "util/span.h"
 
 
 namespace pgp {
@@ -101,7 +101,7 @@ namespace pgp {
              *  @return self, for chaining
              */
             template <typename T>
-            hash_encoder &insert_blob(gsl::span<const T> value)
+            hash_encoder &insert_blob(span<const T> value)
             {
                 // add the data to the hasher
                 _hasher.Update(reinterpret_cast<const uint8_t*>(value.data()), value.size() * sizeof(T));
