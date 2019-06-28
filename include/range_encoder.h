@@ -195,7 +195,7 @@ namespace pgp {
                 return *this;
             }
         private:
-            span<uint8_t> _data;                    // the range to encode to
+            span<uint8_t>       _data;              // the range to encode to
             size_t              _size       { 0 };  // number of bytes written
             uint8_t             _current    { 0 };  // the current byte we are working on
             uint8_t             _skip_bits  { 0 };  // number of bits to skip from data
