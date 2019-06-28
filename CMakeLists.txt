@@ -92,6 +92,11 @@ if(NEED_MPARK)
 endif()
 
 set_property(TARGET pgp-packet PROPERTY CXX_STANDARD 17)
+if(NOT ${CMAKE_VERSION} VERSION_LESS "3.8.0")
+    target_compile_features(pgp-packet PUBLIC cxx_std_17)
+else()
+    message(WARNING "Cannot export requirement for C++17 to users of the pgp-packet library (CMake version < 3.8.0); please set the C++ standard yourself")
+endif()
 
 # TODO: Figure out correct flags for other compilers
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
