@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.5.2)
 
 project(pgp-packet-library
     VERSION     0.1.1
@@ -65,7 +65,7 @@ if(NOT HAVE_STD_SPAN)
     target_compile_definitions(pgp-packet PUBLIC USE_GSL_SPAN)
 endif()
 
-target_include_directories(pgp-packet PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(pgp-packet Boost::boost)
 
 target_include_directories(pgp-packet PUBLIC ${SODIUM_INCLUDE_DIRS})
 target_link_libraries(pgp-packet ${SODIUM_LIBRARIES})
