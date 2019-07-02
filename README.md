@@ -16,6 +16,11 @@ The library is centered around the pgp::packet class. This class can be construc
 
 ## Building the library
 
+The library has been tested to work with the following C++ compilers:
+
+- g++ 8.3.0 ([fails with 7.4.0](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91058))
+- clang++ 8.0.0, 7.1.0, 7.0.1, 6.0, Apple clang 10.0.0
+
 To build the library, the following dependencies need to be installed first:
 - [Boost C++ libraries](https://www.boost.org/)
 - [Libsodium](https://download.libsodium.org/doc/)
