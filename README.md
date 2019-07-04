@@ -263,3 +263,10 @@ int main()
     return 0;
 }
 ```
+
+# Credits
+
+Martijn Otto
+Tom Smeding
+Sascha Jafari
+Victor Sint Nicolaas
