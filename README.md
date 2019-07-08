@@ -267,6 +267,9 @@ int main()
 # Credits
 
 Martijn Otto
+
 Tom Smeding
+
 Sascha Jafari
+
 Victor Sint Nicolaas
