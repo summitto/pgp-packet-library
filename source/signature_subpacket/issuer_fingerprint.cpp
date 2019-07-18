@@ -6,21 +6,6 @@ namespace pgp::signature_subpacket {
     /**
      *  Constructor
      *
-     *  @param  parser  The parser to decode the data
-     */
-    issuer_fingerprint::issuer_fingerprint(decoder &parser) :
-        _version{ parser }
-    {
-        // retrieve data from the decoder
-        auto data = parser.extract_blob<uint8_t>(fingerprint_size);
-
-        // copy the data over
-        std::copy(data.begin(), data.end(), _data.begin());
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  data    The array of data
      */
     issuer_fingerprint::issuer_fingerprint(std::array<uint8_t, fingerprint_size> data) noexcept :

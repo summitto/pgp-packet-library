@@ -1,9 +1,9 @@
 #pragma once
 
 #include "unknown_signature_encoder.h"
+#include "decoder_traits.h"
 #include "secret_key.h"
 #include <stdexcept>
-#include "decoder.h"
 
 
 namespace pgp {
@@ -20,9 +20,11 @@ namespace pgp {
              *  Constructor
              */
             unknown_signature() = default;
+
             /**
              *  Constructor
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             unknown_signature(decoder&) noexcept {}
 
             /**

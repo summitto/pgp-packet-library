@@ -19,6 +19,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  parser  The parser to decode the data
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             numeric(decoder &parser) :
                 _data{ parser }
             {

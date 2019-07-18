@@ -3,13 +3,16 @@
 #include "util/span.h"
 #include <stdexcept>
 #include "util/variant.h"
+#include <boost/optional.hpp>
+#include "variable_number.h"
+#include "decoder_traits.h"
 #include "unknown_packet.h"
 #include "public_key.h"
 #include "secret_key.h"
 #include "packet_tag.h"
 #include "signature.h"
 #include "user_id.h"
-#include "decoder.h"
+#include <cstring>
 
 
 namespace pgp {
@@ -41,7 +44,67 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              *  @throws std::runtime_error
              */
-            packet(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            packet(decoder &parser)
+            {
+                // check whether we have the required true bit
+                if (!parser.extract_bits(1)) {
+                    // a bit that is required to be set is not set
+                    throw std::runtime_error{ "Invalid packet: Required header tag bit not set"};
+                }
+
+                // the packet tag we are processing and the size of it
+                packet_tag                  tag;
+                boost::optional<uint32_t>   size;
+
+                // is this a packet using the new formatting?
+                if (parser.extract_bits(1)) {
+                    // extract packet type and size
+                    tag  = packet_tag{ parser.extract_bits(6) };
+                    size = variable_number{ parser };
+                } else {
+                    // extract packet type
+                    tag = packet_tag{ parser.extract_bits(4) };
+
+                    // what length type do we have
+                    switch (parser.extract_bits(2)) {
+                        case 0: size = parser.template extract_number<uint8_t>();   break;
+                        case 1: size = parser.template extract_number<uint16_t>();  break;
+                        case 2: size = parser.template extract_number<uint32_t>();  break;
+                        case 3:  /* no size is known */                             break;
+                    }
+                }
+
+                // create a parser to hold only the body data
+                // and a pointer to the parser we will use
+                decoder body_parser;
+                decoder *parser_ptr;
+
+                // if we have a known size, we splice off the data,
+                // otherwise we keep using the existing decoder
+                if (size) {
+                    // splice off the data and use the body parser
+                    body_parser = parser.splice(*size);
+                    parser_ptr  = &body_parser;
+                } else {
+                    // we don't know the size, so we will use
+                    // the entire, unrestrained parser instead
+                    parser_ptr  = &parser;
+                }
+
+                // can we decode the packet?
+                switch (tag) {
+                    case packet_tag::signature:     _body.emplace<signature>(*parser_ptr);      break;
+                    case packet_tag::secret_key:    _body.emplace<secret_key>(*parser_ptr);     break;
+                    case packet_tag::public_key:    _body.emplace<public_key>(*parser_ptr);     break;
+                    case packet_tag::secret_subkey: _body.emplace<secret_subkey>(*parser_ptr);  break;
+                    case packet_tag::user_id:       _body.emplace<user_id>(*parser_ptr);        break;
+                    case packet_tag::public_subkey: _body.emplace<public_subkey>(*parser_ptr);  break;
+                    default:
+                        // TODO
+                        break;
+                }
+            }
 
             /**
              *  Constructor

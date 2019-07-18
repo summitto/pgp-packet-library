@@ -6,16 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    eddsa_public_key::eddsa_public_key(decoder &parser) :
-        _curve{ parser },
-        _Q{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  curve   The curve object identifier
      *  @param  Q       The public curve point Q
      */

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cryptopp/integer.h>
+#include "decoder_traits.h"
 #include "fixed_number.h"
+#include "util/span.h"
 #include <vector>
 
 
@@ -24,7 +26,23 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              *  @throws std::out_of_range
              */
-            multiprecision_integer(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            multiprecision_integer(decoder &parser) :
+                _bits{ parser }
+            {
+                // first read the number of elements, since it is in bits,
+                // we have to round it up to the nearest byte and read it
+                size_t count = (_bits + 7) / 8;
+        
+                // allocate memory for the number
+                _data.reserve(count);
+        
+                // and now read all the elements
+                while (_data.size() < count) {
+                    // add an element
+                    _data.push_back(parser.template extract_number<uint8_t>());
+                }
+            }
 
             /**
              *  Constructor

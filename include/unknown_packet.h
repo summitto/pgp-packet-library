@@ -1,7 +1,7 @@
 #pragma once
 
+#include "decoder_traits.h"
 #include "packet_tag.h"
-#include "decoder.h"
 
 
 namespace pgp {
@@ -21,6 +21,7 @@ namespace pgp {
             /**
              *  Constructor
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             unknown_packet(decoder&) {}
 
             /**

@@ -1,6 +1,8 @@
 #pragma once
 
-#include "decoder.h"
+#include "decoder_traits.h"
+#include <cstdint>
+#include <cstddef>
 
 
 namespace pgp {
@@ -23,8 +25,9 @@ namespace pgp {
              *
              *  @param  parser  The decoder to parse the data
              */
-            fixed_number(decoder &parser) :
-                _value{ parser.extract_number<T>() }
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            fixed_number(decoder &&parser) :
+                _value{ parser.template extract_number<T>() }
             {}
 
             /**
@@ -42,10 +45,11 @@ namespace pgp {
              *  @param  parser  The parser to assign the value from
              *  @return self, for chaining
              */
-            fixed_number &operator=(decoder &parser)
+            template <class decoder>
+            std::enable_if_t<is_decoder_v<decoder>, fixed_number> &operator=(decoder &&parser)
             {
                 // update value
-                _value = parser.extract_number<T>();
+                _value = parser.template extract_number<T>();
 
                 // allow chaining
                 return *this;

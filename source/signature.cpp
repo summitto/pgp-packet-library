@@ -6,41 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    signature::signature(decoder &parser) :
-        _version{ parser },
-        _type{ parser.extract_number<uint8_t>() },
-        _key_algorithm{ parser.extract_number<uint8_t>() },
-        _hash_algorithm{ parser.extract_number<uint8_t>() },
-        _hashed_subpackets{ parser },
-        _unhashed_subpackets{ parser },
-        _hash_prefix{ parser }
-    {
-        // what kind of signature should we construct?
-        switch (_key_algorithm) {
-            case key_algorithm::rsa_encrypt_or_sign:
-            case key_algorithm::rsa_sign_only:
-                _signature.emplace<rsa_signature>(parser);
-                break;
-            case key_algorithm::dsa:
-                _signature.emplace<dsa_signature>(parser);
-                break;
-            case key_algorithm::eddsa:
-                _signature.emplace<eddsa_signature>(parser);
-                break;
-            case key_algorithm::ecdsa:
-                _signature.emplace<ecdsa_signature>(parser);
-                break;
-            default:
-                // do nothing, use the unknown_key
-                break;
-        }
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  bound_key               The key we are binding in the signature
      *  @param  user                    The user id we are binding in the signature
      *  @param  hashed_subpackets       The subpackets that will be used for generating the hash
@@ -73,7 +38,7 @@ namespace pgp {
             hash_signature(encoder);
 
             // store the hash prefix
-            _hash_prefix = util::to_lvalue(decoder{encoder.hash_prefix()});
+            _hash_prefix = decoder{encoder.hash_prefix()};
 
             // Directly using emplace would be nice here, but since
             // _signature.emplace is an overloaded member function, this turns

@@ -6,15 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    eddsa_secret_key::eddsa_secret_key(decoder &parser) :
-        _k{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  k       The secret scalar for the public point
      */
     eddsa_secret_key::eddsa_secret_key(multiprecision_integer k) noexcept :

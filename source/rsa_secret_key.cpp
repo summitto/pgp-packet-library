@@ -6,18 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    rsa_secret_key::rsa_secret_key(decoder &parser) :
-        _d{ parser },
-        _p{ parser },
-        _q{ parser },
-        _u{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  d   The secret exponent d
      *  @param  p   The secret prime value p
      *  @param  q   The secret prime value q

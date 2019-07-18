@@ -16,7 +16,10 @@ namespace pgp {
              *
              *  @param  parser  The decoder to parse the data
              */
-            ecdsa_secret_key(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            ecdsa_secret_key(decoder &parser) :
+                _k{ parser }
+            {}
 
             /**
              *  Constructor

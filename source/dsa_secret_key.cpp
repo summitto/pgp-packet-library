@@ -6,15 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    dsa_secret_key::dsa_secret_key(decoder &parser) :
-        _x{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  x   The secret exponent
      */
     dsa_secret_key::dsa_secret_key(multiprecision_integer x) noexcept :

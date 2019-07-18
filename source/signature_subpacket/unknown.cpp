@@ -6,25 +6,6 @@ namespace pgp::signature_subpacket {
     /**
      *  Constructor
      *
-     *  @param  type    The subpacket type
-     *  @param  parser  The decoder to parse the data
-     */
-    unknown::unknown(signature_subpacket_type type, decoder &parser) :
-        _type{ type }
-    {
-        // reserve memory for the data
-        _data.reserve(parser.size());
-
-        // and fill the buffer
-        while (!parser.empty()) {
-            // add another byte
-            _data.push_back(parser.extract_number<uint8_t>());
-        }
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  type    The signature subpacket type
      *  @param  data    The data contained in the subpacket
      */
