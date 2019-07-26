@@ -65,7 +65,7 @@ To build the Docker image, execute the following command from the root of the re
 To build the library and run the unit tests, execute the following command from the root of the repository (after the image has been built):
 
 ```bash
-./compiler-and-test-in-docker.sh
+./compile-and-test-in-docker.sh
 ```
 
 By default, the above commands will use `summitto/pgp-packet-library-builder` as the name of the Docker image, and will use the Clang 8 compiler. These settings can be controlled via environment variables:
