@@ -2,6 +2,7 @@
 
 - [Introduction](#introduction)
 - [Building the library](#building-the-library)
+  - [Building the library in a Docker container](#building-the-library-in-a-docker-container)
 - [Using the library](#using-the-library)
   - [Creating a simple packet](#creating-a-simple-packet)
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
@@ -22,6 +23,7 @@ The library has been tested to work with the following C++ compilers:
 - clang++ 8.0.0, 7.1.0, 7.0.1, 6.0, Apple clang 10.0.0
 
 To build the library, the following dependencies need to be installed first:
+
 - [Boost C++ libraries](https://www.boost.org/)
 - [Libsodium](https://download.libsodium.org/doc/)
 - [Crypto++ Library](https://cryptopp.com/)
@@ -44,6 +46,38 @@ If you wish to install the library (so that it can be automatically found by pro
 `make -C build install`
 
 This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrator account before executing the command.
+
+### Building the library in a Docker container
+
+The repository contains a `Dockerfile`, which can be used to create a Docker container to build the library and run its unit tests. The generated image is based on _Debian Buster_ and contains all the necessary dependencies to build the library. It also provides different compilers (`clang++-8` and `g++-8` currently) to use.
+
+To build the Docker image, execute the following command from the root of the repository:
+
+```bash
+./build-container.sh
+```
+
+**NOTES:**
+
+- If changes are made to the source code or to the unit tests, the Docker image will have to be rebuilt, because it copies the contents of the repository into the image.
+- The submodules of the repository should already be available before building the image (i.e. `git submodule update --init`).
+
+To build the library and run the unit tests, execute the following command from the root of the repository (after the image has been built):
+
+```bash
+./compiler-and-test-in-docker.sh
+```
+
+By default, the above commands will use `summitto/pgp-packet-library-builder` as the name of the Docker image, and will use the Clang 8 compiler. These settings can be controlled via environment variables:
+
+- The **`PGPPL_BUILDER_IMAGE_NAME`** environment variable can be set to specify the name of the generated docker image.
+- The **`CXX`** environment variable can be set to specify the C++ compiler to be used.
+
+For example, to build the library using `g++-8`, execute the following command:
+
+```bash
+CXX=g++-8 ./compile-and-test-in-docker.sh
+```
 
 ## Using the library
 
