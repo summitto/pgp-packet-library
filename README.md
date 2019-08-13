@@ -1,5 +1,7 @@
 # PGP packet decoder and encoder
 
+**Please note: this is not (yet) production-ready code. Proceed with caution.**
+
 - [Introduction](#introduction)
 - [Building the library](#building-the-library)
 - [Using the library](#using-the-library)
