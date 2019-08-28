@@ -15,10 +15,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  curve           The curve object identifier
-     *  @param  Q               The public curve point Q
-     *  @param  hash_function   The used KDF hash function
-     *  @param  algorithm       The symmetric alforithm for wrapping the symmetric key
      *  @param  k               The secret scalar for the public point
      */
     ecdh_secret_key::ecdh_secret_key(multiprecision_integer k) noexcept :
