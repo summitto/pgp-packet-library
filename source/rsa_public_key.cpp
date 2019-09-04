@@ -6,16 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    rsa_public_key::rsa_public_key(decoder &parser) :
-        _n{ parser },
-        _e{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  n   The public modulus n
      *  @param  e   The encryption exponent e
      */

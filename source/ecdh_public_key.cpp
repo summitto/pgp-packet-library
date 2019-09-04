@@ -6,20 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    ecdh_public_key::ecdh_public_key(decoder &parser) :
-        _curve{ parser },
-        _Q{ parser },
-        _kdf_size{ parser },
-        _reserved{ parser },
-        _hash_function{ parser.extract_number<uint8_t>() },
-        _algorithm{ parser.extract_number<uint8_t>() }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  curve           The curve object identifier
      *  @param  Q               The public curve point Q
      *  @param  hash_function   The used KDF hash function

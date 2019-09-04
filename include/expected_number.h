@@ -1,6 +1,6 @@
 #pragma once
 
-#include "decoder.h"
+#include "decoder_traits.h"
 
 
 namespace pgp {
@@ -24,10 +24,11 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              *  @throws std::range_error, std::out_of_range
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             expected_number(decoder &parser)
             {
                 // check whether the value is as expected
-                if (parser.extract_number<T>() != number) {
+                if (parser.template extract_number<T>() != number) {
                     // invalid number was read
                     throw std::range_error{ "A fixed number is outside of expected range" };
                 }

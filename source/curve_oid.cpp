@@ -6,27 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     *  @throws std::out_of_range
-     */
-    curve_oid::curve_oid(decoder &parser)
-    {
-        // first read the number of elements
-        auto count = parser.extract_number<uint8_t>();
-
-        // allocate memory for the number
-        _data.reserve(count);
-
-        // and now read all the elements
-        while (_data.size() < count) {
-            // add an element
-            _data.push_back(parser.extract_number<uint8_t>());
-        }
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  data    The range of numbers
      */
     curve_oid::curve_oid(span<const uint8_t> data) noexcept :

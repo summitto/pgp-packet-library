@@ -1,6 +1,6 @@
 #pragma once
 
-#include "decoder.h"
+#include "decoder_traits.h"
 
 
 namespace pgp {
@@ -32,6 +32,7 @@ namespace pgp {
             /**
              *  Constructor
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             unknown_key(decoder&) noexcept {}
 
             /**

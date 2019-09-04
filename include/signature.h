@@ -5,7 +5,7 @@
 #include "expected_number.h"
 #include "eddsa_signature.h"
 #include "ecdsa_signature.h"
-#include "util/to_lvalue.h"
+#include "decoder_traits.h"
 #include "signature_type.h"
 #include "hash_algorithm.h"
 #include "key_algorithm.h"
@@ -16,7 +16,6 @@
 #include "packet_tag.h"
 #include "secret_key.h"
 #include "public_key.h"
-#include "decoder.h"
 #include "user_id.h"
 
 
@@ -44,7 +43,36 @@ namespace pgp {
              *
              *  @param  parser  The decoder to parse the data
              */
-            signature(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            signature(decoder &parser) :
+                _version{ parser },
+                _type{ parser.template extract_number<uint8_t>() },
+                _key_algorithm{ parser.template extract_number<uint8_t>() },
+                _hash_algorithm{ parser.template extract_number<uint8_t>() },
+                _hashed_subpackets{ parser },
+                _unhashed_subpackets{ parser },
+                _hash_prefix{ parser }
+            {
+                // what kind of signature should we construct?
+                switch (_key_algorithm) {
+                    case key_algorithm::rsa_encrypt_or_sign:
+                    case key_algorithm::rsa_sign_only:
+                        _signature.emplace<rsa_signature>(parser);
+                        break;
+                    case key_algorithm::dsa:
+                        _signature.emplace<dsa_signature>(parser);
+                        break;
+                    case key_algorithm::eddsa:
+                        _signature.emplace<eddsa_signature>(parser);
+                        break;
+                    case key_algorithm::ecdsa:
+                        _signature.emplace<ecdsa_signature>(parser);
+                        break;
+                    default:
+                        // do nothing, use the unknown_key
+                        break;
+                }
+            }
 
             /**
              *  Constructor
@@ -124,7 +152,7 @@ namespace pgp {
                     hash_signature(encoder);
 
                     // store the hash prefix
-                    _hash_prefix = util::to_lvalue(decoder{encoder.hash_prefix()});
+                    _hash_prefix = decoder{encoder.hash_prefix()};
 
                     // Extra move was deemed worth it versus the monstrosity that would
                     // be required to use std::apply here.

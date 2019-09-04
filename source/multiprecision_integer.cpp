@@ -36,29 +36,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     *  @throws std::out_of_range
-     */
-    multiprecision_integer::multiprecision_integer(decoder &parser) :
-        _bits{ parser }
-    {
-        // first read the number of elements, since it is in bits,
-        // we have to round it up to the nearest byte and read it
-        size_t count = (_bits + 7) / 8;
-
-        // allocate memory for the number
-        _data.reserve(count);
-
-        // and now read all the elements
-        while (_data.size() < count) {
-            // add an element
-            _data.push_back(parser.extract_number<uint8_t>());
-        }
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  data    The range of numbers
      */
     multiprecision_integer::multiprecision_integer(span<const uint8_t> data) noexcept

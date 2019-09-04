@@ -6,15 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    ecdh_secret_key::ecdh_secret_key(decoder &parser) :
-        _k{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  k               The secret scalar for the public point
      */
     ecdh_secret_key::ecdh_secret_key(multiprecision_integer k) noexcept :

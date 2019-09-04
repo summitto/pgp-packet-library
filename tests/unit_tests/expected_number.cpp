@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "decoder.h"
 #include "expected_number.h"
 #include "fixed_number.h"
 #include "range_encoder.h"

@@ -7,22 +7,6 @@ namespace pgp::signature_subpacket {
     /**
      *  Constructor
      *
-     *  @param  parser     The parser to decode the data
-     */
-    template <signature_subpacket_type subpacket_type, typename contained_t>
-    embedded<subpacket_type, contained_t>::embedded(decoder &parser) :
-        _contained{ std::make_unique<contained_t>(parser) }
-    {
-        // all data should be consumed
-        if (!parser.empty()) {
-            // this is probably not the correct subpacket type
-            throw std::runtime_error{ "Incorrect subpacket type detected" };
-        }
-    }
-
-    /**
-     *  Constructor
-     *
      *  @param  value      The value to store
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>

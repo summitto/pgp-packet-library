@@ -6,15 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The parser to decode data from
-     */
-    user_id::user_id(decoder &parser) :
-        user_id{ parser.extract_blob<char>(parser.size()) }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  id      The user id to use
      */
     user_id::user_id(span<const char> id) noexcept :

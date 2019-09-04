@@ -2,6 +2,7 @@
 
 #include "../signature_subpacket_type.h"
 #include "../variable_number.h"
+#include "../util/span.h"
 #include <vector>
 
 
@@ -19,7 +20,19 @@ namespace pgp::signature_subpacket {
              *  @param  type    The subpacket type
              *  @param  parser  The decoder to parse the data
              */
-            unknown(signature_subpacket_type type, decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            unknown(signature_subpacket_type type, decoder &parser) :
+                _type{ type }
+            {
+                // reserve memory for the data
+                _data.reserve(parser.size());
+        
+                // and fill the buffer
+                while (!parser.empty()) {
+                    // add another byte
+                    _data.push_back(parser.template extract_number<uint8_t>());
+                }
+            }
 
             /**
              *  Constructor

@@ -6,18 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    dsa_public_key::dsa_public_key(decoder &parser) :
-        _p{ parser },
-        _q{ parser },
-        _g{ parser },
-        _y{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  p   The prime p
      *  @param  q   The group order q
      *  @param  g   The generator g

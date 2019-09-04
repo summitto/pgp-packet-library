@@ -9,15 +9,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    rsa_signature::rsa_signature(decoder &parser) :
-        _s{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  s       The signature value (m**d mod n)
      */
     rsa_signature::rsa_signature(multiprecision_integer s) noexcept :

@@ -1,6 +1,7 @@
 #include <random>
 #include <limits>
 #include <gtest/gtest.h>
+#include "decoder.h"
 #include "fixed_number.h"
 #include "range_encoder.h"
 #include "../device_random_engine.h"

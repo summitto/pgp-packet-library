@@ -24,7 +24,16 @@ namespace pgp::signature_subpacket {
              *
              *  @param  parser  The parser to decode the data
              */
-            issuer_fingerprint(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            issuer_fingerprint(decoder &parser) :
+                _version{ parser }
+            {
+                // retrieve data from the decoder
+                auto data = parser.template extract_blob<uint8_t>(fingerprint_size);
+        
+                // copy the data over
+                std::copy(data.begin(), data.end(), _data.begin());
+            }
 
             /**
              *  Constructor

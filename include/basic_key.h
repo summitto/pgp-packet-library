@@ -1,12 +1,12 @@
 #pragma once
 
-#include "decoder.h"
 #include "packet_tag.h"
 #include "unknown_key.h"
 #include "fixed_number.h"
 #include "hash_encoder.h"
 #include "util/variant.h"
 #include "key_algorithm.h"
+#include "decoder_traits.h"
 #include "expected_number.h"
 #include "util/narrow_cast.h"
 #include "multiprecision_integer.h"
@@ -50,10 +50,11 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              *  @throws std::out_of_range
              */
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
             basic_key(decoder &parser) :
                 _version{ parser },
                 _creation_time{ parser },
-                _algorithm{ parser.extract_number<uint8_t>() }
+                _algorithm{ parser.template extract_number<uint8_t>() }
             {
                 // create the correct key based on the algorithm
                 switch (_algorithm) {

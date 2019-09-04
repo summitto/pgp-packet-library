@@ -3,6 +3,7 @@
 #include "packet_tag.h"
 #include "expected_number.h"
 #include "fixed_number.h"
+#include "util/span.h"
 #include <string>
 
 
@@ -19,7 +20,10 @@ namespace pgp {
              *
              *  @param  parser  The parser to decode data from
              */
-            user_id(decoder &parser);
+            template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
+            user_id(decoder &parser) :
+                user_id{ parser.template extract_blob<char>(parser.size()) }
+            {}
 
             /**
              *  Constructor

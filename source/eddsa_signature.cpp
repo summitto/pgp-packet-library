@@ -6,16 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data
-     */
-    eddsa_signature::eddsa_signature(decoder &parser) :
-        _r{ parser },
-        _s{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  r       The EdDSA r value
      *  @param  s       The EdDSA s value
      */

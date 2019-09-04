@@ -4,17 +4,6 @@
 namespace pgp {
 
     /**
-     *  Constructor
-     *
-     *  @param  parser  The decoder to parse the data
-     */
-    string_to_key::string_to_key(decoder &parser) :
-        _convention{ parser }
-    {
-        // @TODO: support other conventions than "nothing"
-    }
-
-    /**
      *  Comparison operators
      *
      *  @param  other   The object to compare with

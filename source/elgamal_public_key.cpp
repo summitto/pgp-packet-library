@@ -6,17 +6,6 @@ namespace pgp {
     /**
      *  Constructor
      *
-     *  @param  parser  The decoder to parse the data from
-     */
-    elgamal_public_key::elgamal_public_key(decoder &parser) :
-        _p{ parser },
-        _g{ parser },
-        _y{ parser }
-    {}
-
-    /**
-     *  Constructor
-     *
      *  @param  p       The prime p
      *  @param  g       The group generator g
      *  @param  y       The public key value: g**x mod p
