@@ -16,13 +16,18 @@ namespace pgp {
         std::array<uint8_t, crypto_sign_BYTES>  signed_message;
         std::array<uint8_t, 64>                 key_data;
 
+        // ensure that unfilled bytes of key_data are empty
+        std::fill(key_data.begin(), key_data.end(), 0);
+
         // retrieve the key data - ignore the silly leading byte from the public key
         auto public_data = eddsa_key.Q().data().subspan<1>();
         auto secret_data = eddsa_key.k().data();
 
         // copy the public key and then the private key
-        auto iter = std::copy(secret_data.begin(), secret_data.end(), key_data.begin());
-        std::copy(public_data.begin(), public_data.end(), iter);
+        assert(public_data.size() <= 32);
+        assert(secret_data.size() <= 32);
+        auto iter = std::copy(secret_data.begin(), secret_data.end(), key_data.begin() + 32 - secret_data.size());
+        std::copy(public_data.begin(), public_data.end(), iter + 32 - public_data.size());
 
         // get the digest to sign
         auto digest_data = digest();
