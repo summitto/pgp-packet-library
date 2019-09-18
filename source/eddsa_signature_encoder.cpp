@@ -13,18 +13,29 @@ namespace pgp {
     eddsa_signature_encoder::finalize() noexcept
     {
         // the buffer for the signed message and the concatenated key
-        std::array<uint8_t, crypto_sign_BYTES>  signed_message  { 0 };
-        std::array<uint8_t, 64>                 key_data        { 0 };
+        std::array<uint8_t, crypto_sign_BYTES>  signed_message;
+        std::array<uint8_t, 64>                 key_data;
 
         // retrieve the key data - ignore the silly leading byte from the public key
         auto public_data = eddsa_key.Q().data().subspan<1>();
         auto secret_data = eddsa_key.k().data();
 
-        // copy the public key and then the private key
+        // make sure the key fits within the provided key_data structure
         assert(public_data.size() <= 32);
         assert(secret_data.size() <= 32);
-        auto iter = std::copy(secret_data.begin(), secret_data.end(), key_data.begin() + 32 - secret_data.size());
-        std::copy(public_data.begin(), public_data.end(), iter + 32 - public_data.size());
+
+        // the iterator to work with
+        auto iter = key_data.begin();
+
+        // if leading key bytes were missing (due to them being zero) we have to
+        // prefill this with zeroes to avoid libsodium being fed uninitialized data
+        iter = std::fill_n(iter, 32 - secret_data.size(), 0);
+        iter = std::copy(secret_data.begin(), secret_data.end(), iter);
+
+        // the public key data might also be missing leading bytes if they were zero
+        // so we should similary prefill it
+        iter = std::fill_n(iter, 32 - public_data.size(), 0);
+        iter = std::copy(public_data.begin(), public_data.end(), iter);
 
         // get the digest to sign
         auto digest_data = digest();
