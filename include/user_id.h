@@ -1,10 +1,11 @@
 #pragma once
 
-#include "packet_tag.h"
-#include "expected_number.h"
-#include "fixed_number.h"
-#include "util/span.h"
-#include <string>
+#include <cstddef>          // for size_t
+#include <string>           // for string
+#include <type_traits>      // for enable_if_t
+#include "util/span.h"      // for span
+#include "packet_tag.h"     // for packet_tag, packet_tag::user_id
+#include "decoder_traits.h" // for is_decoder_v
 
 
 namespace pgp {
