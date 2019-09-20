@@ -1,11 +1,13 @@
 #pragma once
 
-#include <boost/endian/conversion.hpp>
-#include <type_traits>
-#include "util/span.h"
-#include <cstring>
-#include <limits>
-#include "util/transaction.h"
+#include <boost/endian/conversion.hpp>  // for native_to_big
+#include <cstdint>                      // for uint8_t
+#include <stdexcept>                    // for out_of_range, range_error
+#include <type_traits>                  // for enable_if_t, is_enum, make_un...
+#include "util/span.h"                  // for span
+#include <cstring>                      // for memcpy, size_t
+#include <limits>                       // for numeric_limits
+#include "util/transaction.h"           // for transaction
 
 
 namespace pgp {
