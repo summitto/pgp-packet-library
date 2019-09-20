@@ -43,7 +43,7 @@ namespace pgp::signature_subpacket {
              *  Copy and move constructors
              */
             embedded(const embedded &other);
-            embedded(embedded &&other);
+            embedded(embedded &&other) = default;
 
             /**
              *  Destructor
@@ -54,7 +54,7 @@ namespace pgp::signature_subpacket {
              *  Assignment operators
              */
             embedded<subpacket_type, contained_t> &operator=(const embedded &other);
-            embedded<subpacket_type, contained_t> &operator=(embedded &&other);
+            embedded<subpacket_type, contained_t> &operator=(embedded &&other) = default;
 
             /**
              *  Comparison operators
