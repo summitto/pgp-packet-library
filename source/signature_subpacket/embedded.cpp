@@ -23,12 +23,6 @@ namespace pgp::signature_subpacket {
     {}
 
     /**
-     *  Move constructor
-     */
-    template <signature_subpacket_type subpacket_type, typename contained_t>
-    embedded<subpacket_type, contained_t>::embedded(embedded &&other) = default;
-
-    /**
      *  Destructor
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>
@@ -47,13 +41,6 @@ namespace pgp::signature_subpacket {
         // allow chaining
         return *this;
     }
-
-    /**
-     *  Move assignment operator
-     */
-    template <signature_subpacket_type subpacket_type, typename contained_t>
-    embedded<subpacket_type, contained_t> &
-    embedded<subpacket_type, contained_t>::operator=(embedded &&other) = default;
 
     /**
      *  Comparison operators
