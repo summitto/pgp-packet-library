@@ -1,9 +1,12 @@
 #pragma once
 
-#include "fixed_number.h"
-#include "decoder_traits.h"
-#include "util/span.h"
-#include <vector>
+#include <cstdint>              // for uint8_t
+#include <cstddef>              // for size_t
+#include <initializer_list>     // for initializer_list
+#include <type_traits>          // for enable_if_t
+#include "decoder_traits.h"     // for is_decoder_v
+#include <vector>               // for vector
+#include "util/span.h"          // for span
 
 
 namespace pgp {
