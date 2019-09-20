@@ -1,8 +1,10 @@
 #pragma once
 
-#include "multiprecision_integer.h"
-#include "rsa_signature_encoder.h"
-#include "secret_key.h"
+#include <cstddef>                  // for size_t
+#include <type_traits>              // for enable_if_t
+#include "multiprecision_integer.h" // for multiprecision_integer
+#include "rsa_signature_encoder.h"  // for rsa_signature_encoder
+#include "decoder_traits.h"         // is_decoder_v
 
 
 namespace pgp {
