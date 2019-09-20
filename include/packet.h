@@ -1,18 +1,21 @@
 #pragma once
 
-#include "util/span.h"
-#include <stdexcept>
-#include "util/variant.h"
-#include <boost/optional.hpp>
-#include "variable_number.h"
-#include "decoder_traits.h"
-#include "unknown_packet.h"
-#include "public_key.h"
-#include "secret_key.h"
-#include "packet_tag.h"
-#include "signature.h"
-#include "user_id.h"
-#include <cstring>
+#include <cstdint>              // for uint32_t, uint16_t
+#include <boost/optional.hpp>   // for optional
+#include <cstddef>              // for size_t
+#include <stdexcept>            // for runtime_error
+#include <type_traits>          // for underlying_type_t
+
+#include "util/variant.h"       // for visit, variant
+#include "variable_number.h"    // for variable_number
+#include "unknown_packet.h"     // for unknown_packet
+#include "public_key.h"         // for public_key, publ...
+#include "secret_key.h"         // for secret_key, secr...
+#include "packet_tag.h"         // for packet_tag, pack...
+#include "signature.h"          // for signature
+#include "user_id.h"            // for user_id
+#include "util/narrow_cast.h"   // for narrow_cast
+
 
 
 namespace pgp {
