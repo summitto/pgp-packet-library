@@ -1,22 +1,29 @@
 #pragma once
 
-#include "signature_subpacket_set.h"
-#include "unknown_signature.h"
-#include "expected_number.h"
-#include "eddsa_signature.h"
-#include "ecdsa_signature.h"
-#include "decoder_traits.h"
-#include "signature_type.h"
-#include "hash_algorithm.h"
-#include "key_algorithm.h"
-#include "dsa_signature.h"
-#include "rsa_signature.h"
-#include "util/variant.h"
-#include "fixed_number.h"
-#include "packet_tag.h"
-#include "secret_key.h"
-#include "public_key.h"
-#include "user_id.h"
+#include <cstdint>                      // for uint8_t, uint32_t, uint16_t
+#include <cstddef>                      // for size_t
+#include <type_traits>                  // for decay_t, enable_if_t
+#include <utility>                      // for move
+#include "basic_key.h"                  // for basic_key
+#include "dsa_signature.h"              // for dsa_signature
+#include "ecdsa_signature.h"            // for ecdsa_signature
+#include "eddsa_signature.h"            // for eddsa_signature
+#include "expected_number.h"            // for expected_number
+#include "fixed_number.h"               // for uint16
+#include "hash_algorithm.h"             // for hash_algorithm, hash_alg...
+#include "key_algorithm.h"              // for key_algorithm, key_algor...
+#include "packet_tag.h"                 // for packet_tag, packet_tag::...
+#include "rsa_signature.h"              // for rsa_signature
+#include "secret_key.h"                 // for secret_key_traits, secre...
+#include "decoder.h"                    // for decoder
+#include "signature_subpacket_set.h"    // for signature_subpacket_set
+#include "signature_type.h"             // for signature_type, signatur...
+#include "unknown_signature.h"          // for unknown_signature
+#include "decoder_traits.h"             // for is_decoder_v
+#include "user_id.h"                    // for user_id
+#include "util/narrow_cast.h"           // for narrow_cast
+#include "util/tuple.h"                 // for make_from_tuple
+#include "util/variant.h"               // for variant, in_place_type_t
 
 
 namespace pgp {
