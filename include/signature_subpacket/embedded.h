@@ -1,9 +1,13 @@
 #pragma once
 
-#include <memory>
-#include "../expected_number.h"
-#include "../variable_number.h"
-#include "../signature_subpacket_type.h"
+#include <cstddef>                          // for size_t
+#include <cstdint>                          // for uint32_t
+#include <memory>                           // for make_unique, unique_ptr
+#include <stdexcept>                        // for runtime_error
+#include "../decoder_traits.h"              // for is_decoder_v
+#include "../variable_number.h"             // for variable_number
+#include "../signature_subpacket_type.h"    // for signature_subpacket_type
+#include "../util/narrow_cast.h"            // for narrow_cast
 
 
 namespace pgp {
