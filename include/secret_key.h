@@ -8,6 +8,7 @@
 #include "dsa_public_key.h"
 #include "elgamal_secret_key.h"
 #include "ecdh_secret_key.h"
+#include "ecdh_public_key.h"
 #include "eddsa_secret_key.h"
 #include "ecdsa_secret_key.h"
 

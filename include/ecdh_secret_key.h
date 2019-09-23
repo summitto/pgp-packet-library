@@ -1,7 +1,9 @@
 #pragma once
 
-#include "ecdh_public_key.h"
-#include "basic_secret_key.h"
+#include <cstddef>                  // for size_t
+#include <type_traits>              // for enable_if_t
+#include "decoder_traits.h"         // for is_decoder_v
+#include "multiprecision_integer.h" // for multiprecision_integer
 
 
 namespace pgp {
