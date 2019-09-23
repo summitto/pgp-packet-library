@@ -1,6 +1,5 @@
 #include "ecdsa_signature.h"
-#include <string>
-#include <algorithm>
+#include <utility>          // for move
 
 namespace pgp {
 
