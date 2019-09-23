@@ -1,4 +1,5 @@
 #include "signature_subpacket/issuer_fingerprint.h"
+#include "variable_number.h"                        // for variable_number
 
 
 namespace pgp::signature_subpacket {
