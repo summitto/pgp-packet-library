@@ -1,4 +1,5 @@
 #include "ecdh_public_key.h"
+#include <utility>              // for move
 
 
 namespace pgp {
