@@ -12,6 +12,7 @@
 #include "eddsa_secret_key.h"
 #include "eddsa_public_key.h"
 #include "ecdsa_secret_key.h"
+#include "ecdsa_public_key.h"
 
 
 namespace pgp {
