@@ -1,11 +1,27 @@
 #pragma once
 
-#include <boost/endian/conversion.hpp>
-#include "util/span.h"
-#include <cryptopp/osrng.h>
-#include <cryptopp/rsa.h>
-#include <cassert>
-#include "secret_key.h"
+#include <cryptopp/cryptlib.h>          // for PK_MessageAccumulator
+#include <cryptopp/osrng.h>             // for AutoSeededRandomPool
+#include <cryptopp/pkcspad.h>           // for PKCS1v15
+#include <cryptopp/pubkey.h>            // for RSASS::Signer
+#include <cryptopp/rsa.h>               // for RSASS
+#include <cryptopp/sha.h>               // for SHA256
+#include <cstdint>                      // for uint8_t
+#include <array>                        // for array
+#include <boost/endian/conversion.hpp>  // for native_to_big
+#include <limits>                       // for numeric_limits
+#include <memory>                       // for unique_ptr
+#include <tuple>                        // for tuple
+#include <type_traits>                  // for enable_if_t, is_enum, underly...
+#include <utility>                      // for get
+#include "basic_key.h"                  // for basic_key
+#include "secret_key.h"                 // for basic_secret_key
+#include "multiprecision_integer.h"     // for multprecision_integer
+#include "packet_tag.h"                 // for packet_tag
+#include "rsa_public_key.h"             // for rsa_public_key
+#include "rsa_secret_key.h"             // for rsa_secret_key
+#include "secret_key.h"                 // for secret_key_traits
+#include "util/span.h"                  // for span
 
 
 namespace pgp {
