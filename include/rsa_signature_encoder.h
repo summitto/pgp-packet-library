@@ -15,7 +15,7 @@
 #include <type_traits>                  // for enable_if_t, is_enum, underly...
 #include <utility>                      // for get
 #include "basic_key.h"                  // for basic_key
-#include "secret_key.h"                 // for basic_secret_key
+#include "basic_secret_key.h"           // for basic_secret_key
 #include "multiprecision_integer.h"     // for multprecision_integer
 #include "packet_tag.h"                 // for packet_tag
 #include "rsa_public_key.h"             // for rsa_public_key
