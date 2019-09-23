@@ -1,4 +1,5 @@
 #include "dsa_signature.h"
+#include <utility>          // for move
 
 
 namespace pgp {
