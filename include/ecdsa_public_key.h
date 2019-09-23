@@ -1,8 +1,10 @@
 #pragma once
 
-#include "multiprecision_integer.h"
-#include "packet_tag.h"
-#include "curve_oid.h"
+#include <cstddef>                  // for size_t
+#include <type_traits>              // for enable_if_t
+#include "decoder_traits.h"         // for is_decoder_v
+#include "curve_oid.h"              // for curve_oid
+#include "multiprecision_integer.h" // for multiprecision_integer
 
 
 namespace pgp {
