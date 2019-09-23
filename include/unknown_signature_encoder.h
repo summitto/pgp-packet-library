@@ -1,8 +1,13 @@
 #pragma once
 
-#include "secret_key.h"
-#include "util/span.h"
-#include <stdexcept>
+#include <cstdint>      // for uint8_t
+#include <array>        // for array
+#include <stdexcept>    // for runtime_error
+#include <tuple>        // for tuple
+#include "basic_key.h"  // for basic_key
+#include "packet_tag.h" // for packet_tag
+#include "secret_key.h" // for secret_key_traits
+#include "util/span.h"  // for span
 
 
 namespace pgp {
