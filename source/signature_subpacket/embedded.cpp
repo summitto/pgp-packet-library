@@ -1,5 +1,6 @@
 #include "signature_subpacket/embedded.h"
-#include "signature.h"
+#include "variable_number.h"                // for variable_number
+#include "signature.h"                      // for signature
 
 
 namespace pgp::signature_subpacket {
