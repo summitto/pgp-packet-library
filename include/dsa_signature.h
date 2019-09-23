@@ -1,9 +1,10 @@
 #pragma once
 
-#include "multiprecision_integer.h"
-#include "dsa_signature_encoder.h"
-#include "secret_key.h"
-#include <tuple>
+#include <cstddef>                  // for size_t
+#include <type_traits>              // for enable_if_t
+#include "decoder_traits.h"         // for is_decoder_v
+#include "dsa_signature_encoder.h"  // for dsa_signature_encoder
+#include "multiprecision_integer.h" // for multiprecision_integer
 
 
 namespace pgp {
