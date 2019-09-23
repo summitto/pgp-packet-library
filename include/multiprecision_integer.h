@@ -1,10 +1,13 @@
 #pragma once
 
-#include <cryptopp/integer.h>
-#include "decoder_traits.h"
-#include "fixed_number.h"
-#include "util/span.h"
-#include <vector>
+#include <cryptopp/integer.h>   // for Integer
+#include <cstddef>              // for size_t
+#include <cstdint>              // for uint8_t
+#include <vector>               // for vector
+#include <type_traits>          // for enable_if_t
+#include "decoder_traits.h"     // for is_decoder_v
+#include "fixed_number.h"       // for uint16
+#include "util/span.h"          // for span
 
 
 namespace pgp {
