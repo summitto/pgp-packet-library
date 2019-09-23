@@ -1,4 +1,5 @@
 #include "dsa_secret_key.h"
+#include <utility>          // for move
 
 
 namespace pgp {
