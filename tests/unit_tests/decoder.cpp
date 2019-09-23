@@ -1,8 +1,11 @@
-#include <stdexcept>
-#include <array>
-#include <boost/endian/conversion.hpp>
-#include <gtest/gtest.h>
-#include "decoder.h"
+#include <gtest/gtest.h>                // for TEST
+#include <cstddef>                      // for size_t
+#include <array>                        // for array
+#include <cstdint>                      // for uint8_t
+#include <boost/endian/conversion.hpp>  // for native_to_big, big_to_native
+#include <stdexcept>                    // for out_of_range
+#include "decoder.h"                    // for decoder
+#include "util/span.h"                  // for span
 
 
 TEST(decoder, extract_bits)

@@ -1,12 +1,12 @@
-#include <gtest/gtest.h>
-#include <array>
-#include <vector>
-#include <memory>
-#include <sodium/crypto_sign.h>
-#include "dsa_signature.h"
-#include "range_encoder.h"
-#include "decoder.h"
-#include "../key_template.h"
+#include <gtest/gtest.h>            // for TEST
+#include <array>                    // for array
+#include <cstdint>                  // for uint8_t
+#include <vector>                   // for vector
+#include "decoder.h"                // for decoder
+#include "dsa_signature.h"          // for dsa_signature
+#include "../generate.h"            // for mpi
+#include "multiprecision_integer.h" // for multiprecision_integer
+#include "range_encoder.h"          // for range_encoder
 
 
 TEST(dsa_signature, encode_decode)
