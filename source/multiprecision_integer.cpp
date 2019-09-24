@@ -110,7 +110,7 @@ namespace pgp {
         // erase any leading zero bytes
         data.erase(
             std::begin(data),
-            std::find_if(st::begin(data), std::end(data), [](uint8_t b) { return b != 0; })
+            std::find_if(std::begin(data), std::end(data), [](uint8_t b) { return b != 0; })
         );
 
         // if the given range is empty, just clear out
