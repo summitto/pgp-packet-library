@@ -1,16 +1,16 @@
 #include "ecdsa_signature_encoder.h"
-#include <cryptopp/eccrypto.h>          // for PrivateKey, ECDSA
-#include <cryptopp/ecp.h>               // for ECP
-#include <cryptopp/integer.h>           // for Integer
-#include <cryptopp/oids.h>              // for secp256r1
-#include <cryptopp/osrng.h>             // for AutoSeededRandomPool
-#include <cryptopp/pubkey.h>            // for ECDSA::Signer
-#include <cstddef>                      // for size_t
-#include <cstdint>                      // for uint8_t
-#include <array>                        // for array
-#include <stdexcept>                    // for logic_error
-#include "util/span.h"                  // for span
-#include "null_hash.h"                  // for NullHash
+#include <cryptopp/eccrypto.h>
+#include <cryptopp/ecp.h>
+#include <cryptopp/integer.h>
+#include <cryptopp/oids.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/pubkey.h>
+#include <cstddef>
+#include <cstdint>
+#include <array>
+#include <stdexcept>
+#include "util/span.h"
+#include "null_hash.h"
 
 
 namespace pgp {

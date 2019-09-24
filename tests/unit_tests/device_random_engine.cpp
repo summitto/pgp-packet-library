@@ -1,7 +1,7 @@
-#include <gtest/gtest.h>            // for TEST
-#include <cstddef>                  // for size_t
-#include <array>                    // for array
-#include "device_random_engine.h"   // for device_random_engine
+#include <gtest/gtest.h>
+#include <cstddef>
+#include <array>
+#include "device_random_engine.h"
 
 
 TEST(device_random_engine, is_random)

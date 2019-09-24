@@ -1,5 +1,5 @@
 #include "user_id.h"
-#include <utility>  // for move
+#include <utility>
 
 
 namespace pgp {

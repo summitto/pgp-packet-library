@@ -1,11 +1,11 @@
-#include <gtest/gtest.h>        // for TEST
-#include <cstddef>              // for size_t
-#include <array>                // for array
-#include <cstdint>              // for uint8_t
-#include <vector>               // for vector
-#include "curve_oid.h"          // for curve_oid
-#include "decoder.h"            // for decoder
-#include "util/narrow_cast.h"   // for narrow_cast
+#include <gtest/gtest.h>
+#include <cstddef>
+#include <array>
+#include <cstdint>
+#include <vector>
+#include "curve_oid.h"
+#include "decoder.h"
+#include "util/narrow_cast.h"
 
 
 TEST(curve_oid, size_preset_curves)

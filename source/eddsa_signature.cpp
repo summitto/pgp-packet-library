@@ -1,5 +1,5 @@
 #include "eddsa_signature.h"
-#include <utility>              // for move
+#include <utility>
 
 
 namespace pgp {

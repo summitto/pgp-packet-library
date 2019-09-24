@@ -1,5 +1,5 @@
 #include "signature.h"
-#include "util/narrow_cast.h"   // for narrow_cast
+#include "util/narrow_cast.h"
 
 
 namespace pgp {

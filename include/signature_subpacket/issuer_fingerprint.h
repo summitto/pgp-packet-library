@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstddef>                          // for size_t
-#include <cstdint>                          // for uint8_t, uint32_t
-#include <array>                            // for array
-#include <type_traits>                      // for enable_if_t
-#include "../decoder_traits.h"              // for is_decoder_v
-#include "../expected_number.h"             // for expected_number
-#include "../signature_subpacket_type.h"    // for signature_subpacket_type
-#include "../variable_number.h"             // for variable_number
-#include "../util/narrow_cast.h"               // for narrow_cast
+#include <cstddef>
+#include <cstdint>
+#include <array>
+#include <type_traits>
+#include "../decoder_traits.h"
+#include "../expected_number.h"
+#include "../signature_subpacket_type.h"
+#include "../variable_number.h"
+#include "../util/narrow_cast.h"
 
 
 namespace pgp::signature_subpacket {

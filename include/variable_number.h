@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cstddef>              // for size_t
-#include <cstdint>              // for uint8_t, uint16_t, uint32_t
-#include <stdexcept>            // for runtime_error
-#include <type_traits>          // for enable_if_t
-#include "decoder_traits.h"     // for is_decoder_v
-#include "util/narrow_cast.h"   // for narrow_cast
+#include <cstddef>
+#include <cstdint>
+#include <stdexcept>
+#include <type_traits>
+#include "decoder_traits.h"
+#include "util/narrow_cast.h"
 
 
 namespace pgp {

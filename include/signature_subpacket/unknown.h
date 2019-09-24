@@ -1,13 +1,13 @@
 #pragma once
 
-#include <cstddef>                          // for size_t
-#include <cstdint>                          // for uint8_t, uint32_t
-#include <vector>                           // for vector
-#include <type_traits>                      // for enable_if_t
-#include "../decoder_traits.h"              // for is_decoder_v
-#include "../signature_subpacket_type.h"    // for signature_subpacket_type
-#include "../variable_number.h"             // for variable_number
-#include "../util/span.h"                   // for span
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+#include <type_traits>
+#include "../decoder_traits.h"
+#include "../signature_subpacket_type.h"
+#include "../variable_number.h"
+#include "../util/span.h"
 
 
 namespace pgp::signature_subpacket {

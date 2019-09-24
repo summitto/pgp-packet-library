@@ -1,11 +1,11 @@
 #pragma once
 
-#include <boost/endian/conversion.hpp>  // for big_to_native_inplace
-#include <cstdint>                      // for uint8_t
-#include <cstring>                      // for size_t, memcpy
-#include <limits>                       // for numeric_limits
-#include <stdexcept>                    // for out_of_range
-#include "util/span.h"                  // for span, span<>::index_type
+#include <boost/endian/conversion.hpp>
+#include <cstdint>
+#include <cstring>
+#include <limits>
+#include <stdexcept>
+#include "util/span.h"
 
 
 namespace pgp {

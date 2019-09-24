@@ -1,10 +1,10 @@
 #pragma once
 
-#include <cstdint>          // for uint8_t
-#include <cstddef>          // for size_t
-#include <type_traits>      // for enable_if_t
-#include "decoder_traits.h" // for is_decoder_v
-#include "fixed_number.h"   // for uint8
+#include <cstdint>
+#include <cstddef>
+#include <type_traits>
+#include "decoder_traits.h"
+#include "fixed_number.h"
 
 
 namespace pgp {

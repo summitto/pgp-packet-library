@@ -1,14 +1,14 @@
 #pragma once
 
-#include <cstddef>                      // for size_t
-#include <cstdint>                      // for uint8_t
-#include <type_traits>                  // for enable_if_t
-#include "decoder_traits.h"             // for is_decoder_v
-#include "curve_oid.h"                  // for curve_oid
-#include "expected_number.h"            // for expected_number
-#include "hash_algorithm.h"             // for hash_algorithm
-#include "multiprecision_integer.h"     // for multiprecision_integer
-#include "symmetric_key_algorithm.h"    // for symmetric_key_algorithm
+#include <cstddef>
+#include <cstdint>
+#include <type_traits>
+#include "decoder_traits.h"
+#include "curve_oid.h"
+#include "expected_number.h"
+#include "hash_algorithm.h"
+#include "multiprecision_integer.h"
+#include "symmetric_key_algorithm.h"
 
 
 namespace pgp {

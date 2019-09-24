@@ -1,5 +1,5 @@
 #include "dsa_public_key.h"
-#include <utility>          // for move
+#include <utility>
 
 
 namespace pgp {

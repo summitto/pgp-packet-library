@@ -1,10 +1,10 @@
 #include "multiprecision_integer.h"
-#include <algorithm>                // for find_if, max
-#include <array>                    // for array
-#include <cstdint>                  // for uint8_t, uint16_t
-#include <type_traits>              // for enable_if_t, is_integral
-#include <utility>                  // for move
-#include "util/narrow_cast.h"       // for narrow_cast
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <type_traits>
+#include <utility>
+#include "util/narrow_cast.h"
 
 
 namespace pgp {
