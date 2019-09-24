@@ -1,5 +1,6 @@
 #include "multiprecision_integer.h"
 #include <algorithm>
+#include <iterator>
 #include <array>
 #include <cstdint>
 #include <type_traits>
@@ -108,8 +109,8 @@ namespace pgp {
     {
         // erase any leading zero bytes
         data.erase(
-            begin(data),
-            std::find_if(begin(data), end(data), [](uint8_t b) { return b != 0; })
+            std::begin(data),
+            std::find_if(st::begin(data), std::end(data), [](uint8_t b) { return b != 0; })
         );
 
         // if the given range is empty, just clear out
