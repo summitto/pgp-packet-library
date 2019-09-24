@@ -1,4 +1,5 @@
 #include "signature_subpacket/embedded.h"
+#include "variable_number.h"
 #include "signature.h"
 
 

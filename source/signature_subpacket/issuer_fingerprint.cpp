@@ -1,4 +1,6 @@
 #include "signature_subpacket/issuer_fingerprint.h"
+#include "variable_number.h"
+#include "util/narrow_cast.h"
 
 
 namespace pgp::signature_subpacket {

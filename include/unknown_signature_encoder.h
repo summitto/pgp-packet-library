@@ -1,8 +1,13 @@
 #pragma once
 
+#include <cstdint> 
+#include <array>
+#include <stdexcept>
+#include <tuple>
+#include "basic_key.h"
+#include "packet_tag.h"
 #include "secret_key.h"
 #include "util/span.h"
-#include <stdexcept>
 
 
 namespace pgp {

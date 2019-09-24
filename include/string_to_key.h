@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <cstddef>
+#include <type_traits>
+#include "decoder_traits.h"
 #include "fixed_number.h"
 
 

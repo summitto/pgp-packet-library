@@ -1,9 +1,13 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+#include <vector>
+#include <type_traits>
+#include "../decoder_traits.h"
 #include "../signature_subpacket_type.h"
 #include "../variable_number.h"
 #include "../util/span.h"
-#include <vector>
 
 
 namespace pgp::signature_subpacket {

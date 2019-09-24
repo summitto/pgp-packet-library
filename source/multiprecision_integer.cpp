@@ -1,6 +1,11 @@
 #include "multiprecision_integer.h"
-#include "util/narrow_cast.h"
+#include <algorithm>
+#include <iterator>
+#include <array>
+#include <cstdint>
 #include <type_traits>
+#include <utility>
+#include "util/narrow_cast.h"
 
 
 namespace pgp {

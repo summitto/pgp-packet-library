@@ -1,9 +1,12 @@
 #pragma once
 
 #include <boost/endian/conversion.hpp>
-#include "util/span.h"
+#include <cstdint>
 #include <cstring>
 #include <limits>
+#include <stdexcept>
+#include "util/span.h"
+
 
 namespace pgp {
 

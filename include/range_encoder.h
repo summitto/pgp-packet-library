@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/endian/conversion.hpp>
+#include <cstdint>
+#include <stdexcept>
 #include <type_traits>
 #include "util/span.h"
 #include <cstring>

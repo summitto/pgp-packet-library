@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include <array>
+#include <cstdint>
 #include <vector>
-#include <memory>
-#include <sodium/crypto_sign.h>
-#include "dsa_signature.h"
-#include "range_encoder.h"
 #include "decoder.h"
-#include "../key_template.h"
+#include "dsa_signature.h"
+#include "../generate.h"
+#include "multiprecision_integer.h"
+#include "range_encoder.h"
 
 
 TEST(dsa_signature, encode_decode)

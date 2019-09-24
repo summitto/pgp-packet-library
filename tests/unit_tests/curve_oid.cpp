@@ -1,10 +1,11 @@
-#include <stdexcept>
-#include <array>
-#include <vector>
 #include <gtest/gtest.h>
-#include "util/narrow_cast.h"
+#include <cstddef>
+#include <array>
+#include <cstdint>
+#include <vector>
 #include "curve_oid.h"
 #include "decoder.h"
+#include "util/narrow_cast.h"
 
 
 TEST(curve_oid, size_preset_curves)

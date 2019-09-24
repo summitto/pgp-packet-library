@@ -1,8 +1,11 @@
-#include <stdexcept>
-#include <array>
-#include <boost/endian/conversion.hpp>
 #include <gtest/gtest.h>
+#include <cstddef>
+#include <array>
+#include <cstdint>
+#include <boost/endian/conversion.hpp>
+#include <stdexcept>
 #include "decoder.h"
+#include "util/span.h"
 
 
 TEST(decoder, extract_bits)

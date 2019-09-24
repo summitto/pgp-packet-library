@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+#include <type_traits>
+#include "decoder_traits.h"
 #include "curve_oid.h"
-#include "hash_algorithm.h"
 #include "expected_number.h"
+#include "hash_algorithm.h"
 #include "multiprecision_integer.h"
 #include "symmetric_key_algorithm.h"
 

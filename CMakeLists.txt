@@ -5,6 +5,8 @@ project(pgp-packet-library
     LANGUAGES   CXX
 )
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Boost              REQUIRED)
@@ -161,3 +163,13 @@ install(
     DESTINATION
         lib/cmake/pgp-packet
 )
+
+find_package(PythonInterp)
+find_program(iwyu_tool_path NAMES iwyu_tool.py iwyu_tool)
+if (iwyu_tool_path AND PYTHONINTERP_FOUND)
+    add_custom_target(iwyu
+        COMMAND "${PYTHON_EXECUTABLE}" "${iwyu_tool_path}" -p "${CMAKE_BINARY_DIR}" --
+        COMMENT "Running include-what-you-use tool"
+        VERBATIM
+)
+endif()

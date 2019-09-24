@@ -1,6 +1,9 @@
 #pragma once
 
-#include "eddsa_public_key.h"
+#include <cstddef>
+#include <type_traits>
+#include "decoder_traits.h"
+#include "multiprecision_integer.h"
 
 
 namespace pgp {

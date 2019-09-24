@@ -1,10 +1,16 @@
 #include "ecdsa_signature_encoder.h"
 #include <cryptopp/eccrypto.h>
-#include <cryptopp/osrng.h>
+#include <cryptopp/ecp.h>
+#include <cryptopp/integer.h>
 #include <cryptopp/oids.h>
-#include <cryptopp/hex.h>
-#include "null_hash.h"
+#include <cryptopp/osrng.h>
+#include <cryptopp/pubkey.h>
+#include <cstddef>
+#include <cstdint>
+#include <array>
 #include <stdexcept>
+#include "util/span.h"
+#include "null_hash.h"
 
 
 namespace pgp {

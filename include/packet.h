@@ -1,18 +1,21 @@
 #pragma once
 
-#include "util/span.h"
-#include <stdexcept>
-#include "util/variant.h"
+#include <cstdint>
 #include <boost/optional.hpp>
+#include <cstddef>
+#include <stdexcept>
+#include <type_traits>
+
+#include "util/variant.h"
 #include "variable_number.h"
-#include "decoder_traits.h"
 #include "unknown_packet.h"
 #include "public_key.h"
 #include "secret_key.h"
 #include "packet_tag.h"
 #include "signature.h"
 #include "user_id.h"
-#include <cstring>
+#include "util/narrow_cast.h"
+
 
 
 namespace pgp {

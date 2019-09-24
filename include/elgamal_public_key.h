@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstddef>
+#include <type_traits>
+#include "decoder_traits.h"
 #include "multiprecision_integer.h"
-#include "packet_tag.h"
 
 
 namespace pgp {

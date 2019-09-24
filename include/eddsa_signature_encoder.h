@@ -1,9 +1,14 @@
 #pragma once
 
-#include "multiprecision_integer.h"
-#include "hash_encoder.h"
-#include "secret_key.h"
 #include <tuple>
+#include "basic_key.h"
+#include "basic_secret_key.h"
+#include "eddsa_public_key.h"
+#include "eddsa_secret_key.h"
+#include "hash_encoder.h"
+#include "multiprecision_integer.h"
+#include "packet_tag.h"
+#include "secret_key.h"
 
 
 namespace pgp {

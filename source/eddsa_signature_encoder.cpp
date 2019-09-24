@@ -1,5 +1,9 @@
 #include "eddsa_signature_encoder.h"
 #include <sodium/crypto_sign.h>
+#include <cstdint>
+#include <algorithm>
+#include <array>
+#include "util/span.h"
 
 
 namespace pgp {

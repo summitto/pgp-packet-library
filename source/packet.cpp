@@ -1,4 +1,5 @@
 #include "packet.h"
+#include "util/narrow_cast.h"
 
 
 namespace pgp {

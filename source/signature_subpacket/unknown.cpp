@@ -1,4 +1,8 @@
 #include "signature_subpacket/unknown.h"
+#include <algorithm>
+#include "signature_subpacket_type.h"
+#include "variable_number.h"
+#include "util/narrow_cast.h"
 
 
 namespace pgp::signature_subpacket {

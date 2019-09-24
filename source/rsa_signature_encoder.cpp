@@ -1,4 +1,8 @@
 #include "rsa_signature_encoder.h"
+#include <cryptopp/integer.h>
+#include <cstddef>
+#include <cstdint>
+#include <vector>
 
 
 namespace pgp {

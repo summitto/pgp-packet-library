@@ -1,22 +1,29 @@
 #pragma once
 
-#include "signature_subpacket_set.h"
-#include "unknown_signature.h"
-#include "expected_number.h"
-#include "eddsa_signature.h"
+#include <cstdint>
+#include <cstddef>
+#include <type_traits>
+#include <utility>
+#include "basic_key.h"
+#include "dsa_signature.h"
 #include "ecdsa_signature.h"
-#include "decoder_traits.h"
-#include "signature_type.h"
+#include "eddsa_signature.h"
+#include "expected_number.h"
+#include "fixed_number.h"
 #include "hash_algorithm.h"
 #include "key_algorithm.h"
-#include "dsa_signature.h"
-#include "rsa_signature.h"
-#include "util/variant.h"
-#include "fixed_number.h"
 #include "packet_tag.h"
+#include "rsa_signature.h"
 #include "secret_key.h"
-#include "public_key.h"
+#include "decoder.h"
+#include "signature_subpacket_set.h"
+#include "signature_type.h"
+#include "unknown_signature.h"
+#include "decoder_traits.h"
 #include "user_id.h"
+#include "util/narrow_cast.h"
+#include "util/tuple.h"
+#include "util/variant.h"
 
 
 namespace pgp {

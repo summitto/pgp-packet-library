@@ -1,10 +1,11 @@
 #pragma once
 
-#include "packet_tag.h"
-#include "expected_number.h"
-#include "fixed_number.h"
-#include "util/span.h"
+#include <cstddef> 
 #include <string>
+#include <type_traits>
+#include "util/span.h"
+#include "packet_tag.h"
+#include "decoder_traits.h"
 
 
 namespace pgp {
