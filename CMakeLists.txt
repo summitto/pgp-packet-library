@@ -171,5 +171,14 @@ if (iwyu_tool_path AND PYTHONINTERP_FOUND)
         COMMAND "${PYTHON_EXECUTABLE}" "${iwyu_tool_path}" -p "${CMAKE_BINARY_DIR}" --
         COMMENT "Running include-what-you-use tool"
         VERBATIM
-)
+    )
+endif()
+
+find_program(clang_tidy_path NAMES clang-tidy)
+if (clang_tidy_path)
+    add_custom_target(tidy
+        COMMAND ${clang_tidy_path} -p="${CMAKE_CURRENT_BINARY_DIR}" ${pgp-packet-sources}
+        COMMENT "Running clang-tidy"
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
 endif()
