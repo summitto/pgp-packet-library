@@ -1,5 +1,9 @@
 #pragma once
 
+#include <functional>
+#include <tuple>
+
+
 /**
  *  This file is only necessary to deal with implementations missing some
  *  required functionality in the STL.
