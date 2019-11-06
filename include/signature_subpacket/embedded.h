@@ -66,14 +66,14 @@ namespace pgp::signature_subpacket {
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const embedded &other) const noexcept;
+            bool operator==(const embedded &other) const;
 
             /**
              *  Comparison operators
              *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const embedded &other) const noexcept;
+            bool operator!=(const embedded &other) const;
 
             /**
              *  Determine the size used in encoded format

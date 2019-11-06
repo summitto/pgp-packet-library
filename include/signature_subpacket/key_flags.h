@@ -67,7 +67,7 @@ namespace pgp::signature_subpacket {
             size_t size() const noexcept
             {
                 // we need to store the flags plus the type
-                uint32_t size = sizeof(_flags) + sizeof(type());
+                uint32_t size = sizeof(_flags) + sizeof(decltype(type()));
 
                 // and then store this number in a variable number
                 return size + variable_number{ size }.size();
@@ -110,7 +110,7 @@ namespace pgp::signature_subpacket {
             void encode(encoder_t &writer) const
             {
                 // first get the size for the data itself
-                uint32_t size = sizeof(_flags) + sizeof(type());
+                uint32_t size = sizeof(_flags) + sizeof(decltype(type()));
 
                 // encode the size, the type, and the number
                 variable_number{ size }.encode(writer);

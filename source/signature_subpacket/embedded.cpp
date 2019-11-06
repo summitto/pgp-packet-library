@@ -49,7 +49,7 @@ namespace pgp::signature_subpacket {
      *  @param  other   The object to compare with
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>
-    bool embedded<subpacket_type, contained_t>::operator==(const embedded &other) const noexcept
+    bool embedded<subpacket_type, contained_t>::operator==(const embedded &other) const
     {
         return type() == other.type() && contained() == other.contained();
     }
@@ -60,7 +60,7 @@ namespace pgp::signature_subpacket {
      *  @param  other   The object to compare with
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>
-    bool embedded<subpacket_type, contained_t>::operator!=(const embedded &other) const noexcept
+    bool embedded<subpacket_type, contained_t>::operator!=(const embedded &other) const
     {
         return !operator==(other);
     }
