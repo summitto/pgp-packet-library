@@ -15,6 +15,6 @@ TEST(expected_number, decode_encode)
 
     pgp::decoder decoder{data};
 
-    pgp::expected_number<uint32_t, 42>{decoder};
+    ASSERT_NO_THROW((pgp::expected_number<uint32_t, 42>{decoder}));
     ASSERT_THROW((pgp::expected_number<uint32_t, 43>{decoder}), std::range_error);
 }

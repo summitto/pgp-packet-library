@@ -125,10 +125,10 @@ namespace {
         hash_encoder.push<uint8_t>(0xff);
         hash_encoder.push<uint32_t>(
             util::narrow_cast<uint32_t>(
-                sizeof(sig.version()) +
-                sizeof(sig.type()) +
-                sizeof(sig.public_key_algorithm()) +
-                sizeof(sig.hashing_algorithm()) +
+                sizeof(decltype(sig.version())) +
+                sizeof(decltype(sig.type())) +
+                sizeof(decltype(sig.public_key_algorithm())) +
+                sizeof(decltype(sig.hashing_algorithm())) +
                 hashedsubs.size()
             )
         );

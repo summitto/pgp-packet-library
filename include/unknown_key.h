@@ -66,7 +66,7 @@ namespace pgp {
              *  Hash the key into a given hash context
              */
             template <class encoder_t>
-            void hash(encoder_t &) const noexcept
+            void hash(encoder_t &) const
             {
                 // unknown key cannot be hashed
                 throw std::runtime_error{ "Unknown keys cannot be hashed" };
