@@ -277,7 +277,7 @@ The `clang_analyze.sh` Bash script in the root of the repository can be used to 
 ./clang_analyze.sh
 ```
 
-from the repository root. After the analysis is done, follow the instructions printed to the terminal to view the resulting report.
+from the repository root. (It can also be run from any location as long as the path to the script is correctly specified.) After the analysis is done, follow the instructions printed to the terminal to view the resulting report.
 
 # Credits
 

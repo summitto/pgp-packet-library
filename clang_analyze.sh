@@ -64,5 +64,5 @@ if [[ -z $nthreads ]]; then
 fi
 
 CC=clang CXX=clang++ scan-build --use-cc=clang --use-c++=clang++ ${checkers} cmake -S "$sourcedir" -B "$builddir" -DCMAKE_BUILD_TYPE=Debug "$@"
-scan-build --use-cc=clang --use-c++=clang++ ${checkers} make -j$(nproc) -C"$builddir"
+scan-build --use-cc=clang --use-c++=clang++ ${checkers} make -j${nthreads} -C"$builddir"
 
