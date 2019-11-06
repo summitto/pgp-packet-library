@@ -8,7 +8,8 @@
   - [Creating a simple packet](#creating-a-simple-packet)
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
   - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
-
+- [Verifying the library](#verifying-the-library)
+  - [Static analysis using Clang](#static-analysis-using-clang)
 
 ## Introduction
 
@@ -265,6 +266,18 @@ int main()
     return 0;
 }
 ```
+
+# Verifying the library
+
+## Static analysis using Clang
+
+The `clang_analyze.sh` Bash script in the root of the repository can be used to run the [Clang Static Analyzer](https://clang-analyzer.llvm.org) over the source code. It enables some extra checkers on top of the default ones. For the exact list of these checkers see the `enable_checkers` variable in the script. To run the static analysis, simply run
+
+```bash
+./clang_analyze.sh
+```
+
+from the repository root. After the analysis is done, follow the instructions printed to the terminal to view the resulting report.
 
 # Credits
 
