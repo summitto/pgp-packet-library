@@ -64,6 +64,8 @@ namespace pgp {
 
             /**
              *  Hash the key into a given hash context
+             *
+             *  @throws std::runtime_error for the unknown key
              */
             template <class encoder_t>
             void hash(encoder_t &) const
