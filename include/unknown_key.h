@@ -77,7 +77,7 @@ namespace pgp {
             /**
              *  Write the data to an encoder
              *
-              *  @throws std::out_of_range, std::range_error
+             *  @throws std::runtime_error for the unknown key
              */
             template <class encoder_t>
             void encode(encoder_t&) const
