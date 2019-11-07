@@ -10,6 +10,7 @@
   - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
 - [Verifying the library](#verifying-the-library)
   - [Clang Tidy](#clang-tidy)
+  - [Static analysis using Cppcheck](#static-analysis-using-cppcheck)
 
 ## Introduction
 
@@ -272,6 +273,16 @@ int main()
 ## Clang Tidy
 
 If `clang-tidy` is installed, then CMake will create a `make tidy` target that can be used to run `clang-tidy` over the codebase. The configuration for the checkers can be found in the `.clang-tidy` file in the root of the repository.
+
+## Static analysis using Cppcheck
+
+If [Cppcheck](http://cppcheck.sourceforge.net/) is found on the system,
+the `cppcheck` make target can be used to run static analysis on the
+source code. Any warnings will mark the check as failed.
+
+The checks enabled can be found in `CMakeLists.txt` and the existing
+exceptions to rules can be found in `CppCheckSuppressions.txt`. Do make
+sure that adding new code doesn't fail the existing tests.
 
 # Credits
 
