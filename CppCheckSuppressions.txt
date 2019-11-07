@@ -3,3 +3,7 @@
 
 // passedByValue trips over constructors
 passedByValue
+
+// UB on moved-from values
+throwInNoexceptFunction:source/signature_subpacket/embedded.cpp:56
+throwInNoexceptFunction:source/signature_subpacket/embedded.cpp:69

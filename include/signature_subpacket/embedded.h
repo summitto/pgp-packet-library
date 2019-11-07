@@ -64,16 +64,20 @@ namespace pgp::signature_subpacket {
             /**
              *  Comparison operators
              *
+             *  Note: this function is UB when used with a moved-from object.
+             *
              *  @param  other   The object to compare with
              */
-            bool operator==(const embedded &other) const;
+            bool operator==(const embedded &other) const noexcept;
 
             /**
              *  Comparison operators
              *
+             *  Note: this function is UB when used with a moved-from object.
+             *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const embedded &other) const;
+            bool operator!=(const embedded &other) const noexcept;
 
             /**
              *  Determine the size used in encoded format
