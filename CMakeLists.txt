@@ -182,3 +182,20 @@ if (clang_tidy_path)
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     )
 endif()
+
+
+find_program(cppcheck_path NAMES cppcheck)
+if (cppcheck_path)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS On)
+    message(STATUS "Found cppcheck executable ${cppcheck_path}, enabling cppcheck target")
+    add_custom_target(cppcheck
+        COMMAND ${cppcheck_path}
+        "--project=${CMAKE_BINARY_DIR}/compile_commands.json"
+        "--quiet"
+        "--error-exitcode=1"
+        "--enable=warning,portability,unusedFunction,performance"
+        "--suppressions-list=${CMAKE_SOURCE_DIR}/CppCheckSuppressions.txt"
+        "-rp=${CMAKE_SOURCE_DIR}"
+        COMMENT "Running cppcheck"
+    )
+endif()

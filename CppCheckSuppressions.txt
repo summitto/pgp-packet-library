@@ -1,0 +1,5 @@
+// Skip the Google test libraries since they're full of issues.
+*:*google*
+
+// passedByValue trips over constructors
+passedByValue
