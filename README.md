@@ -8,6 +8,8 @@
   - [Creating a simple packet](#creating-a-simple-packet)
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
   - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
+- [Verifying the library](#verifying-the-library)
+  - [Static analysis using Cppcheck](#static-analysis-using-cppcheck)
 
 
 ## Introduction
@@ -30,7 +32,7 @@ To build the library, the following dependencies need to be installed first:
 
 Since this library uses submodules, it will not build unless they are also checked out. To check out all the submodules used in the project, execute the following command:
 
-```bash
+```bash#
 git submodule update --init
 ```
 
@@ -265,6 +267,18 @@ int main()
     return 0;
 }
 ```
+
+# Verifying the library
+
+## Static analysis using Cppcheck
+
+If [Cppcheck](http://cppcheck.sourceforge.net/) is found on the system,
+the `cppcheck` make target can be used to run static analysis on the
+source code. Any warnings will mark the check as failed.
+
+The checks enabled can be found in `CMakeLists.txt` and the existing
+exceptions to rules can be found in `CppCheckSuppressions.txt`. Do make
+sure that adding new code doesn't fail the existing tests.
 
 # Credits
 
