@@ -64,12 +64,16 @@ namespace pgp::signature_subpacket {
             /**
              *  Comparison operators
              *
+             *  Precondition: neither this nor the object compared to have been moved from.
+             *
              *  @param  other   The object to compare with
              */
             bool operator==(const embedded &other) const noexcept;
 
             /**
              *  Comparison operators
+             *
+             *  Precondition: neither this nor the object compared to have been moved from.
              *
              *  @param  other   The object to compare with
              */

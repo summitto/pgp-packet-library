@@ -46,6 +46,8 @@ namespace pgp::signature_subpacket {
     /**
      *  Comparison operators
      *
+     *  Precondition: neither this nor the object compared to have been moved from.
+     *
      *  @param  other   The object to compare with
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>
@@ -56,6 +58,8 @@ namespace pgp::signature_subpacket {
 
     /**
      *  Comparison operators
+     *
+     *  Precondition: neither this nor the object compared to have been moved from.
      *
      *  @param  other   The object to compare with
      */
