@@ -32,7 +32,7 @@ To build the library, the following dependencies need to be installed first:
 
 Since this library uses submodules, it will not build unless they are also checked out. To check out all the submodules used in the project, execute the following command:
 
-```bash#
+```bash
 git submodule update --init
 ```
 
