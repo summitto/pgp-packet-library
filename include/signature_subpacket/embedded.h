@@ -64,7 +64,7 @@ namespace pgp::signature_subpacket {
             /**
              *  Comparison operators
              *
-             *  Note: this function is UB when used with a moved-from object.
+             *  Precondition: neither this nor the object compared to have been moved from.
              *
              *  @param  other   The object to compare with
              */
@@ -73,7 +73,7 @@ namespace pgp::signature_subpacket {
             /**
              *  Comparison operators
              *
-             *  Note: this function is UB when used with a moved-from object.
+             *  Precondition: neither this nor the object compared to have been moved from.
              *
              *  @param  other   The object to compare with
              */
