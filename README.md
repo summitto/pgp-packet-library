@@ -9,7 +9,7 @@
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
   - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
 - [Verifying the library](#verifying-the-library)
-  - [Static analysis using Clang](#static-analysis-using-clang)
+  - [Clang Tidy](#clang-tidy)
 
 ## Introduction
 
@@ -269,15 +269,9 @@ int main()
 
 # Verifying the library
 
-## Static analysis using Clang
+## Clang Tidy
 
-The `clang_analyze.sh` Bash script in the root of the repository can be used to run the [Clang Static Analyzer](https://clang-analyzer.llvm.org) over the source code. It enables some extra checkers on top of the default ones. For the exact list of these checkers see the `enable_checkers` variable in the script. To run the static analysis, simply run
-
-```bash
-./clang_analyze.sh
-```
-
-from the repository root. (It can also be run from any location as long as the path to the script is correctly specified.) After the analysis is done, follow the instructions printed to the terminal to view the resulting report.
+If `clang-tidy` is installed, then CMake will create a `make tidy` target that can be used to run `clang-tidy` over the codebase. The configuration for the checkers can be found in the `.clang-tidy` file in the root of the repository.
 
 # Credits
 
