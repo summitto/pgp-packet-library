@@ -21,7 +21,7 @@ namespace pgp {
              *  Create the encoder
              */
             template <packet_tag key_tag>
-            dsa_signature_encoder(basic_key<secret_key_traits<key_tag>>)
+            explicit dsa_signature_encoder(basic_key<secret_key_traits<key_tag>>)
             {
                 // TODO
                 throw std::runtime_error{ "Generating DSA signatures is not yet implemented" };

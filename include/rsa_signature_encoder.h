@@ -39,7 +39,7 @@ namespace pgp {
              *  Constructor
              */
             template <packet_tag key_tag>
-            rsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) :
+            explicit rsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) :
                 _signature_context{signer_t{}.NewSignatureAccumulator(_prng)},
                 rsa_key{get<basic_secret_key<rsa_public_key, rsa_secret_key>>(key.key())}
             {}

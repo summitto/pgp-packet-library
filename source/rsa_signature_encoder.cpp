@@ -38,10 +38,10 @@ namespace pgp {
         signed_message.resize(actual_length);
 
         // the Sign() method deallocated the accumulator, so forget the reference to it
-        _signature_context.release();
+        [[maybe_unused]] auto _ = _signature_context.release();
 
         // return the signature parameter
-        return std::make_tuple(signed_message);
+        return std::make_tuple(pgp::multiprecision_integer{ signed_message });
     }
 
     /**
@@ -54,7 +54,7 @@ namespace pgp {
     std::array<uint8_t, 2> rsa_signature_encoder::hash_prefix() noexcept
     {
         // the buffer to store the prefix in
-        std::array<uint8_t, 2> result;
+        std::array<uint8_t, 2> result{};
 
         // obtain the prefix from the hash context
         _hash_context.TruncatedFinal(result.data(), 2);

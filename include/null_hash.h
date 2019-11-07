@@ -67,7 +67,7 @@ namespace pgp {
             }
 
             // Append the input data to the "digest" buffer
-            _iter = std::copy(input, input + length, _iter);
+            _iter = std::copy_n(input, length, _iter);
         }
 
         /**

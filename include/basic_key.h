@@ -51,7 +51,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            basic_key(decoder &parser) :
+            explicit basic_key(decoder &parser) :
                 _version{ parser },
                 _creation_time{ parser },
                 _algorithm{ parser.template extract_number<uint8_t>() }
@@ -234,7 +234,7 @@ namespace pgp {
                 std::array<uint8_t, 20> print{fingerprint()};
 
                 // copy the last 8 bytes into the result container
-                std::array<uint8_t, 8>  result;
+                std::array<uint8_t, 8>  result{};
                 std::copy(print.begin() + 12, print.end(), result.begin());
 
                 // return the result

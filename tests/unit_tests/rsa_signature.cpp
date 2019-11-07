@@ -22,14 +22,14 @@ namespace {
         inputs(CryptoPP::RSA::PrivateKey &&private_key):
             private_key{private_key},
             pubkey{
-                private_key.GetModulus(),
-                private_key.GetPublicExponent()
+                pgp::multiprecision_integer{ private_key.GetModulus()           },
+                pgp::multiprecision_integer{ private_key.GetPublicExponent()    }
             },
             seckey{
-                private_key.GetPrivateExponent(),
-                private_key.GetPrime1(),
-                private_key.GetPrime2(),
-                private_key.GetMultiplicativeInverseOfPrime2ModPrime1()
+                pgp::multiprecision_integer{ private_key.GetPrivateExponent()                           },
+                pgp::multiprecision_integer{ private_key.GetPrime1()                                    },
+                pgp::multiprecision_integer{ private_key.GetPrime2()                                    },
+                pgp::multiprecision_integer{ private_key.GetMultiplicativeInverseOfPrime2ModPrime1()    }
             }
         {}
     };

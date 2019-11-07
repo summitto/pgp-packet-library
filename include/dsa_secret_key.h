@@ -20,7 +20,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            dsa_secret_key(decoder &parser) :
+            explicit dsa_secret_key(decoder &parser) :
                 _x{ parser }
             {}
 
@@ -29,7 +29,7 @@ namespace pgp {
              *
              *  @param  x   The secret exponent
              */
-            dsa_secret_key(multiprecision_integer x) noexcept;
+            explicit dsa_secret_key(multiprecision_integer x) noexcept;
 
             /**
              *  Comparison operators

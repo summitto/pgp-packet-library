@@ -45,13 +45,13 @@ namespace {
         CryptoPP::RSA::PrivateKey private_key;
         private_key.GenerateRandomWithKeySize(prng, 2048);
 
-        pgp::multiprecision_integer n = private_key.GetModulus();
-        pgp::multiprecision_integer e = private_key.GetPublicExponent();
+        pgp::multiprecision_integer n{ private_key.GetModulus()         };
+        pgp::multiprecision_integer e{ private_key.GetPublicExponent()  };
 
-        pgp::multiprecision_integer d = private_key.GetPrivateExponent();
-        pgp::multiprecision_integer p = private_key.GetPrime1();
-        pgp::multiprecision_integer q = private_key.GetPrime2();
-        pgp::multiprecision_integer u = private_key.GetMultiplicativeInverseOfPrime2ModPrime1();
+        pgp::multiprecision_integer d{ private_key.GetPrivateExponent()                         };
+        pgp::multiprecision_integer p{ private_key.GetPrime1()                                  };
+        pgp::multiprecision_integer q{ private_key.GetPrime2()                                  };
+        pgp::multiprecision_integer u{ private_key.GetMultiplicativeInverseOfPrime2ModPrime1()  };
 
         return Key{
             987654321,

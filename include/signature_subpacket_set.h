@@ -45,7 +45,7 @@ namespace pgp {
              *  @param  parser      The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            signature_subpacket_set(decoder &parser)
+            explicit signature_subpacket_set(decoder &parser)
             {
                 // splice off the allocated data from the main parser
                 auto set_parser = parser.splice(uint16{ parser });
@@ -105,7 +105,7 @@ namespace pgp {
              *
              *  @param  subpackets  The subpackets to keep in the set
              */
-            signature_subpacket_set(std::vector<subpacket_variant> subpackets) noexcept;
+            explicit signature_subpacket_set(std::vector<subpacket_variant> subpackets) noexcept;
 
             /**
              *  Comparison operators

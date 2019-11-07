@@ -20,7 +20,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  parser  The decoder to parse the data
              */
-            key_flags(decoder &parser) :
+            explicit key_flags(decoder &parser) :
                 _flags{ parser }
             {
                 // all data should be consumed

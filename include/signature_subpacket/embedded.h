@@ -27,7 +27,7 @@ namespace pgp::signature_subpacket {
              *  @param  parser     The parser to decode the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            embedded(decoder &parser) :
+            explicit embedded(decoder &parser) :
                 _contained{ std::make_unique<contained_t>(parser) }
             {
                 // all data should be consumed
@@ -42,13 +42,13 @@ namespace pgp::signature_subpacket {
              *
              *  @param  value      The value to store
              */
-            embedded(contained_t value);
+            explicit embedded(contained_t value);
 
             /**
              *  Copy and move constructors
              */
             embedded(const embedded &other);
-            embedded(embedded &&other) = default;
+            embedded(embedded &&other) noexcept = default;
 
             /**
              *  Destructor
@@ -58,8 +58,8 @@ namespace pgp::signature_subpacket {
             /**
              *  Assignment operators
              */
-            embedded<subpacket_type, contained_t> &operator=(const embedded &other);
-            embedded<subpacket_type, contained_t> &operator=(embedded &&other) = default;
+            embedded<subpacket_type, contained_t> &operator=(const embedded &other) noexcept;
+            embedded<subpacket_type, contained_t> &operator=(embedded &&other) noexcept = default;
 
             /**
              *  Comparison operators

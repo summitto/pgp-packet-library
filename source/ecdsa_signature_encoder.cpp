@@ -39,7 +39,7 @@ namespace pgp {
         k1.Initialize(CryptoPP::ASN1::secp256r1(), k1_exponent);
 
         // the buffer for the signed message and the concatenated key
-        std::array<uint8_t, signature_length> signed_message;
+        std::array<uint8_t, signature_length> signed_message{};
 
         // construct the signer
         CryptoPP::ECDSA<CryptoPP::ECP, NullHash<32>>::Signer signer{k1};

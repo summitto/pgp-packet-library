@@ -30,7 +30,7 @@ namespace pgp::signature_subpacket {
              *  @param  parser  The parser to decode the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            issuer_fingerprint(decoder &parser) :
+            explicit issuer_fingerprint(decoder &parser) :
                 _version{ parser }
             {
                 // retrieve data from the decoder
@@ -45,7 +45,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  data    The array of data
              */
-            issuer_fingerprint(std::array<uint8_t, fingerprint_size> data) noexcept;
+            explicit issuer_fingerprint(std::array<uint8_t, fingerprint_size> data) noexcept;
 
             /**
              *  Comparison operators
@@ -94,7 +94,7 @@ namespace pgp::signature_subpacket {
             void encode(encoder_t &writer) const
             {
                 // first get the size for the data itself
-                uint32_t size = util::narrow_cast<uint32_t>(_data.size() + _version.size() + sizeof(type()));
+                auto size = util::narrow_cast<uint32_t>(_data.size() + _version.size() + sizeof(type()));
 
                 // encode the size, the type, and the number
                 variable_number{ size }.encode(writer);

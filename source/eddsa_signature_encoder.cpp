@@ -17,8 +17,8 @@ namespace pgp {
     eddsa_signature_encoder::finalize() noexcept
     {
         // the buffer for the signed message and the concatenated key
-        std::array<uint8_t, crypto_sign_BYTES>  signed_message;
-        std::array<uint8_t, 64>                 key_data;
+        std::array<uint8_t, crypto_sign_BYTES>  signed_message{};
+        std::array<uint8_t, 64>                 key_data{};
 
         // retrieve the key data - ignore the silly leading byte from the public key
         auto public_data = eddsa_key.Q().data().subspan<1>();

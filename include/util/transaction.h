@@ -12,8 +12,20 @@ namespace util {
     template <typename Rollback>
     class transaction {
     public:
-        transaction(Rollback rollback):
+        explicit transaction(Rollback rollback):
             _rollback{ std::forward<Rollback>(rollback) } {}
+
+        /**
+         *  Copy and move constructors
+         */
+        transaction(const transaction &other) = default;
+        transaction(transaction &&other) noexcept = default;
+
+        /**
+         *  Assignment operators
+         */
+        transaction &operator=(const transaction &other) noexcept = default;
+        transaction &operator=(transaction &&other) noexcept = default;
 
         /**
          *  If commit() was not called, the restore function will be called.

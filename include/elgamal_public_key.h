@@ -35,7 +35,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data from
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            elgamal_public_key(decoder &parser) :
+            explicit elgamal_public_key(decoder &parser) :
                 _p{ parser },
                 _g{ parser },
                 _y{ parser }

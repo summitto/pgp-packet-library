@@ -22,7 +22,7 @@ namespace pgp {
              *  Create a nonexistent encoder; throws.
              */
             template <packet_tag key_tag>
-            unknown_signature_encoder(basic_key<secret_key_traits<key_tag>>)
+            explicit unknown_signature_encoder(basic_key<secret_key_traits<key_tag>>)
             {
                 throw std::runtime_error{ "Unknown signatures cannot sign streamed data" };
             }

@@ -25,7 +25,7 @@ namespace pgp {
              *  @throws std::range_error, std::out_of_range
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            expected_number(decoder &parser)
+            explicit expected_number(decoder &parser)
             {
                 // check whether the value is as expected
                 if (parser.template extract_number<T>() != number) {

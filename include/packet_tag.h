@@ -73,7 +73,7 @@ namespace pgp {
     {
         // the old format uses only four bits to represent the tag
         // so any tag using more than this is not compatible
-        return (0b11110000 & static_cast<typename std::underlying_type_t<packet_tag>>(tag)) == 0;
+        return (0b11110000U & static_cast<typename std::underlying_type_t<packet_tag>>(tag)) == 0;
     }
 
 }

@@ -25,7 +25,7 @@ namespace pgp {
              *  @param key        The secret key with which to make the signature
              */
             template <packet_tag key_tag>
-            eddsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) noexcept :
+            explicit eddsa_signature_encoder(const basic_key<secret_key_traits<key_tag>> &key) noexcept :
                 eddsa_key{get<basic_secret_key<eddsa_public_key, eddsa_secret_key>>(key.key())}
             {}
 

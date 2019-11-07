@@ -52,7 +52,7 @@ namespace pgp {
     range_encoder &range_encoder::insert_bits(size_t count, uint8_t value)
     {
         // check whether the number fits within the given bit-size
-        if (value > (1 << count) - 1) {
+        if (value > (1U << count) - 1U) {
             // the value is too large to encode
             throw std::range_error{ "Cannot encode value, too large for given bit-size" };
         }
@@ -69,7 +69,7 @@ namespace pgp {
         }
 
         // shift the data so it fits with the existing data and add it
-        _current |= (value << (8 - _skip_bits - count));
+        _current |= static_cast<uint8_t>(value << static_cast<uint8_t>(8U - _skip_bits - count));
 
         // do we move on to the next byte?
         if (count + _skip_bits == 8) {
