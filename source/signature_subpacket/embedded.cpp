@@ -34,7 +34,7 @@ namespace pgp::signature_subpacket {
      */
     template <signature_subpacket_type subpacket_type, typename contained_t>
     embedded<subpacket_type, contained_t> &
-    embedded<subpacket_type, contained_t>::operator=(const embedded &other)
+    embedded<subpacket_type, contained_t>::operator=(const embedded &other) noexcept
     {
         // copy the contained object
         _contained = std::make_unique<contained_t>(other.contained());

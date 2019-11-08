@@ -34,7 +34,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            eddsa_public_key(decoder &parser) :
+            explicit eddsa_public_key(decoder &parser) :
                 _curve{ parser },
                 _Q{ parser }
             {}

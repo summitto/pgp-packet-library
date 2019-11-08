@@ -21,7 +21,7 @@ namespace pgp::signature_subpacket {
              *  @param  parser  The parser to decode the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            fixed_array(decoder &parser)
+            explicit fixed_array(decoder &parser)
             {
                 // retrieve data from the decoder
                 auto data = parser.template extract_blob<uint8_t>(data_size);
@@ -35,7 +35,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  data    The array of data
              */
-            fixed_array(std::array<uint8_t, data_size> data) noexcept :
+            explicit fixed_array(std::array<uint8_t, data_size> data) noexcept :
                 _data{ data }
             {}
 

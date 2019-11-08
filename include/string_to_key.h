@@ -27,7 +27,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            string_to_key(decoder &parser) :
+            explicit string_to_key(decoder &parser) :
                 _convention{ parser }
             {
                 // @TODO: support other conventions than "nothing"

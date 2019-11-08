@@ -30,7 +30,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            multiprecision_integer(decoder &parser) :
+            explicit multiprecision_integer(decoder &parser) :
                 _bits{ parser }
             {
                 // first read the number of elements, since it is in bits,
@@ -60,21 +60,26 @@ namespace pgp {
              *
              *  @param  data    The range of numbers
              */
-            multiprecision_integer(span<const uint8_t> data) noexcept;
+            explicit multiprecision_integer(span<const uint8_t> data) noexcept;
 
             /**
              *  Constructor
              *
              *  @param  data    The range of numbers
              */
-            multiprecision_integer(std::vector<uint8_t> data) noexcept;
+            explicit multiprecision_integer(std::vector<uint8_t> data) noexcept;
 
             /**
              *  Constructor
              *
              *  @param  integer The Crypto++ integer to convert
              */
-            multiprecision_integer(const CryptoPP::Integer &integer) noexcept;
+            explicit multiprecision_integer(const CryptoPP::Integer &integer) noexcept;
+
+            /**
+             *  Destructor
+             */
+            ~multiprecision_integer() = default;
 
             /**
              *  Assignment

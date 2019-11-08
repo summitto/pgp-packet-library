@@ -9,8 +9,8 @@
   - [Encoding and decoding of packet data](#encoding-and-decoding-of-packet-data)
   - [Creating a PGP key from raw point data](#creating-a-PGP-key-from-raw-point-data)
 - [Verifying the library](#verifying-the-library)
+  - [Clang Tidy](#clang-tidy)
   - [Static analysis using Cppcheck](#static-analysis-using-cppcheck)
-
 
 ## Introduction
 
@@ -269,6 +269,10 @@ int main()
 ```
 
 # Verifying the library
+
+## Clang Tidy
+
+If `clang-tidy` is installed, then CMake will create a `tidy` target that can be used to run `clang-tidy` over the codebase. The configuration for the checkers can be found in the `.clang-tidy` file in the root of the repository.
 
 ## Static analysis using Cppcheck
 

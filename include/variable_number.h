@@ -28,7 +28,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            variable_number(decoder &parser)
+            explicit variable_number(decoder &parser)
             {
                 // read the first byte to determine the strategy
                 if (parser.template peek_number<uint8_t>() < 192) {
@@ -54,7 +54,7 @@ namespace pgp {
              *
              *  @param  value   The value to hold
              */
-            variable_number(uint32_t value) noexcept;
+            explicit variable_number(uint32_t value) noexcept;
 
             /**
              *  Assignment operator
@@ -90,12 +90,12 @@ namespace pgp {
                 // encoding depends on the value
                 if (_value < 192) {
                     // directly encode the number
-                    uint8_t value = util::narrow_cast<uint8_t>(_value);
+                    auto value = util::narrow_cast<uint8_t>(_value);
                     writer.push(value);
                 } else if (_value < 8384) {
                     // enable the two most significant bits and remove
                     // 192 from the number according to rfc 4880
-                    uint16_t value = util::narrow_cast<uint16_t>(0b1100000000000000 | (_value - 192));
+                    auto value = util::narrow_cast<uint16_t>(0b1100000000000000U | (_value - 192));
                     writer.push(value);
                 } else {
                     // write the tag to indicate a full 4-byte number

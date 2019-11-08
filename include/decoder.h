@@ -29,7 +29,7 @@ namespace pgp {
              *
              *  @param  data    The range to decode from
              */
-            decoder(span<const uint8_t> data) noexcept;
+            explicit decoder(span<const uint8_t> data) noexcept;
 
             /**
              *  The decoder is a move-only class
@@ -38,6 +38,11 @@ namespace pgp {
              */
             decoder(const decoder &that) = delete;
             decoder(decoder &&that) = default;
+
+            /**
+             *  Destructor
+             */
+            ~decoder() = default;
 
             /**
              *  Assignment operator, only using move

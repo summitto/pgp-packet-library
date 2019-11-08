@@ -12,7 +12,7 @@ namespace pgp {
 
     namespace {
 
-        template <typename T, typename = typename std::enable_if<std::is_integral<T>::value && sizeof(T) <= 8>::type>
+        template <typename T, typename = typename std::enable_if<std::is_unsigned_v<T> && sizeof(T) <= 8>::type>
         uint8_t count_leading_zeros(T value)
         {
             // lookup table for number of leading zeroes
@@ -22,7 +22,7 @@ namespace pgp {
             // significant nibble
             for (int i = 2 * sizeof(T) - 1; i >= 0; i--) {
                 // get the current nibble from the value
-                uint8_t nibble = (value >> (4 * i)) & 0x0f;
+                uint8_t nibble = (value >> (4U * static_cast<unsigned int>(i))) & 0x0fU;
 
                 // if the leading zeros end here
                 if (nibble != 0) {
@@ -57,7 +57,7 @@ namespace pgp {
     multiprecision_integer::multiprecision_integer(std::vector<uint8_t> data) noexcept
     {
         // assign the data
-        operator=(data);
+        operator=(std::move(data));
     }
 
     /**

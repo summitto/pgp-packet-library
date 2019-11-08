@@ -29,7 +29,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            curve_oid(decoder &parser)
+            explicit curve_oid(decoder &parser)
             {
                 // first read the number of elements
                 auto count = parser.template extract_number<uint8_t>();
@@ -49,7 +49,7 @@ namespace pgp {
              *
              *  @param  data    The range of numbers
              */
-            curve_oid(span<const uint8_t> data) noexcept;
+            explicit curve_oid(span<const uint8_t> data) noexcept;
 
             /**
              *  Constructor

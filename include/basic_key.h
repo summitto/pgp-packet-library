@@ -51,7 +51,7 @@ namespace pgp {
              *  @throws std::out_of_range
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            basic_key(decoder &parser) :
+            explicit basic_key(decoder &parser) :
                 _version{ parser },
                 _creation_time{ parser },
                 _algorithm{ parser.template extract_number<uint8_t>() }

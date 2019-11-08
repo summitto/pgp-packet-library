@@ -22,7 +22,7 @@ namespace pgp {
              *  @param  parser  The parser to decode data from
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            user_id(decoder &parser) :
+            explicit user_id(decoder &parser) :
                 user_id{ parser.template extract_blob<char>(parser.size()) }
             {}
 
@@ -31,14 +31,14 @@ namespace pgp {
              *
              *  @param  id      The user id to use
              */
-            user_id(span<const char> id) noexcept;
+            explicit user_id(span<const char> id) noexcept;
 
             /**
              *  Constructor
              *
              *  @param  id      The user id to use
              */
-            user_id(std::string id) noexcept;
+            explicit user_id(std::string id) noexcept;
 
             /**
              *  Comparison operators

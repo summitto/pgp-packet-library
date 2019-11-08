@@ -48,7 +48,7 @@ namespace pgp {
              *  @throws std::runtime_error
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            packet(decoder &parser)
+            explicit packet(decoder &parser)
             {
                 // check whether we have the required true bit
                 if (!parser.extract_bits(1)) {
@@ -116,7 +116,7 @@ namespace pgp {
              *  @throws Forwards exception from body constructor
              */
             template <class T, typename... Arguments>
-            packet(in_place_type_t<T>, Arguments&& ...parameters) :
+            explicit packet(in_place_type_t<T>, Arguments&& ...parameters) :
                 _body{ in_place_type_t<T>{}, std::forward<Arguments>(parameters)... }
             {}
 

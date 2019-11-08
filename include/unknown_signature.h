@@ -25,7 +25,7 @@ namespace pgp {
              *  Constructor
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            unknown_signature(decoder&) noexcept {}
+            explicit unknown_signature(decoder&) noexcept {}
 
             /**
              *  Comparison operators

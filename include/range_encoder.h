@@ -24,7 +24,7 @@ namespace pgp {
              *
              *  @param  data    The range to encode to
              */
-            range_encoder(span<uint8_t> data);
+            explicit range_encoder(span<uint8_t> data);
 
             /**
              *  Flush the encoder, so any partial-written bytes

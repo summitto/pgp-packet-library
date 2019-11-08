@@ -38,10 +38,10 @@ namespace pgp {
         signed_message.resize(actual_length);
 
         // the Sign() method deallocated the accumulator, so forget the reference to it
-        _signature_context.release();
+        [[maybe_unused]] auto _ = _signature_context.release();
 
         // return the signature parameter
-        return std::make_tuple(signed_message);
+        return std::make_tuple(pgp::multiprecision_integer{ signed_message });
     }
 
     /**

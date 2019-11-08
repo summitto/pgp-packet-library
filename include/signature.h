@@ -51,7 +51,7 @@ namespace pgp {
              *  @param  parser  The decoder to parse the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            signature(decoder &parser) :
+            explicit signature(decoder &parser) :
                 _version{ parser },
                 _type{ parser.template extract_number<uint8_t>() },
                 _key_algorithm{ parser.template extract_number<uint8_t>() },

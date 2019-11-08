@@ -13,7 +13,7 @@
  *  file can then be deleted.
  */
 
-namespace {
+namespace detail {
 
     /**
      *  Private helper function to construct the type
@@ -62,7 +62,7 @@ namespace util {
     constexpr T make_from_tuple(Tuple&& tuple)
     {
         // use the implementation, providing the index sequence into the tuple elements
-        return make_from_tuple_impl<T>(std::forward<Tuple>(tuple), std::make_index_sequence<std::tuple_size<std::remove_reference_t<Tuple>>::value>{});
+        return detail::make_from_tuple_impl<T>(std::forward<Tuple>(tuple), std::make_index_sequence<std::tuple_size<std::remove_reference_t<Tuple>>::value>{});
     }
 
     /**
@@ -78,7 +78,7 @@ namespace util {
     constexpr decltype(auto) apply(F&& f, Tuple&& t)
     {
         // use the implementation, providing the index sequence into the tuple elements
-        return apply_impl(
+        return detail::apply_impl(
             std::forward<F>(f), std::forward<Tuple>(t),
             std::make_index_sequence<std::tuple_size<std::remove_reference_t<Tuple>>::value>{}
         );
