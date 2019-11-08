@@ -234,7 +234,7 @@ namespace pgp {
                 std::array<uint8_t, 20> print{fingerprint()};
 
                 // copy the last 8 bytes into the result container
-                std::array<uint8_t, 8>  result{};
+                std::array<uint8_t, 8>  result;
                 std::copy(print.begin() + 12, print.end(), result.begin());
 
                 // return the result

@@ -18,14 +18,14 @@ namespace util {
         /**
          *  Copy and move constructors
          */
-        transaction(const transaction &other) = default;
-        transaction(transaction &&other) noexcept = default;
+        transaction(const transaction &other) = delete;
+        transaction(transaction &&other) = default;
 
         /**
          *  Assignment operators
          */
-        transaction &operator=(const transaction &other) noexcept = default;
-        transaction &operator=(transaction &&other) noexcept = default;
+        transaction &operator=(const transaction &other) = delete;
+        transaction &operator=(transaction &&other) = default;
 
         /**
          *  If commit() was not called, the restore function will be called.

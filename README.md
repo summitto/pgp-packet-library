@@ -272,7 +272,7 @@ int main()
 
 ## Clang Tidy
 
-If `clang-tidy` is installed, then CMake will create a `make tidy` target that can be used to run `clang-tidy` over the codebase. The configuration for the checkers can be found in the `.clang-tidy` file in the root of the repository.
+If `clang-tidy` is installed, then CMake will create a `tidy` target that can be used to run `clang-tidy` over the codebase. The configuration for the checkers can be found in the `.clang-tidy` file in the root of the repository.
 
 ## Static analysis using Cppcheck
 

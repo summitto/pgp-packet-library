@@ -54,7 +54,7 @@ namespace pgp {
     std::array<uint8_t, 2> rsa_signature_encoder::hash_prefix() noexcept
     {
         // the buffer to store the prefix in
-        std::array<uint8_t, 2> result{};
+        std::array<uint8_t, 2> result;
 
         // obtain the prefix from the hash context
         _hash_context.TruncatedFinal(result.data(), 2);

@@ -138,7 +138,7 @@ namespace pgp {
             std::array<uint8_t, 2> hash_prefix() noexcept
             {
                 // the resulting prefix
-                std::array<uint8_t, 2> prefix{};
+                std::array<uint8_t, 2> prefix;
 
                 // fill it with the data
                 std::copy_n(digest().begin(), prefix.size(), prefix.begin());
