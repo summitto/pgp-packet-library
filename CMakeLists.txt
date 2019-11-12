@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.13.0)
 
 project(pgp-packet-library
     VERSION     0.1.1
@@ -109,6 +109,37 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
     target_compile_options(pgp-packet PRIVATE -Wall -Wextra -Wdeprecated -Wno-sign-compare)
 else()
     message(WARNING "Unsupported compiler: don't know what compiler flags to add for this compiler!")
+endif()
+
+# allow the user to enable some clang sanitizers
+option(ASAN "Enable the address sanitizer (clang only)" OFF)
+option(MSAN "Enable the memory sanitizer (clang only)" OFF)
+
+# function to enable a particular clang sanitizer
+function(enable_clang_sanitizer sanitizer)
+    # does the user want to use the address sanitizer
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        # enable the address sanitizer during build- and link step
+        target_compile_options(pgp-packet PUBLIC -fsanitize=${sanitizer})
+        target_compile_options(pgp-packet PUBLIC -fno-omit-frame-pointer)
+        target_compile_options(pgp-packet PUBLIC -fno-optimize-sibling-calls)
+        target_link_options(pgp-packet PUBLIC -fsanitize=${sanitizer})
+    else()
+        # unable to enable the option for this compiler
+        message(WARNING "Unable to enable ${sanitizer} sanitizer, compiler ${CMAKE_CXX_COMPILER_ID} not supported")
+    endif()
+endfunction()
+
+# we cannot enable both sanitizers at the same time
+if (ASAN AND MSAN)
+    # notify the user this is impossible
+    message(FATAL_ERROR "Address Sanitizer and Memory Sanitizer cannot be used simultaneously")
+elseif(ASAN)
+    # enable address sanitizer
+    enable_clang_sanitizer(address)
+elseif(MSAN)
+    #enable memory sanitizer
+    enable_clang_sanitizer(memory)
 endif()
 
 add_subdirectory(tests)
