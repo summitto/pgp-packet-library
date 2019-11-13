@@ -1,4 +1,5 @@
-add_subdirectory(googletest)
+# use EXCLUDE_FROM_ALL to avoid gtest installation
+add_subdirectory(googletest EXCLUDE_FROM_ALL)
 
 set(test-sources "")
 foreach(source ${pgp-packet-sources})
