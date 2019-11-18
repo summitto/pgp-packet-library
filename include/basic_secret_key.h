@@ -2,6 +2,7 @@
 
 #include "range_encoder.h"
 #include "string_to_key.h"
+#include "util/vector.h"
 #include "util/tuple.h"
 #include <numeric>
 
@@ -57,8 +58,8 @@ namespace pgp {
                 secret_key_t{ util::make_from_tuple<secret_key_t>(std::forward<secret_arguments>(secret_tuple)) }
             {
                 // data buffer to store the encoded data
-                std::vector<uint8_t>    data    ( secret_key_t::size()  );
-                range_encoder           writer  { data                  };
+                vector<uint8_t> data    ( secret_key_t::size()  );
+                range_encoder   writer  { data                  };
 
                 // encode the secret key data
                 secret_key_t::encode(writer);

@@ -124,6 +124,10 @@ its simplicity). The packet is encoded to its binary representation,
 which is then read. We verify that this indeed results in the same
 packet as we started with.
 
+Note the use of `pgp::vector`, this is an alias for an `std::vector`
+using a custom allocator which prevents the data from being swapped
+to disk, as well as erasing the memory before freeing it.
+
 ```c++
 #include <pgp-packet/packet.h>
 #include <iostream>
@@ -143,7 +147,7 @@ int main()
     // a range_encoder around it. the range_encoder works by writing
     // the raw data to a provided range of bytes, which must stay in
     // scope during the encoder operation.
-    std::vector<uint8_t> data(packet.size());
+    pgp::vector<uint8_t> data(packet.size());
     pgp::range_encoder   encoder{ data };
 
     // write out the packet data to the given buffer
@@ -182,8 +186,8 @@ int main()
     // need an extra byte in front of it, it is always the same byte
     // for this key type, so it doesn't add any real information but
     // pgp still requires it and throws a fit if it is missing.
-    std::vector<uint8_t> public_key_data(crypto_sign_PUBLICKEYBYTES + 1);
-    std::vector<uint8_t> secret_key_data(crypto_sign_SECRETKEYBYTES);
+    pgp::vector<uint8_t> public_key_data(crypto_sign_PUBLICKEYBYTES + 1);
+    pgp::vector<uint8_t> secret_key_data(crypto_sign_SECRETKEYBYTES);
 
     // now create a new keypair to be imported into pgp, as noted in
     // the declaration above, we have to ignore the first byte as we
@@ -246,7 +250,7 @@ int main()
 
     // we now have a set of packets, which, when encoded to a file, can
     // be imported into a compatible pgp implementation (such as gnupg)
-    std::vector<uint8_t> data(
+    pgp::vector<uint8_t> data(
         secret_key_packet   .size() +
         user_id_packet      .size() +
         signature_packet    .size()

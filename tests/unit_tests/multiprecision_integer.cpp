@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <gtest/gtest.h>
+#include "util/vector.h"
 #include "multiprecision_integer.h"
 #include "range_encoder.h"
 #include "decoder.h"
@@ -57,7 +58,7 @@ TEST(multiprecision_integer, assignment)
 
 TEST(multiprecision_integer, vector_constructor)
 {
-    auto test_for_vector = [](const std::vector<uint8_t> &data) {
+    auto test_for_vector = [](const pgp::vector<uint8_t> &data) {
         auto nonzero_it = std::find_if(data.begin(), data.end(), [](uint8_t x) { return x != 0; });
         size_t zero_bytes = std::distance(data.begin(), nonzero_it);
 
@@ -67,10 +68,10 @@ TEST(multiprecision_integer, vector_constructor)
         ASSERT_EQ(mi.size(), 2 + data.size() - zero_bytes);
     };
 
-    test_for_vector(std::vector<uint8_t>{});
-    test_for_vector(std::vector<uint8_t>{1, 2, 3, 4});
-    test_for_vector(std::vector<uint8_t>{0, 2, 3, 4});
-    test_for_vector(std::vector<uint8_t>{0, 0, 0xff, 4, 5 ,6, 7});
+    test_for_vector(pgp::vector<uint8_t>{});
+    test_for_vector(pgp::vector<uint8_t>{1, 2, 3, 4});
+    test_for_vector(pgp::vector<uint8_t>{0, 2, 3, 4});
+    test_for_vector(pgp::vector<uint8_t>{0, 0, 0xff, 4, 5 ,6, 7});
 }
 
 TEST(multiprecision_integer, computed_bits)
@@ -85,7 +86,7 @@ TEST(multiprecision_integer, computed_bits)
 
         pgp::multiprecision_integer mi{data};
 
-        std::vector<uint8_t> dest(8);
+        pgp::vector<uint8_t> dest(8);
         pgp::range_encoder encoder{dest};
         mi.encode(encoder);
 
@@ -105,7 +106,7 @@ TEST(multiprecision_integer, zero_stripping)
 
         pgp::multiprecision_integer mi(data);
 
-        std::vector<uint8_t> dest(8);
+        pgp::vector<uint8_t> dest(8);
         pgp::range_encoder encoder{dest};
         mi.encode(encoder);
 

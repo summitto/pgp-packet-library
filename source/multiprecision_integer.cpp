@@ -54,7 +54,7 @@ namespace pgp {
      *
      *  @param  data    The range of numbers
      */
-    multiprecision_integer::multiprecision_integer(std::vector<uint8_t> data) noexcept
+    multiprecision_integer::multiprecision_integer(vector<uint8_t> data) noexcept
     {
         // assign the data
         operator=(std::move(data));
@@ -105,7 +105,7 @@ namespace pgp {
         return *this;
     }
 
-    multiprecision_integer &multiprecision_integer::operator=(std::vector<uint8_t> data) noexcept
+    multiprecision_integer &multiprecision_integer::operator=(vector<uint8_t> data) noexcept
     {
         // erase any leading zero bytes
         data.erase(
