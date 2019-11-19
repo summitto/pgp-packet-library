@@ -101,7 +101,10 @@ namespace pgp {
             {
                 // ensure the data is locked so it is
                 // not swapped to disk in low-memory
-                sodium_mlock(this, sizeof(*this));
+                if (sodium_mlock(this, sizeof(*this)) == -1) {
+                    // failed to secure the memory
+                    throw std::runtime_error{ "Failed to lock memory, check ulimit" };
+                }
             }
     };
 
