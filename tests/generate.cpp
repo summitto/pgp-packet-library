@@ -16,7 +16,9 @@ namespace tests::generate {
         int length = length_distr(detail::random_engine);
 
         // get random data with that length
-        pgp::vector<uint8_t> data(length);
+        pgp::vector<uint8_t> data;
+        data.resize(length);
+
         for (uint8_t &elem : data) {
             elem = distr(detail::random_engine);
         }

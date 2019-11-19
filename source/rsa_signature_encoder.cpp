@@ -30,8 +30,8 @@ namespace pgp {
         signer_t signer{k1};
 
         // construct the target buffer for the signature
-        const size_t signature_length = signer.MaxSignatureLength();
-        std::vector<uint8_t> signed_message(signature_length);
+        vector<uint8_t> signed_message;
+        signed_message.resize(signer.MaxSignatureLength());
 
         // sign the message, and resize the buffer to the actual size
         size_t actual_length = signer.Sign(_prng, _signature_context.get(), signed_message.data());
@@ -41,7 +41,7 @@ namespace pgp {
         [[maybe_unused]] auto _ = _signature_context.release();
 
         // return the signature parameter
-        return std::make_tuple(pgp::multiprecision_integer{ signed_message });
+        return std::make_tuple(pgp::multiprecision_integer{ std::move(signed_message) });
     }
 
     /**
