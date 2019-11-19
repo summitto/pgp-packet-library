@@ -56,7 +56,7 @@ namespace pgp {
             ~secure_object()
             {
                 // first destruct the managed object
-                this->~base_t();
+                this->base_t::~base_t();
 
                 // zero out the memory and unlock it
                 sodium_memzero(this, sizeof(*this));
