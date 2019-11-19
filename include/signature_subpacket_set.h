@@ -171,7 +171,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // add the size header; this is the size of the packet minus
                 // the size of the header itself

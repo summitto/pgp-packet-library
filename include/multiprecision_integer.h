@@ -3,7 +3,6 @@
 #include <cryptopp/integer.h>
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 #include <type_traits>
 #include "decoder_traits.h"
 #include "fixed_number.h"
@@ -127,7 +126,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // write out the number of elements first
                 _bits.encode(writer);

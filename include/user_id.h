@@ -80,7 +80,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // insert the id into the encoder
                 writer.insert_blob(span<const char>{ _id });

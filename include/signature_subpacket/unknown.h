@@ -79,7 +79,7 @@ namespace pgp::signature_subpacket {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // first encode the length of the subpacket
                 variable_number{ static_cast<uint32_t>(sizeof(_type) + _data.size()) }.encode(writer);
