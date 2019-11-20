@@ -147,11 +147,11 @@ int main()
     // a range_encoder around it. the range_encoder works by writing
     // the raw data to a provided range of bytes, which must stay in
     // scope during the encoder operation.
-    pgp::vector<uint8_t> data(packet.size());
-    pgp::range_encoder   encoder{ data };
+    pgp::vector<uint8_t> data;
+    data.resize(packet.size());
 
     // write out the packet data to the given buffer
-    packet.encode(encoder);
+    packet.encode(pgp::range_encoder{ encoder });
 
     // now create a decoder to decode the freshly filled data buffer
     // and use this decoder to create a second packet containing the
@@ -186,8 +186,12 @@ int main()
     // need an extra byte in front of it, it is always the same byte
     // for this key type, so it doesn't add any real information but
     // pgp still requires it and throws a fit if it is missing.
-    pgp::vector<uint8_t> public_key_data(crypto_sign_PUBLICKEYBYTES + 1);
-    pgp::vector<uint8_t> secret_key_data(crypto_sign_SECRETKEYBYTES);
+    pgp::vector<uint8_t> public_key_data;
+    pgp::vector<uint8_t> secret_key_data;
+
+    // allocate memory for the keys
+    public_key_data.resize(crypto_sign_PUBLICKEYBYTES + 1);
+    secret_key_data.resize(crypto_sign_SECRETKEYBYTES);
 
     // now create a new keypair to be imported into pgp, as noted in
     // the declaration above, we have to ignore the first byte as we
@@ -250,7 +254,8 @@ int main()
 
     // we now have a set of packets, which, when encoded to a file, can
     // be imported into a compatible pgp implementation (such as gnupg)
-    pgp::vector<uint8_t> data(
+    pgp::vector<uint8_t> data
+    data.resize(
         secret_key_packet   .size() +
         user_id_packet      .size() +
         signature_packet    .size()
