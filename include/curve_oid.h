@@ -93,7 +93,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // write out the number of elements first
                 writer.push(static_cast<uint8_t>(_data.size()));

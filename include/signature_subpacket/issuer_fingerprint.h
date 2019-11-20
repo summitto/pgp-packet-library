@@ -91,7 +91,7 @@ namespace pgp::signature_subpacket {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // first get the size for the data itself
                 auto size = util::narrow_cast<uint32_t>(_data.size() + _version.size() + sizeof(type()));

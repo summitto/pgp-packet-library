@@ -1,18 +1,22 @@
 #pragma once
 
 #include "../signature_subpacket_type.h"
+#include "../symmetric_key_algorithm.h"
+#include "../compression_algorithm.h"
+#include "../hash_algorithm.h"
 #include "../variable_number.h"
 #include "../fixed_number.h"
+#include <vector>
 
 
 namespace pgp::signature_subpacket {
 
     /**
-     *  Generic class for a simple signature subpacket
-     *  with a fixed-size array of bytes
+     *  Generic class for handling signature subpackets
+     *  containing an array of one-octet values
      */
-    template <size_t data_size, signature_subpacket_type subpacket_type>
-    class fixed_array
+    template <signature_subpacket_type subpacket_type, typename algorithm>
+    class preferred_algorithms
     {
         public:
             /**
@@ -21,22 +25,25 @@ namespace pgp::signature_subpacket {
              *  @param  parser  The parser to decode the data
              */
             template <class decoder, class = std::enable_if_t<is_decoder_v<decoder>>>
-            explicit fixed_array(decoder &parser)
+            explicit preferred_algorithms(decoder &parser)
             {
-                // retrieve data from the decoder
-                auto data = parser.template extract_blob<uint8_t>(data_size);
+                // allocate memory for the data
+                _data.reserve(parser.size());
 
-                // copy the data over
-                std::copy(data.begin(), data.end(), _data.begin());
+                // process bytes until we run out
+                while (!parser.empty()) {
+                    // one more octet
+                    _data.push_back(algorithm{ parser.template extract_number<std::underlying_type_t<algorithm>>() });
+                }
             }
 
             /**
              *  Constructor
              *
-             *  @param  data    The array of data
+             *  @param  data    The data to store
              */
-            explicit fixed_array(std::array<uint8_t, data_size> data) noexcept :
-                _data{ data }
+            explicit preferred_algorithms(std::vector<algorithm> data) :
+                _data{ std::move(data) }
             {}
 
             /**
@@ -44,7 +51,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  other   The object to compare with
              */
-            bool operator==(const fixed_array<data_size, subpacket_type> &other) const noexcept
+            bool operator==(const preferred_algorithms<subpacket_type, algorithm> &other) const noexcept
             {
                 return data() == other.data();
             }
@@ -54,7 +61,7 @@ namespace pgp::signature_subpacket {
              *
              *  @param  other   The object to compare with
              */
-            bool operator!=(const fixed_array<data_size, subpacket_type> &other) const noexcept
+            bool operator!=(const preferred_algorithms<subpacket_type, algorithm> &other) const noexcept
             {
                 return !operator==(other);
             }
@@ -65,8 +72,8 @@ namespace pgp::signature_subpacket {
              */
             size_t size() const noexcept
             {
-                // we need to store the number plus the type
-                uint32_t size = util::narrow_cast<uint32_t>(_data.size() + sizeof(subpacket_type));
+                // we need to store the data plus the type
+                uint32_t size = sizeof(std::underlying_type_t<algorithm>) * _data.size() + sizeof(subpacket_type);
 
                 // and then store this number in a variable number
                 return size + variable_number{ size }.size();
@@ -83,13 +90,13 @@ namespace pgp::signature_subpacket {
             }
 
             /**
-             *  Retrieve the stored array
+             *  Retrieve the stored number
              *
-             *  @return The stored array
+             *  @return The stored number
              */
-            const std::array<uint8_t, data_size> &data() const noexcept
+            gsl::span<const algorithm> data() const noexcept
             {
-                // retrieve the stored array
+                // retrieve the stored number
                 return _data;
             }
 
@@ -103,20 +110,27 @@ namespace pgp::signature_subpacket {
             void encode(encoder_t&& writer) const
             {
                 // first get the size for the data itself
-                uint32_t size = util::narrow_cast<uint32_t>(_data.size() + sizeof(subpacket_type));
+                uint32_t size = sizeof(std::underlying_type_t<algorithm>) * _data.size() + sizeof(subpacket_type);
 
-                // encode the size, the type, and the number
+                // encode the size and type
                 variable_number{ size }.encode(writer);
                 writer.push(subpacket_type);
-                writer.template insert_blob<uint8_t>(_data);
+
+                // iterate over the data
+                for (auto algo : _data) {
+                    // write it to the encoder
+                    writer.push(algo);
+                }
             }
         private:
-            std::array<uint8_t, data_size>  _data;  // the array of data
+            std::vector<algorithm>  _data;
     };
 
     /**
      *  Specialize the different subpacket types available
      */
-    using issuer  = fixed_array<8, signature_subpacket_type::issuer>;
+    using preferred_symmetric_algorithms    = preferred_algorithms<signature_subpacket_type::preferred_symmetric_algorithms,    symmetric_key_algorithm>;
+    using preferred_hash_algorithms         = preferred_algorithms<signature_subpacket_type::preferred_hash_algorithms,         hash_algorithm>;
+    using preferred_compression_algorithms  = preferred_algorithms<signature_subpacket_type::preferred_compression_algorithms,  compression_algorithm>;
 
 }

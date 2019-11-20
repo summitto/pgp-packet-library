@@ -3,10 +3,10 @@
 #include <cryptopp/integer.h>
 #include <cstddef>
 #include <cstdint>
-#include <vector>
 #include <type_traits>
 #include "decoder_traits.h"
 #include "fixed_number.h"
+#include "util/vector.h"
 #include "util/span.h"
 
 
@@ -67,7 +67,7 @@ namespace pgp {
              *
              *  @param  data    The range of numbers
              */
-            explicit multiprecision_integer(std::vector<uint8_t> data) noexcept;
+            explicit multiprecision_integer(vector<uint8_t> data) noexcept;
 
             /**
              *  Constructor
@@ -90,7 +90,7 @@ namespace pgp {
             multiprecision_integer &operator=(const multiprecision_integer &that) = default;
             multiprecision_integer &operator=(multiprecision_integer &&that) = default;
             multiprecision_integer &operator=(span<const uint8_t> data) noexcept;
-            multiprecision_integer &operator=(std::vector<uint8_t> data) noexcept;
+            multiprecision_integer &operator=(vector<uint8_t> data) noexcept;
             multiprecision_integer &operator=(const CryptoPP::Integer &integer) noexcept;
 
             /**
@@ -126,7 +126,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // write out the number of elements first
                 _bits.encode(writer);
@@ -138,8 +138,8 @@ namespace pgp {
                 }
             }
         private:
-            uint16                  _bits;
-            std::vector<uint8_t>    _data;
+            uint16          _bits;
+            vector<uint8_t> _data;
     };
 
 }

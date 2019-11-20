@@ -2,6 +2,7 @@
 
 #include "range_encoder.h"
 #include "string_to_key.h"
+#include "util/vector.h"
 #include "util/tuple.h"
 #include <numeric>
 
@@ -57,11 +58,13 @@ namespace pgp {
                 secret_key_t{ util::make_from_tuple<secret_key_t>(std::forward<secret_arguments>(secret_tuple)) }
             {
                 // data buffer to store the encoded data
-                std::vector<uint8_t>    data    ( secret_key_t::size()  );
-                range_encoder           writer  { data                  };
+                vector<uint8_t> data;
+
+                // allocate memory for the data
+                data.resize(secret_key_t::size());
 
                 // encode the secret key data
-                secret_key_t::encode(writer);
+                secret_key_t::encode(range_encoder{ data });
 
                 // now add up all the numbers to create the checksum
                 _checksum = std::accumulate(data.begin(), data.end(), static_cast<uint16_t>(0), [](uint16_t a, uint8_t b) {
@@ -110,7 +113,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // encode all the fields
                 public_key_t::encode(writer);

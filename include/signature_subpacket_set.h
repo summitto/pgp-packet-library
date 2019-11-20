@@ -1,5 +1,6 @@
 #pragma once
 
+#include "signature_subpacket/preferred_algorithms.h"
 #include "signature_subpacket/issuer_fingerprint.h"
 #include "signature_subpacket/fixed_array.h"
 #include "signature_subpacket/key_flags.h"
@@ -23,15 +24,18 @@ namespace pgp {
              */
             using subpacket_variant = variant<
                 signature_subpacket::unknown,
-                signature_subpacket::issuer,
                 signature_subpacket::signature_creation_time,
+                signature_subpacket::issuer,
+                signature_subpacket::key_expiration_time,
+                signature_subpacket::preferred_symmetric_algorithms,
+                signature_subpacket::preferred_hash_algorithms,
+                signature_subpacket::preferred_compression_algorithms,
                 signature_subpacket::signature_expiration_time,
                 signature_subpacket::exportable_certification,
                 signature_subpacket::primary_user_id,
-                signature_subpacket::key_expiration_time,
                 signature_subpacket::key_flags,
-                signature_subpacket::issuer_fingerprint,
-                signature_subpacket::embedded_signature
+                signature_subpacket::embedded_signature,
+                signature_subpacket::issuer_fingerprint
             >;
 
             /**
@@ -72,6 +76,22 @@ namespace pgp {
                             // add the issuer key id
                             _subpackets.emplace_back(in_place_type_t<signature_subpacket::issuer>{}, subpacket_parser);
                             break;
+                        case signature_subpacket_type::key_expiration_time:
+                            // add the key expiration time
+                            _subpackets.emplace_back(in_place_type_t<signature_subpacket::key_expiration_time>{}, subpacket_parser);
+                            break;
+                        case signature_subpacket_type::preferred_symmetric_algorithms:
+                            // add the preferred symmetric algorithms
+                            _subpackets.emplace_back(in_place_type_t<signature_subpacket::preferred_symmetric_algorithms>{}, subpacket_parser);
+                            break;
+                        case signature_subpacket_type::preferred_hash_algorithms:
+                            // add the preferred hash algorithms
+                            _subpackets.emplace_back(in_place_type_t<signature_subpacket::preferred_hash_algorithms>{}, subpacket_parser);
+                            break;
+                        case signature_subpacket_type::preferred_compression_algorithms:
+                            // add the preferred compression algorithms
+                            _subpackets.emplace_back(in_place_type_t<signature_subpacket::preferred_compression_algorithms>{}, subpacket_parser);
+                            break;
                         case signature_subpacket_type::signature_expiration_time:
                             // add the signature expiration time
                             _subpackets.emplace_back(in_place_type_t<signature_subpacket::signature_expiration_time>{}, subpacket_parser);
@@ -79,10 +99,6 @@ namespace pgp {
                         case signature_subpacket_type::exportable_certification:
                             // store whether this signature is exportable
                             _subpackets.emplace_back(in_place_type_t<signature_subpacket::exportable_certification>{}, subpacket_parser);
-                            break;
-                        case signature_subpacket_type::key_expiration_time:
-                            // add the key expiration time
-                            _subpackets.emplace_back(in_place_type_t<signature_subpacket::key_expiration_time>{}, subpacket_parser);
                             break;
                         case signature_subpacket_type::primary_user_id:
                             // add whether this signature constitutes the primary user id
@@ -155,7 +171,7 @@ namespace pgp {
              *  @throws std::out_of_range, std::range_error
              */
             template <class encoder_t>
-            void encode(encoder_t &writer) const
+            void encode(encoder_t&& writer) const
             {
                 // add the size header; this is the size of the packet minus
                 // the size of the header itself

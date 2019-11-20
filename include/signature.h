@@ -282,7 +282,7 @@ namespace pgp {
              *  @param  hash_encoder    The encoder to write to
              */
             template <class encoder_t>
-            void hash_signature(encoder_t &hash_encoder)
+            void hash_signature(encoder_t&& hash_encoder)
             {
                 // hash our own data
                 hash_encoder.push(version());
