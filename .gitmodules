@@ -1,6 +1,6 @@
 [submodule "GSL"]
 	path = GSL
-	url = git@github.com:Microsoft/GSL.git
+	url = https://github.com/microsoft/GSL.git
 [submodule "variant"]
 	path = variant
 	url = https://github.com/mpark/variant.git
