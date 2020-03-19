@@ -11,7 +11,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(Boost              REQUIRED)
 find_package(sodium     1.0.16  REQUIRED)
-find_package(CryptoPP           REQUIRED)
+
+# first try to find CryptoPP built using CMake
+find_package(cryptopp CONFIG)
+
+# if this didn't work, use our built-in search tool
+if (NOT TARGET cryptopp-static)
+    find_package(CryptoPP REQUIRED)
+endif()
 
 set(pgp-packet-sources
     source/decoder.cpp
@@ -73,13 +80,17 @@ if(NOT HAVE_STD_SPAN)
     target_compile_definitions(pgp-packet PUBLIC USE_GSL_SPAN)
 endif()
 
-target_link_libraries(pgp-packet Boost::boost)
+target_link_libraries(pgp-packet PUBLIC Boost::boost)
+
+# do we have a CryptoPP target from a CMake build
+if (TARGET cryptopp-static)
+    target_link_libraries(pgp-packet PUBLIC cryptopp-static)
+else ()
+    target_link_libraries(pgp-packet PUBLIC CryptoPP::CryptoPP)
+endif()
 
 target_include_directories(pgp-packet PUBLIC ${SODIUM_INCLUDE_DIRS})
-target_link_libraries(pgp-packet ${SODIUM_LIBRARIES})
-
-target_include_directories(pgp-packet PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
-target_link_libraries(pgp-packet ${CRYPTOPP_LIBRARIES})
+target_link_libraries(pgp-packet PUBLIC ${SODIUM_LIBRARIES})
 
 target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>

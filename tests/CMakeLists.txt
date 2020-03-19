@@ -80,13 +80,17 @@ endif()
 target_include_directories(tests PUBLIC ${LIBGCRYPT_INCLUDE_DIRS})
 target_link_libraries(tests ${LIBGCRYPT_LIBRARIES})
 
-target_include_directories(tests PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_libraries(tests PUBLIC Boost::boost)
+
+# do we have a CryptoPP target from a CMake build
+if (TARGET cryptopp-static)
+    target_link_libraries(tests PUBLIC cryptopp-static)
+else ()
+    target_link_libraries(tests PUBLIC CryptoPP::CryptoPP)
+endif()
 
 target_include_directories(tests PUBLIC ${SODIUM_INCLUDE_DIRS})
-target_link_libraries(tests ${SODIUM_LIBRARIES})
-
-target_include_directories(tests PUBLIC ${CRYPTOPP_INCLUDE_DIRS})
-target_link_libraries(tests ${CRYPTOPP_LIBRARIES})
+target_link_libraries(tests PUBLIC ${SODIUM_LIBRARIES})
 
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/tests)
 target_include_directories(tests PUBLIC ${PROJECT_SOURCE_DIR}/include)
@@ -99,7 +103,7 @@ if(NEED_GSL)
     target_compile_definitions(tests PUBLIC USE_GSL_SPAN)
 endif()
 
-target_link_libraries(tests gtest_main)
+target_link_libraries(tests PUBLIC gtest_main)
 
 add_custom_target(test
     COMMAND tests
