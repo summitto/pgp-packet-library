@@ -1,5 +1,8 @@
 # PGP packet decoder and encoder
 
+![](https://github.com/summitto/pgp-packet-library/workflows/ubuntu-latest/badge.svg)
+![](https://github.com/summitto/pgp-packet-library/workflows/macos-latest/badge.svg)
+
 **Please note: this is not (yet) production-ready code. Proceed with caution.**
 
 - [Introduction](#introduction)
