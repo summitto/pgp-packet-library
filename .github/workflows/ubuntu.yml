@@ -7,25 +7,40 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-
+  clang:
+    name: clang++-9
     runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v2
     - name: submodules
       run: git submodule update --init --recursive
-    - name: compiler
-      run: |
-        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
-        echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main' | sudo tee /etc/apt/sources.list.d/llvm.list
     - name: dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y clang-9 libboost-dev libsodium-dev libcrypto++-dev
+        sudo apt-get install -y libsodium-dev libcrypto++-dev
     - name: cmake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/bin/clang++-9
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9 -DBoost_INCLUDE_DIR=${BOOST_ROOT_1_69_0}/include -DBoost_LIBRARY_DIR=${BOOST_ROOT_1_69_0}/lib
     - name: build
-      run: cmake --build build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+
+  gcc:
+    name: g++-9
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-9 -DBoost_INCLUDE_DIR=${BOOST_ROOT_1_69_0}/include -DBoost_LIBRARY_DIR=${BOOST_ROOT_1_69_0}/lib
+    - name: build
+      run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
