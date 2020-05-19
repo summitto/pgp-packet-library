@@ -24,9 +24,13 @@ The library is centered around the pgp::packet class. This class can be construc
 ## Building the library
 
 The library has been tested to work with the following C++ compilers:
+| Compiler      | Version(s)      | Environment     |
+| :---          |     :---:       | :---            |
+| Apple clang   | 10.0.1/11.0.3   | macOS-10.15.4   |
+| clang++       | 6.0.0/9.0.0     | ubuntu-18.04    |
+| g++           | 8.4.0/9.3.0     | ubuntu-18.04    |
 
-- g++ >= 8.0 ([fails with versions &lt; 8.0](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91058))
-- clang++ 8.0.0, 7.1.0, 7.0.1, 6.0, Apple clang 10.0.0
+[The compiler crashes](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91058) for versions of g++ lower than 8.0
 
 To build the library, the following dependencies need to be installed first:
 - [Boost C++ libraries](https://www.boost.org/)
