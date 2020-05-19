@@ -68,7 +68,13 @@ check_cxx17_source_runs(
 
 add_library(pgp-packet ${pgp-packet-sources})
 
-if(NOT HAVE_STD_VARIANT)
+if((NOT HAVE_STD_VARIANT) 
+    OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" 
+        AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8.3)
+    OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" 
+        AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 8)
+    OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"
+        AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10.0.1))
     message("No working std::variant found, using mpark::variant")
     set(NEED_MPARK 1)
     target_compile_definitions(pgp-packet PUBLIC USE_MPARK_VARIANT)
