@@ -7,7 +7,26 @@ on:
     branches: [ master ]
 
 jobs:
-  clang:
+  clang-minimum:
+    name: clang++-6
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-6.0
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+
+  clang-latest:
     name: clang++-9
     runs-on: ubuntu-latest
     
@@ -18,15 +37,34 @@ jobs:
     - name: dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libsodium-dev libcrypto++-dev
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
     - name: cmake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9 -DBoost_INCLUDE_DIR=${BOOST_ROOT_1_69_0}/include -DBoost_LIBRARY_DIR=${BOOST_ROOT_1_69_0}/lib
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9
     - name: build
       run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
 
-  gcc:
+  gcc-minimum:
+    name: g++-8
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-8
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+
+  gcc-latest:
     name: g++-9
     runs-on: ubuntu-latest
 
@@ -37,9 +75,9 @@ jobs:
     - name: dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libsodium-dev libcrypto++-dev
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
     - name: cmake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-9 -DBoost_INCLUDE_DIR=${BOOST_ROOT_1_69_0}/include -DBoost_LIBRARY_DIR=${BOOST_ROOT_1_69_0}/lib
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-9
     - name: build
       run: cmake --build build -j$(nproc)
     - name: test
