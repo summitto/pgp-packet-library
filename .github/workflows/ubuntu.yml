@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  clang:
+  clang-minimum:
     name: clang++-6
     runs-on: ubuntu-latest
     
@@ -26,7 +26,26 @@ jobs:
     - name: test
       run: ./build/tests/tests
 
-  gcc:
+  clang-latest:
+    name: clang++-9
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+
+  gcc-minimum:
     name: g++-8
     runs-on: ubuntu-latest
 
@@ -40,6 +59,25 @@ jobs:
         sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-8
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+
+  gcc-latest:
+    name: g++-9
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-9
     - name: build
       run: cmake --build build -j$(nproc)
     - name: test
