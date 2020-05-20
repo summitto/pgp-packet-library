@@ -1,42 +1,33 @@
 #pragma once
 
-
 #ifdef USE_MPARK_VARIANT
 
+#define VARIANT_PROVIDER mpark
 #include <mpark/variant.hpp>
-
-namespace pgp {
-    using mpark::variant;
-    using mpark::in_place_type_t;
-    using mpark::get;
-    using mpark::visit;
-    using mpark::holds_alternative;
-    using mpark::swap;
-    using mpark::operator==;
-    using mpark::operator!=;
-    using mpark::operator>;
-    using mpark::operator<;
-    using mpark::operator<=;
-    using mpark::operator>=;
-}
 
 #else
 
+#define VARIANT_PROVIDER std
 #include <variant>
 
-namespace pgp {
-    using std::variant;
-    using std::in_place_type_t;
-    using std::get;
-    using std::visit;
-    using std::holds_alternative;
-    using std::swap;
-    using std::operator==;
-    using std::operator!=;
-    using std::operator>;
-    using std::operator<;
-    using std::operator<=;
-    using std::operator>=;
-}
-
 #endif
+
+namespace pgp {
+    using VARIANT_PROVIDER::variant;
+    using VARIANT_PROVIDER::in_place_type_t;
+    using VARIANT_PROVIDER::get;
+    using VARIANT_PROVIDER::visit;
+    using VARIANT_PROVIDER::holds_alternative;
+    using VARIANT_PROVIDER::swap;
+    using VARIANT_PROVIDER::operator==;
+    using VARIANT_PROVIDER::operator!=;
+    using VARIANT_PROVIDER::operator>;
+    using VARIANT_PROVIDER::operator<;
+    using VARIANT_PROVIDER::operator<=;
+    using VARIANT_PROVIDER::operator>=;
+    using VARIANT_PROVIDER::bad_variant_access;
+    using VARIANT_PROVIDER::variant_size;
+    using VARIANT_PROVIDER::variant_size_v;
+    using VARIANT_PROVIDER::monostate;
+    using VARIANT_PROVIDER::variant_npos;
+}
