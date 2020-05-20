@@ -10,6 +10,14 @@ namespace pgp {
     using mpark::in_place_type_t;
     using mpark::get;
     using mpark::visit;
+    using mpark::holds_alternative;
+    using mpark::swap;
+    using mpark::operator==;
+    using mpark::operator!=;
+    using mpark::operator>;
+    using mpark::operator<;
+    using mpark::operator<=;
+    using mpark::operator>=;
 }
 
 #else
@@ -21,6 +29,14 @@ namespace pgp {
     using std::in_place_type_t;
     using std::get;
     using std::visit;
+    using std::holds_alternative;
+    using std::swap;
+    using std::operator==;
+    using std::operator!=;
+    using std::operator>;
+    using std::operator<;
+    using std::operator<=;
+    using std::operator>=;
 }
 
 #endif
