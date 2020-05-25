@@ -161,7 +161,7 @@ namespace pgp {
                 // create the result variable containing the data - we do not
                 // check the bounds here, but the subspan below will fail in
                 // case the read is out-of-bounds
-                span<const T> result{ reinterpret_cast<const T*>(_data.data()), static_cast<typename span<uint8_t>::index_type>(size) };
+                span<const T> result{ reinterpret_cast<const T*>(_data.data()), static_cast<typename span<uint8_t>::size_type>(size) };
 
                 // remove the bytes from the local data
                 _data = _data.subspan(size);

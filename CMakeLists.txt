@@ -62,9 +62,6 @@ include(CheckCXX17SourceRuns)
 check_cxx17_source_runs(
     ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tests/std_variant_test.cpp
     HAVE_STD_VARIANT)
-check_cxx17_source_runs(
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/tests/std_span_test.cpp
-    HAVE_STD_SPAN)
 
 add_library(pgp-packet ${pgp-packet-sources})
 
@@ -78,12 +75,6 @@ if((NOT HAVE_STD_VARIANT)
     message("No working std::variant found, using mpark::variant")
     set(NEED_MPARK 1)
     target_compile_definitions(pgp-packet PUBLIC USE_MPARK_VARIANT)
-endif()
-
-if(NOT HAVE_STD_SPAN)
-    message("No working std::span found, using gsl::span")
-    set(NEED_GSL 1)
-    target_compile_definitions(pgp-packet PUBLIC USE_GSL_SPAN)
 endif()
 
 target_link_libraries(pgp-packet PUBLIC Boost::boost)
@@ -102,12 +93,10 @@ target_include_directories(pgp-packet PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 
-if(NEED_GSL)
-    target_include_directories(pgp-packet PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSL/include>
-        $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
-    )
-endif()
+target_include_directories(pgp-packet PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/GSL/include>
+    $<INSTALL_INTERFACE:include/pgp-packet/GSL/include>
+)
 
 if(NEED_MPARK)
     target_include_directories(pgp-packet PUBLIC
@@ -179,9 +168,7 @@ install(
 
 install(DIRECTORY include/ DESTINATION include/pgp-packet)
 
-if(NEED_GSL)
-    install(DIRECTORY GSL DESTINATION include/pgp-packet)
-endif()
+install(DIRECTORY GSL DESTINATION include/pgp-packet)
 
 if(NEED_MPARK)
     install(DIRECTORY variant DESTINATION include/pgp-packet)
