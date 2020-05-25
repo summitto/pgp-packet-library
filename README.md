@@ -50,6 +50,7 @@ cmake -B build && make -C build
 ```
 
 If you wish to install the library (so that it can be automatically found by projects using it), you could then execute the following command:
+
 ```bash
 make -C build install
 ```
@@ -57,6 +58,8 @@ make -C build install
 This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrator account before executing the command.
 
 ## Using the library
+
+The easiest way to use the library is by setting up a CMake project and use the provided CMake modules under `cmake/Modules` to locate the dependencies, a clear example of how to do it can be found in the [pgp-key-generation repository](https://github.com/summitto/pgp-key-generation/).
 
 ### Creating a simple packet
 
