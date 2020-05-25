@@ -46,13 +46,13 @@ git submodule update --init
 The recommended way to then build the library is to do a so-called out-of-source build. This ensures that any build-related files do not clutter the repository itself and makes it easy to get rid of any build artifacts. Assuming you want to build in a directory called `build`, the following set of commands should be enough:
 
 ```bash
-mkdir -p build && cd build && cmake .. && cd ..
-make -C build
+cmake -B build && make -C build
 ```
 
 If you wish to install the library (so that it can be automatically found by projects using it), you could then execute the following command:
-
-`make -C build install`
+```bash
+make -C build install
+```
 
 This command might need administrative privileges. Depending on your operating system and configuration, you might need to use `sudo` or change to an administrator account before executing the command.
 
@@ -60,16 +60,22 @@ This command might need administrative privileges. Depending on your operating s
 
 ### Creating a simple packet
 
-Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. If for some reason your standard library is outdated and does not provide `std::variant`, the library falls back to a bundled third-party variant implementation called `mpark::variant`. For the sake of the examples, we will assume an up-to-date standard library.
+Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. If for some reason your standard library is outdated and does not provide `std::variant`, the library falls back to a bundled third-party variant implementation called `mpark::variant`. A type alias for the variant class and it's helper definitions is provided under the `pgp namespace` to make use of the right package.
 
  When constructing a packet, the packet type must be provided as well. Let's look at an example for the simplest type of packet, the user id:
 
 ```c++
 #include <pgp-packet/packet.h>
+#include <sodium.h>
 #include <iostream>
 
 int main()
 {
+    // initialize libsodium
+    if (sodium_init() == -1) {
+        return 1;
+    }
+
     // when constructing a packet we must specify the body type that
     // is to be contained within the packet; the constructor for the
     // packet uses the same pattern a regular std::variant uses when
@@ -80,7 +86,7 @@ int main()
     // since a user_id packet has a constructor using an std::string
     // we can construct a user_id packet like this:
     pgp::packet packet{
-        std::in_place_type_t<pgp::user_id>{},
+        pgp::in_place_type_t<pgp::user_id>{},
         std::string{ "Anne Onymous <anonymous@example.org>" }
     };
 
@@ -101,7 +107,7 @@ int main()
     // retrieve a specific type of body - which could throw an error
     // if the body is of a different type than the one requested. in
     // this case we are certain that the body will contain a user_id
-    auto &body = std::get<pgp::user_id>(packet.body());
+    auto &body = pgp::get<pgp::user_id>(packet.body());
 
     // now we have access to the user_id body, which provides simple
     // getters for its relevant members. in this case, it's only the
@@ -111,6 +117,8 @@ int main()
         << "Stored user id: "
         << body.id()
         << std::endl;
+
+    return 0;
 }
 ```
 
@@ -137,15 +145,21 @@ to disk, as well as erasing the memory before freeing it.
 
 ```c++
 #include <pgp-packet/packet.h>
+#include <sodium.h>
 #include <iostream>
 #include <cassert>
 #include <vector>
 
 int main()
 {
+    // initialize libsodium
+    if (sodium_init() == -1) {
+        return 1;
+    }
+
     // create our simple user id packet
     pgp::packet packet{
-        std::in_place_type_t<pgp::user_id>{},
+        pgp::in_place_type_t<pgp::user_id>{},
         std::string{ "Anne Onymous <anonymous@example.org>" }
     };
 
@@ -158,7 +172,7 @@ int main()
     data.resize(packet.size());
 
     // write out the packet data to the given buffer
-    packet.encode(pgp::range_encoder{ encoder });
+    packet.encode(pgp::range_encoder{ data });
 
     // now create a decoder to decode the freshly filled data buffer
     // and use this decoder to create a second packet containing the
@@ -168,6 +182,8 @@ int main()
 
     // the packets should be identical
     assert(packet == copied_packet);
+
+    return 0;
 }
 ```
 
@@ -183,11 +199,17 @@ This example should provide a bit more insight into the structure of PGP keys. W
 ```c++
 #include <pgp-packet/packet.h>
 #include <iostream>
+#include <fstream>
 #include <sodium.h>
 #include <vector>
 
 int main()
 {
+    // initialize libsodium
+    if (sodium_init() == -1) {
+        return 1;
+    }
+
     // create vectors holding the secret and public key points, note
     // that we take an extra byte for the public key, since pgp will
     // need an extra byte in front of it, it is always the same byte
@@ -222,10 +244,10 @@ int main()
 
     // now create a packet containing this secret key
     pgp::packet secret_key_packet{
-        std::in_place_type_t<pgp::secret_key>{},                        // we are building a secret key
+        pgp::in_place_type_t<pgp::secret_key>{},                        // we are building a secret key
         creation,                                                       // created at this unix timestamp
         pgp::key_algorithm::eddsa,                                      // using the eddsa key algorithm
-        std::in_place_type_t<pgp::secret_key::eddsa_key_t>{},           // create a key of the eddsa type
+        pgp::in_place_type_t<pgp::secret_key::eddsa_key_t>{},           // create a key of the eddsa type
         std::forward_as_tuple(                                          // arguments for the public key
             pgp::curve_oid::ed25519(),                                  // which curve to use
             pgp::multiprecision_integer{ std::move(public_key_data) }   // move in the public key point
@@ -237,31 +259,31 @@ int main()
 
     // create a packet describing the user owning this key
     pgp::packet user_id_packet{
-        std::in_place_type_t<pgp::user_id>{},
+        pgp::in_place_type_t<pgp::user_id>{},
         std::string{ "Anne Onymous <anonymous@example.org>" }
     };
 
     // to complete the set, we need to create a signature packet,
     // which certifies that we are the owners of this key.
     pgp::packet signature_packet{
-        std::in_place_type_t<pgp::signature>{},                         // we are making a signature
-        std::get<pgp::secret_key>(secret_key_packet.body()),            // we sign it with the secret key
-        std::get<pgp::user_id>(user_id_packet.body()),                  // for the given user
-        pgp::signature_subpacket_set{{                                  // hashed subpackets
-            pgp::signature_creation_time_subpacket  { creation      },  // signature creation time
-            pgp::key_expiration_time_subpacket      { expiration    },  // signature expiration time
-            pgp::key_flags_subpacket                { 0x01, 0x02    },  // the privileges for the main key (signing and certification)
+        pgp::in_place_type_t<pgp::signature>{},                                     // we are making a signature
+        pgp::get<pgp::secret_key>(secret_key_packet.body()),                        // we sign it with the secret key
+        pgp::get<pgp::user_id>(user_id_packet.body()),                              // for the given user
+        pgp::signature_subpacket_set{{                                              // hashed subpackets
+            pgp::signature_subpacket::signature_creation_time  { creation      },   // signature creation time
+            pgp::signature_subpacket::key_expiration_time      { expiration    },   // key expiration time
+            pgp::signature_subpacket::key_flags                { 0x01, 0x02    },   // the privileges for the main key (signing and certification)
         }},
-        pgp::signature_subpacket_set{{                                  // unhashed subpackets
-            pgp::issuer_subpacket {                                     // fingerprint of the key we are signing with
-                std::get<pgp::secret_key>(secret_key_packet.body()).fingerprint()
+        pgp::signature_subpacket_set{{                                              // unhashed subpackets
+            pgp::signature_subpacket::issuer_fingerprint {                          // fingerprint of the key we are signing with
+                pgp::get<pgp::secret_key>(secret_key_packet.body()).fingerprint()
             }
         }}
     };
 
     // we now have a set of packets, which, when encoded to a file, can
     // be imported into a compatible pgp implementation (such as gnupg)
-    pgp::vector<uint8_t> data
+    pgp::vector<uint8_t> data;
     data.resize(
         secret_key_packet   .size() +
         user_id_packet      .size() +
