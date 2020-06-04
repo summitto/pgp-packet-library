@@ -61,6 +61,22 @@ This command might need administrative privileges. Depending on your operating s
 
 The easiest way to use the library is by setting up a CMake project and use the provided CMake modules under `cmake/Modules` to locate the dependencies, a clear example of how to do it can be found in the [pgp-key-generation repository](https://github.com/summitto/pgp-key-generation/).
 
+The library provides a CMake configuration file which sets up all the needed dependencies, the following `CMakeLists.txt` should be enough to run the code examples
+```cmake
+cmake_minimum_required(VERSION 3.13.0)
+
+project(pgp-packet-example
+        VERSION 0.1.1
+        LANGUAGES CXX)
+
+find_package(pgp-packet-packet REQUIRED)
+
+add_executable(pgp-packet-example example.cpp)
+target_link_libraries(pgp-packet-example pgp-packet)
+```
+
+Otherwise the dependencies need to be installed and linked manually
+
 ### Creating a simple packet
 
 Since PGP packets can contain very different types of data, the body of the `pgp::packet` is an `std::variant`, which gives easy access to the packet-specific fields. If for some reason your standard library is outdated and does not provide `std::variant`, the library falls back to a bundled third-party variant implementation called `mpark::variant`. A type alias for the variant class and it's helper definitions is provided under the `pgp namespace` to make use of the right package.
