@@ -25,6 +25,15 @@ jobs:
       run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_CXX_COMPILER=clang++-6.0
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
 
   clang-latest:
     name: clang++-9
@@ -44,6 +53,15 @@ jobs:
       run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
 
   gcc-minimum:
     name: g++-8
@@ -63,6 +81,15 @@ jobs:
       run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_CXX_COMPILER=g++-8
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
 
   gcc-latest:
     name: g++-9
@@ -82,3 +109,12 @@ jobs:
       run: cmake --build build -j$(nproc)
     - name: test
       run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_CXX_COMPILER=g++-9
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
