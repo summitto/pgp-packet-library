@@ -199,6 +199,11 @@ install(
         lib/cmake/pgp-packet
 )
 
+install(
+    DIRECTORY   cmake/Modules
+    DESTINATION lib/cmake/pgp-packet
+)
+
 find_package(PythonInterp)
 find_program(iwyu_tool_path NAMES iwyu_tool.py iwyu_tool)
 if (iwyu_tool_path AND PYTHONINTERP_FOUND)
