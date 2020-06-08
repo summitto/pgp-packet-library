@@ -1,4 +1,5 @@
 #include <pgp-packet/packet.h>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <sodium.h>
@@ -27,7 +28,7 @@ int main()
     // the declaration above, we have to ignore the first byte as we
     // need to set a special tag byte here for pgp to recognize it
     // note: error checks are skipped here for brevity
-    crypto_box_keypair(public_key_data.data() + 1, secret_key_data.data());
+    crypto_sign_keypair(public_key_data.data() + 1, secret_key_data.data());
 
     // libsodium puts both the secret key and the public key data in
     // the secret key buffer, which pgp does not need, therefore the
@@ -35,13 +36,13 @@ int main()
     secret_key_data.resize(32);
 
     // now set the tag byte required for pgp
-    public_key_data[0] = 0x04;
+    public_key_data[0] = 0x40;
 
     // define the creation time of this key (as a unix timestamp)
-    // and the expiration time (another unix timestamp), we define
-    // the key as being valid for 3600 seconds (an hour);
-    uint32_t creation = 1559737787;
-    uint32_t expiration = creation + 3600;
+    // and the expiration period (the amount of seconds which the key will be valid after it's creation)
+    // we define the key as created in the current time and valid for 3600 seconds (an hour);
+    uint32_t creation = std::time(nullptr);
+    uint32_t expiration = 3600;
 
     // now create a packet containing this secret key
     pgp::packet secret_key_packet{
@@ -64,20 +65,29 @@ int main()
         std::string{ "Anne Onymous <anonymous@example.org>" }
     };
 
+    // retrieve the secret key from the packet generated above
+    const auto& secret_key = pgp::get<pgp::secret_key>(secret_key_packet.body());
+
     // to complete the set, we need to create a signature packet,
     // which certifies that we are the owners of this key.
     pgp::packet signature_packet{
         pgp::in_place_type_t<pgp::signature>{},                                     // we are making a signature
-        pgp::get<pgp::secret_key>(secret_key_packet.body()),                        // we sign it with the secret key
+        secret_key,                                                                 // we sign it with the secret key
         pgp::get<pgp::user_id>(user_id_packet.body()),                              // for the given user
         pgp::signature_subpacket_set{{                                              // hashed subpackets
-            pgp::signature_subpacket::signature_creation_time  { creation      },   // signature creation time
-            pgp::signature_subpacket::key_expiration_time      { expiration    },   // key expiration time
-            pgp::signature_subpacket::key_flags                { 0x01, 0x02    },   // the privileges for the main key (signing and certification)
+            pgp::signature_subpacket::signature_creation_time   { creation      },  // signature creation time
+            pgp::signature_subpacket::key_expiration_time       { expiration    },  // key expiration time
+            pgp::signature_subpacket::issuer_fingerprint{                           // fingerprint of the key we are signing with
+                secret_key.fingerprint()
+            },
+            pgp::signature_subpacket::key_flags{                                    // the privileges for the main key
+                pgp::key_flag::certification,
+                pgp::key_flag::signing,
+            },
         }},
         pgp::signature_subpacket_set{{                                              // unhashed subpackets
-            pgp::signature_subpacket::issuer_fingerprint {                          // fingerprint of the key we are signing with
-                pgp::get<pgp::secret_key>(secret_key_packet.body()).fingerprint()
+            pgp::signature_subpacket::issuer {                                      // key ID of the key we are signing with
+                secret_key.key_id()
             }
         }}
     };
