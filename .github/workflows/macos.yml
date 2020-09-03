@@ -18,7 +18,12 @@ jobs:
     - name: submodules
       run: git submodule update --init --recursive
     - name: dependencies
-      run: brew install boost cryptopp
+      run: | 
+        brew install boost
+        curl -O https://www.cryptopp.com/cryptopp820.zip
+        unzip cryptopp820.zip -d cryptopp820
+        make -C cryptopp820 shared all
+        make -C cryptopp820 install
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
     - name: build
@@ -44,7 +49,12 @@ jobs:
     - name: submodules
       run: git submodule update --init --recursive
     - name: dependencies
-      run: brew install boost cryptopp
+      run: | 
+        brew install boost
+        curl -O https://www.cryptopp.com/cryptopp820.zip
+        unzip cryptopp820.zip -d cryptopp820
+        make -C cryptopp820 shared all
+        make -C cryptopp820 install
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
     - name: build
