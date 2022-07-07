@@ -21,6 +21,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+        sudo apt-get install -y clang-6.0 lldb-6.0 lld-6.0 clang-format-6.0
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-6.0
     - name: build
@@ -49,6 +50,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+        sudo apt-get install -y clang-9 lldb-9 lld-9 clang-format-9
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-9
     - name: build
@@ -77,6 +79,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+        sudo apt-get install -y g++-8
     - name: cmake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-8
     - name: build
