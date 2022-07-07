@@ -1,16 +1,18 @@
 name: ubuntu-latest
 
-on:
+'on':
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
   clang-minimum:
     name: clang++-6
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-20.04
+
     steps:
     - uses: actions/checkout@v2
     - name: submodules
@@ -35,10 +37,10 @@ jobs:
         ./build/encoding_and_decoding
         ./build/key_from_raw_data
 
-  clang-latest:
+  clang-9:
     name: clang++-9
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-20.04
+
     steps:
     - uses: actions/checkout@v2
     - name: submodules
@@ -65,7 +67,7 @@ jobs:
 
   gcc-minimum:
     name: g++-8
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
@@ -91,9 +93,9 @@ jobs:
         ./build/encoding_and_decoding
         ./build/key_from_raw_data
 
-  gcc-latest:
+  gcc-9:
     name: g++-9
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
