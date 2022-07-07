@@ -67,6 +67,34 @@ jobs:
         ./build/encoding_and_decoding
         ./build/key_from_raw_data
 
+  clang-14:
+    name: clang++-14
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-14
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-14
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
+
   gcc-minimum:
     name: g++-8
     runs-on: ubuntu-20.04
@@ -119,6 +147,34 @@ jobs:
         sudo make install -C build
         cd examples
         cmake -B build -DCMAKE_CXX_COMPILER=g++-9
+        make -C build
+        ./build/create_simple_packet
+        ./build/encoding_and_decoding
+        ./build/key_from_raw_data
+
+  gcc-11:
+    name: g++-11
+    runs-on: ubuntu-22.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: submodules
+      run: git submodule update --init --recursive
+    - name: dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libsodium-dev libcrypto++-dev libboost-all-dev
+    - name: cmake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=g++-11
+    - name: build
+      run: cmake --build build -j$(nproc)
+    - name: test
+      run: ./build/tests/tests
+    - name: examples
+      run: |
+        sudo make install -C build
+        cd examples
+        cmake -B build -DCMAKE_CXX_COMPILER=g++-11
         make -C build
         ./build/create_simple_packet
         ./build/encoding_and_decoding
