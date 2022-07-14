@@ -26,11 +26,11 @@ The library is centered around the pgp::packet class. This class can be construc
 ## Building the library
 
 The library has been tested to work with the following C++ compilers:
-| Compiler      | Version(s)      | Environment     |
-| :---          |     :---:       | :---            |
-| Apple clang   | 10.0.1/11.0.3   | macOS-10.15.4   |
-| clang++       | 6.0.0/9.0.0     | ubuntu-18.04    |
-| g++           | 8.4.0/9.3.0     | ubuntu-18.04    |
+| Compiler    | Version(s)               | Environment    |
+|:------------|:------------------------:|:---------------|
+| Apple clang | `13.0.0.13000029`        | `macOS-11.6.6` |
+| clang++     | `6.0.1`/`9.0.1`/`14.0.0` | `ubuntu-20.04` |
+| g++         | `8.4.0`/`9.4.0`/`11.2.0` | `ubuntu-20.04` |
 
 [The compiler crashes](https://gcc.gnu.org/bugzilla/show_bug.cgi?id=91058) for versions of g++ lower than 8.0
 
@@ -97,9 +97,9 @@ which parses the binary data read by the decoder, and has an
 `encode` method, which produces the binary representation and
 passes it to an `encoder` instance.
 
-[Let's look at an example](examples/encoding_and_decoding.cpp), 
+[Let's look at an example](examples/encoding_and_decoding.cpp),
 once again using the user_id type (due to its simplicity).
-The packet is encoded to its binary representation, which is then 
+The packet is encoded to its binary representation, which is then
 read. We verify that this indeed results in the same
 packet as we started with.
 
