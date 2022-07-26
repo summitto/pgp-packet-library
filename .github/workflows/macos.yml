@@ -1,55 +1,24 @@
 name: macos-latest
 
-on:
+'on':
   push:
-    branches: [ master ]
+    branches:
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - master
 
 jobs:
-  appleclang-minimum:
-    name: appleclang-10.0.1
-    runs-on: macos-latest
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_10.3.app/Contents/Developer
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: submodules
-      run: git submodule update --init --recursive
-    - name: dependencies
-      run: | 
-        brew install boost
-        curl -O https://www.cryptopp.com/cryptopp820.zip
-        unzip cryptopp820.zip -d cryptopp820
-        make -C cryptopp820 shared all
-        make -C cryptopp820 install
-    - name: cmake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Debug
-    - name: build
-      run: cmake --build build
-    - name: test
-      run: ./build/tests/tests
-    - name: examples
-      run: |
-        make install -C build
-        cd examples
-        cmake -B build
-        make -C build
-        ./build/create_simple_packet
-        ./build/encoding_and_decoding
-        ./build/key_from_raw_data
-
   appleclang-latest:
-    name: appleclang-11.0.3
-    runs-on: macos-latest
+    name: appleclang-13.0.0
+    runs-on: macos-11
 
     steps:
     - uses: actions/checkout@v2
     - name: submodules
       run: git submodule update --init --recursive
     - name: dependencies
-      run: | 
+      run: |
         brew install boost
         curl -O https://www.cryptopp.com/cryptopp820.zip
         unzip cryptopp820.zip -d cryptopp820

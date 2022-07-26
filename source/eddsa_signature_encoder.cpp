@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include "util/span.h"
 
 
